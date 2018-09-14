@@ -1,0 +1,69 @@
+@layout('layout.app')
+@section('content')
+<section>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+        <div class="auth trigger" data-event="init" data-model="auth" data-callback="init">
+          <div class="brand text-center"><a href="/"><span>Beta</span></a></div>
+          <form name="register" class="form trigger" data-event="submit" data-model="auth" data-callback="register">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-row">
+                  <label>First name</label>
+                  <input type="text" class="input-control" placeholder="Enter your first name" name="first_name" data-validate="required,alphabet" />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-row">
+                  <label>Last name</label>
+                  <input type="text" class="input-control" placeholder="Enter your last name" name="last_name" data-validate="required,alphabet"/>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-row">
+                  <label>Company name</label>
+                  <input type="text" class="input-control" placeholder="Enter your company name" name="company_name" data-validate="required"/>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-row">
+                  <label>Your position (optional)</label>
+                  <input type="text" class="input-control" placeholder="E.g. QA Engineer" name="position" />
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <label>Email address</label>
+              <input type="email" class="input-control" placeholder="Enter your email address" name="email" data-validate="required,email"/>
+            </div>
+            <div class="form-row">
+              <label>Password</label>
+              <input type="password" class="input-control" placeholder="Enter your password" name="password" data-validate="required"/>
+            </div>
+            <div class="form-row">
+              <p class="weight400 grey-color px12">By clicking Register, you agree to the xmeter <a href="" class="link">User Agreement</a>, <a href="" class="link">Privacy Policy</a>, and <a href="" class="link">Cookie Policy</a>.</p>
+            </div>
+            <div class="form-row">
+              <button class="btn btn-blue" type="submit"><i class="icon-lock"></i> Register for free</button>
+              <button class="btn btn-blank" type="reset"><i class="icon-times"></i> Reset</button>
+            </div>
+            <div class="form-row">
+              <p class="weight400 grey-color">Already on xmeter?  <a href="/app/auth/login" class="link">Secure login now.</a></p>
+            </div>
+            <div class="links">
+              <a href="">Terms of Use</a>
+              <a href="">Privacy Policy</a>
+            </div>
+            <div>
+              <p class="px12">&copy; 2018, All rights are reserved to <span class="weight700">xmeter</span>.</p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+@endsection

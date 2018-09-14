@@ -1,0 +1,464 @@
+@import "utility/_variables";
+@import "mixins/_grid";
+@import "mixins/_helper";
+
+@import "utility/_base";
+@import "utility/_grid";
+@import "utility/_fonts";
+@import "utility/_icons";
+@import "utility/_form";
+@import "utility/_helper";
+
+/**
+* Reset container for non-responsive grid
+*/
+.container{
+  width: 1170px !important;
+  max-width: none !important;
+}
+
+.uppercase{
+  letter-spacing: 1px;
+}
+
+body{
+  background: $off-white;
+}
+
+section{
+  padding: 50px 0;
+
+  .title{
+    margin-bottom: 30px;
+
+    h2{
+      margin-bottom: 15px;
+    }
+  }
+}
+
+.dropdown{
+  position: relative;
+
+  .overlay{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 4;
+    display: none;
+  }
+
+  .dropdown-trigger{
+    display: inline-block;
+  }
+
+  .dropdown-options{
+    position: absolute;
+    top: 30px;
+    @include box-shadow($box-shadow);
+    width: auto;
+    z-index: 5;
+    min-width: 100px;
+    display: none;
+
+    &.right{
+      right: 0;
+    }
+
+    &.left{
+      left: 0;
+    }
+
+    li{
+      margin: 0;
+      padding: 0;
+      display: block;
+
+      a{
+        padding: 10px 15px;
+        display: inline-block;
+        font-size: 12px;
+        background: $white;
+        width: 100%;
+
+        &:hover{
+          background: $off-white;
+          color: $black;
+        }
+      }
+    }
+  }
+
+  &.open{
+    .overlay{
+      display: block;
+    }
+    .dropdown-options{
+      display: block;
+    }
+  }
+}
+
+header{
+  padding: 15px 0;
+  background: $black;
+  color: $white;
+
+  .nav{
+    li{
+      display: inline-block;
+      vertical-align: middle;
+
+      a{
+        font-weight: 400;
+        display: inline-block;
+        @include transition($transition);
+
+        &.light{
+          opacity: 0.4;
+
+          &:hover{
+            opacity: 0.7;
+          }
+        }
+      }
+
+      .brand{
+        width:78px;
+        height: 20px;
+        background: url(../img/logo-full-white-x.svg) no-repeat center center;
+        opacity: 0.5;
+      }
+    }
+
+    &.pull-right{
+      li{
+        margin-left: 15px;
+      }
+    }
+  
+    &.pull-left{
+      li{
+        margin-right: 15px;
+      }
+    }
+  }
+
+  .page-title{
+    padding: 35px 0 25px 0;
+    position: relative;
+
+    .sub-nav{
+      position: absolute;
+      bottom: -15px;
+      left: 0;
+      display: none;
+
+      li{
+        display: inline-block;
+        margin-right: 25px;
+
+
+        a{
+          color: $white;
+          opacity: 0.5;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          display: inline-block;
+          padding-bottom: 10px;
+          font-size: 12px;
+          @include transition($transition);
+          border-bottom: 3px solid transparent;
+
+          &:hover{
+            opacity: 0.8;
+            border-color: $red;
+          }
+        }
+
+        &.active{
+          a{
+            opacity: 1;
+            border-color: $red;
+          }
+        }
+      }
+    }
+
+    &.sub-nav-shown{
+      padding: 35px 0 35px 0;
+
+      .sub-nav{
+        display: block;
+      }
+    }
+  }
+}
+
+.auth{
+  .brand{
+    margin-bottom: 30px;
+    a{
+      display: inline-block;
+      width: 139px;
+      height: 35px;
+      background: url(../img/logo-full.svg) no-repeat center center;
+      position: relative;
+
+      span{
+        display: inline-block;
+        position: absolute;
+        bottom:0;
+        right: -17px;
+        background: #D81698;
+        color: $white;
+        padding: 3px;
+        font-size: 6px;
+        text-transform: uppercase;
+        font-weight: 700;
+        line-height: 1;
+      }
+    }
+  }
+
+  .links{
+    margin-bottom: 10px;
+  }
+}
+
+.checkbox{
+  display: inline-block;
+  vertical-align: middle;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+
+  span{
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+    border:2px solid rgba(0, 0, 0, 0.15);
+    border-radius: 50%;
+  }
+
+  input{
+    display: none;
+  }
+}
+
+.sub-header{
+  margin-bottom: 30px;
+
+  .search{
+    display: inline-block;
+    position: relative;
+
+    input{
+      padding: 10px 15px 10px 30px;
+      border: none;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+      background: transparent;
+      width: 350px;
+      font-size: 14px;
+    }
+
+    .ico{
+      font-size: 24px;
+      position: absolute;
+      top: 50%;
+      left: 0;
+      @include translate(0, -50%);
+    }
+  }
+
+  .bluck-actions{
+    opacity: 0;
+    visibility: hidden;
+    @include transition($transition);
+
+    li{
+      display: inline-block;
+    }
+
+    &.shown{
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  .add-button{
+    display: inline-block;
+    position: absolute;
+    top: -77px;
+    right: 0;
+    width: 50px;
+    height: 50px;
+    background: $green;
+    color: $white;
+    border-radius: 50%;
+    font-size: 22px;
+    text-align: center;
+    padding-top: 13px;
+    @include box-shadow($default-box-shadow);
+    @include transition($transition);
+
+    &:hover{
+      @include box-shadow($box-shadow);
+    }
+  }
+}
+
+.list-container{
+  
+  .list-item{
+
+    position: relative;
+    width: 100%;
+    background: $white;
+    @include box-shadow($default-box-shadow);
+    @include transition($transition);
+    @include translate(0, 0);
+    margin-bottom: 15px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+
+    .inner{
+      padding: 10px 20px 10px 65px;
+      position: relative;
+
+      .sn{
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        @include translate(0, -50%);
+        width: 35px;
+        height: 35px;
+        background: $light-grey;
+        border-radius: 50%;
+        text-align: center;
+        padding-top: 6px;
+        color: $grey;
+        cursor: pointer;
+      }
+  
+      .check{
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        @include translate(0, -50%);
+        width: 35px;
+        height: 35px;
+        background: $green;
+        border-radius: 50%;
+        text-align: center;
+        padding-top: 6px;
+        color: $white;
+        cursor: pointer;
+        display: none;
+      }
+  
+      .action{
+        position: absolute;
+        top: 50%;
+        right: 20px;
+        @include translate(0, -50%);
+  
+        a{
+          color: $grey;
+          font-size: 16px;
+          margin-left: 10px;
+        }
+      }
+    }
+
+    .meta{
+      display: none;
+
+      ul{
+        width: 100%;
+
+        li{
+          padding: 10px 15px;
+          border-top: 1px solid $light-grey;
+        }
+      }
+
+    }
+
+    &:hover{
+      @include box-shadow($box-shadow);
+      @include translate(0, -2px);
+    }
+
+    &.selected{
+      border: 1px solid $green;
+
+      .check{
+        display: block;
+      }
+    }
+  }
+}
+
+.card{
+  @include box-shadow($default-box-shadow);
+  @include transition($transition);
+  @include translate(0, 0);
+
+  .image{
+    height: 200px;
+    background: $light-grey;
+    text-align: center;
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+
+    img{
+      max-width: 100%;
+      max-height: 100%;
+      position: absolute;
+      left: 50%;
+      top: 20px;
+      @include translate(-50%, 0);
+    }
+
+    .over{
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.9);
+      opacity: 0;
+      @include transition($transition);
+
+      .btn{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        @include translate(-50%, -50%);
+      }
+    }
+  }
+
+  .info{
+    background: $white;
+    padding: 20px 30px;
+  }
+
+  &:hover{
+    @include box-shadow($box-shadow);
+    @include translate(0, -2px);
+    
+    .over{
+      opacity: 1;
+    }
+  }
+}
+
+footer{
+  padding-bottom: 30px;
+}

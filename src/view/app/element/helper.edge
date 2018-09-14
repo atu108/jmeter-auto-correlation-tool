@@ -1,0 +1,40 @@
+<div id="alert">
+  <div class="content">
+    <span class="message">This is a sample message</span>
+    <a href="javascript:void(0)" class="close" onclick="Util.alert.hide();"><i class="icon-times"></i></a>
+  </div>
+</div>
+<div id="confirm" class="confirm">
+  <div class="overlay"></div>
+  <div class="confirm-box">
+    <div class="message">This is a sample message</div>
+    <div class="buttons">
+      <button class="btn btn-blue btn-xs confirm-label-yes"><i class="icon-check"></i> <span>Okay</span></button>
+      <button class="btn btn-blank btn-xs confirm-label-no"><i class="icon-times"></i> <span>Cancel</span></button>
+    </div>
+  </div>
+</div>
+<div class="modal" id="modal">
+  <div class="overlay"></div>
+  <div class="modal-box">This is a sample modal box</div>
+</div>
+
+<script type="text/html" id="LoginModal">
+  <div class="login">
+    <h3 class="weight700">Login</h3>
+    <div class="form">
+      <div class="form-row">
+        <label>Email address</label>
+        <input type="text" name="email" placeholder="Email address" class="input-control email"/>
+      </div>
+      <div class="form-row">
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Enter password" class="input-control password"/>
+      </div>
+      <div class="form-row">
+        <button class="btn btn-blue" onclick="App.auth.login.bind(App.auth)();"><i class="icon-check"></i> Save Category</button>
+        <button class="btn btn-blank" onclick="Util.modal.close();"><i class="icon-times"></i> Cancel</button>
+      </div>
+    </div>
+  </div>
+</script>

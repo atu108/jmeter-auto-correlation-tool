@@ -1,0 +1,93 @@
+@import "utility/_variables";
+@import "mixins/_grid";
+@import "mixins/_helper";
+
+@import "utility/_base";
+@import "utility/_grid";
+@import "utility/_fonts";
+@import "utility/_icons";
+
+section{
+  padding: 70px 0;
+
+  .title{
+    margin-bottom: 30px;
+  }
+}
+
+header{
+  padding: 15px 0;
+  background: $off-white;
+
+  .brand{
+    width: 118px;
+    height: 30px;
+    background: url(../img/logo-full.svg) no-repeat center center;
+    display: inline-block;
+    position: relative;
+
+    span{
+      display: inline-block;
+      position: absolute;
+      bottom:0;
+      right: -17px;
+      background: #D81698;
+      color: $white;
+      padding: 3px;
+      font-size: 6px;
+      text-transform: uppercase;
+      font-weight: 700;
+      line-height: 1;
+    }
+  }
+
+  .nav{
+    margin-top: 8px;
+
+    li{
+      display: inline-block;
+      margin-left: 15px;
+      vertical-align: middle;
+
+      a{
+        font-weight: 400;
+        color: $grey;
+        @include transition($transition);
+
+        &.link:hover{
+          color: $black;
+        }
+      }
+    }
+  }
+}
+
+
+.hero{
+  padding: 30px 0;
+  background: $off-white;
+
+  .intro{
+    padding: 80px 0;
+    
+    p.px18{
+      margin: 15px 0 35px 0;
+    }
+  }
+
+  .image{
+    img{
+      width: 100%;
+    }
+  }
+}
+
+.feature{
+  padding: 15px 0;
+}
+
+footer{
+  background: $grey;
+  padding: 50px 0 20px 0;
+  color: $white;
+}
