@@ -8,8 +8,9 @@ import Step from '../models/Step';
 import Run from '../models/Run';
 import RunValue from '../models/RunValue';
 import Session from '../models/Session';
-import config from "../../../jmx-generator/server/config";
+// import config from "../../../jmx-generator/server/config";
 import fs from 'fs';
+import Difference from '../models/Difference';
 
 // const _tabs = [{
 //   label: "Runs",
@@ -34,7 +35,7 @@ class ScenarioController{
     return {
       find:this.find.bind(this),
       delete: this.delete.bind(this),
-      saveHar: this.saveHar.bind(this)
+      saveHar: this.saveHar.bind(this),
     }
   }
 
