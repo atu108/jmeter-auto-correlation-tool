@@ -4,3 +4,4 @@ uploads
 logs
 .editorconfig
 .idea
+package-lock.json
