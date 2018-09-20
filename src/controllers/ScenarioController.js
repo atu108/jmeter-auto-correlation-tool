@@ -31,7 +31,8 @@ class ScenarioController{
     return {
       delete: this.delete.bind(this),
       steps: this.steps.bind(this),
-      runs: this.runs.bind(this)
+      runs: this.runs.bind(this),
+        differences : this.differences.bind(this)
     }
   }
 
@@ -57,8 +58,14 @@ class ScenarioController{
 
   async runs(ctx){
     const scenario = await Scenario.findById(ctx.params._id);
-    const runs = await Run.find({scenario: ctx.params._id}).populate('values');
+    const runs = await Run.find({scenario: ctx.params._id}).populate('sessions');
     ctx.body = template.render('app.scenario.runs', {runs, scenario, global: {title: scenario.name, tabs: _tabs, _id: ctx.params._id, current: "runs", sub: "Runs", back: `/app/project/${scenario.project}/scenarios`}});
+  }
+
+  async differences(ctx){
+      const scenario = await Scenario.findById(ctx.params._id);
+      const differences = await Difference.find({scenario:ctx.params._id});
+      ctx.body = template.render('app.scenario.differences',{differences,scenario,global:{title:scenario.name,tabs:_tabs,_id:ctx.params._id,current:"difference",sub:"Difference", back: `/app/project/${scenario.project}/scenarios`}})
   }
 }
 

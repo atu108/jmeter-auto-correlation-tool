@@ -32,9 +32,12 @@ class RunController{
       message: "Already compared."
     });
 
+    const runs  = await Run.find({_id:ctx.request.body.ids[0]});
+
     const compare = await Compare.create({
       title: "Compare Runs " + ctx.request.body.ids.join(", "),
       runs: ctx.request.body.ids,
+        scenario:runs.scenario,
       status: "new"
     });
 
@@ -44,7 +47,7 @@ class RunController{
       if(res.comparissions.length > 0){
         await Difference.insertMany(res["comparissions"]);
       }
-      if(re.comparissions.length > 0){
+      if(res.comparissions.length > 0){
         await MisMatchUrl.insertMany(res["mismatchedUrls"]);
       }
       await Compare.findByIdAndUpdate(res.compare._id, {status: "done"});
@@ -58,32 +61,33 @@ class RunController{
   }
 
   async save(ctx){
+    console.log(ctx.request.body);
     const run = await Run.create({
       scenario: ctx.request.body.scenario,
       title: ctx.request.body.title,
       description: ctx.request.body.description,
-      status: "new"
+      status: "done"
     });
 
-    const steIds = Object.keys(ctx.request.body.values);
-
-    if(steIds && steIds.length > 0){
-      const steps = await Step.find({_id:{$in:steIds}});
-
-      const values = [];
-
-      steps.forEach(step => {
-        values.push({
-          step: step._id,
-          target: step.target,
-          sequence: step.sequence,
-          value: ctx.request.body.values[step._id],
-          run: run._id
-        });
-      });
-
-      await RunValue.insertMany(values);
-    }
+    // const steIds = Object.keys(ctx.request.body.values);
+    //
+    // if(steIds && steIds.length > 0){
+    //   const steps = await Step.find({_id:{$in:steIds}});
+    //
+    //   const values = [];
+    //
+    //   steps.forEach(step => {
+    //     values.push({
+    //       step: step._id,
+    //       target: step.target,
+    //       sequence: step.sequence,
+    //       value: ctx.request.body.values[step._id],
+    //       run: run._id
+    //     });
+    //   });
+    //
+    //   await RunValue.insertMany(values);
+    // }
 
     ctx.body = JSON.stringify({
       type: "success",

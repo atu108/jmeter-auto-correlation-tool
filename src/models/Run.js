@@ -37,6 +37,13 @@ RunSchema.virtual("values", {
   justOne: false
 });
 
+RunSchema.virtual("sessions",{
+  ref: "Session",
+    localField:"_id",
+    foreignField:"run",
+    justOne:false
+})
+
 RunSchema.plugin(MongooseError);
 RunSchema.plugin(findOrCreate);
 

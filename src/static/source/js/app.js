@@ -17,7 +17,10 @@
       SAVE: '/app/run/save',
       COMPARE: '/app/run/compare',
       DELETE: '/app/run/delete'
-    }
+    },
+      SESSION:{
+      SAVE:'/app/session/save'
+      }
   };
 
   var App = {
@@ -169,7 +172,6 @@
     run: {
       selected: [],
       record: function(e){
-
         var $ele = $(e.currentTarget);
         var id = $ele.data("id");
         console.log(id);
@@ -188,9 +190,6 @@
           beforeOpen: function($container){
             App.run.form = new Util.Validator($container.find(".form").attr("name"));
             App.run.$container = $container;
-            values.forEach(function(value){
-              $container.find(".step_" + value.step).val("").attr("placeholder", "E.g. " + value.value);
-            });
           }
         });
 
@@ -201,7 +200,6 @@
         if(!App.run.form.valid()) return false;
 
         var data = App.run.form.data();
-
         if(App.run._id) data._id = App.run._id;
 
         Util.request.post(URL.RUN.SAVE, JSON.stringify(data)).then(function(res){
@@ -251,6 +249,23 @@
 
         return false;
       }
+    },
+    session:{
+        openModel: function(e){
+            var $ele = $(e.currentTarget);
+            var values = $ele.data("values");
+            Util.modal.open($("#AddSession"), {
+                beforeOpen: function($container){
+                    var form_ele = document.getElementById('RunId')
+                    form_ele.setAttribute("value",values);
+                }
+            });
+            return false;
+        },
+        save: function(res){
+            Util.alert.show(res);
+            if(res.reload) Util.redirect(location.href, true);
+        }
     }
   };
 

@@ -9,9 +9,13 @@ const CompareSchema = new Schema({
   title: String,
   runs: [{
     type: Schema.Types.ObjectId,
-    ref: "Scenario"
+    ref: "Run"
   }],
-  added_on: {
+    scenario:{
+      type:Schema.Types.ObjectId,
+        ref:"Scenario"
+    },
+    added_on: {
     type: Date,
     default: Date.now,
   },

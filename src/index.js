@@ -28,7 +28,9 @@ const app = new Koa();
 app.keys = [config.app.secret, 'testingtool-app'];
 
 app
-  .use(body({multipart:true, limit: '50mb'}))
+  .use(body({
+      formidable:{uploadDir: './uploads'},
+      multipart:true, limit: '50mb'}))
   .use(serve(path.join(__dirname, 'static'), {
     gzip: true
   }))

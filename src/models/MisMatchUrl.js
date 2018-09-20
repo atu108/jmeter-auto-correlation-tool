@@ -10,6 +10,7 @@ const MisMatchUrlSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "Step"
   },
+    session_sequence:Number,
   session:{
     type:Schema.Types.ObjectId,
     ref:"Session"

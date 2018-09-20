@@ -6,6 +6,7 @@ import api from './api';
 import project from './project';
 import scenario from './scenario';
 import run from './run';
+import session from './session';
 
 export default combineRouters([
   page,
@@ -13,5 +14,6 @@ export default combineRouters([
   api,
   project,
   scenario,
-  run
+  run,
+    session
 ]);

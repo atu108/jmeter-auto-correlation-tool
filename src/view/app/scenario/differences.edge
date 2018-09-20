@@ -1,0 +1,64 @@
+@layout('layout.app')
+@section('content')
+<section>
+  <div class="sub-header">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="search">
+            <span class="ico"><i class="icon-search"></i></span>
+            <input type="text" placeholder="type to search..." />
+          </div>
+        </div>
+        <div class="col-md-6 text-right">
+          <div class="relative"><a href="javascript:void(0);" class="add-button trigger" data-values='{{stringify(runs[0].values)}}' data-event="click" data-model="run" data-callback="openModel"><i class="icon-plus"></i></a></div>
+          <ul class="bluck-actions" id="RunBulkAction">
+            <li><a href="javascript:void(0);" class="btn btn-green btn-xs trigger" data-event="click" data-model="run" data-callback="compare" data-mode="bulk"><i class="icon-copy"></i> Compare</a></li>
+            <li><a href="javascript:void(0);" class="btn btn-red btn-xs trigger" data-event="click" data-model="run" data-callback="delete" data-mode="bulk"><i class="icon-trash"></i> Delete</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="list-container">
+          @each(run in runs)
+          <div class="list-item trigger" id="_{{run.id}}" data-status="{{run.status}}" data-event="click" data-model="common" data-callback="accordien" data-group=".run-info" data-ele="#RI{{run._id}}">
+            <div class="inner">
+              <div class="row">
+                <div class="sn weight400 trigger" data-event="click" data-model="common" data-callback="select" data-app-model="run" data-bulk-id="#RunBulkAction" data-id="{{run._id}}">{{pad($loop.index + 1, 2)}}</div>
+                <div class="check trigger" data-event="click" data-model="common" data-callback="select" data-app-model="run" data-bulk-id="#RunBulkAction" data-id="{{run._id}}"><i class="icon-check"></i></div>
+                <div class="col-md-11">
+                  <div class="info">
+                    <p class="px16 weight400 black-color">{{run.title}}</p>
+                    <p class="px12 grey-color">{{run.description || "No descriptrion added"}}</p>
+                  </div>
+                </div>
+                <div class="action">
+
+                  <a href="javascript:void(0);" title="Run" class="trigger" data-model="session" data-callback="openModel" data-event="click" data-values="{{run._id}}"><i class="icon-circle-filled red-color"></i></a>
+
+                  <a href="javascript:void(0);" class="trigger" title="Delete" data-event="click" data-model="scenario" data-callback="delete" data-id="{{step._id}}"><i class="icon-trash"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="meta run-info" id="RI{{run._id}}">
+              <ul class="hidden">
+                @if(run.sessions && run.sessions.length > 0)
+                @each(session in run.sessions)
+                <li class="weight400 grey-color">Session <span class="tag">{{session.title}}</span> has sequence <span class="tag">{{session.sequence}}</span></li>
+                @endeach
+                @else
+                <li><p class="weight400">No session !! To add click record button</p></li>
+                @endif
+              </ul>
+            </div>
+          </div>
+          @endeach
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

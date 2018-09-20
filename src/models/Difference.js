@@ -22,7 +22,7 @@ const DifferenceSchema = new Schema({
       ref: "Run"
     }
   },
-  seccond:{
+  second:{
     value: String,
     request: {
       type: Schema.Types.ObjectId,

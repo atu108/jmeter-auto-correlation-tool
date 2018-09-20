@@ -14,9 +14,7 @@ const SessionSchema = new Schema({
     type:Date,
     default: Date.now()
   },
-  project_id: {type: Schema.Types.ObjectId, ref: 'Project'},
-  scenario_id: {type: Schema.Types.ObjectId, ref: 'Scenario'},
-  run_id: {type: Schema.Types.ObjectId, ref: 'Run'}
+  run: {type: Schema.Types.ObjectId, ref: 'Run'}
 });
 
 SessionSchema.plugin(MongooseError);

@@ -7,6 +7,7 @@ import Recording from '../models/Recording';
 import Step from '../models/Step';
 import Run from '../models/Run';
 import RunValue from '../models/RunValue';
+import Request from '../models/Request';
 import Session from '../models/Session';
 // import config from "../../../jmx-generator/server/config";
 import fs from 'fs';
@@ -30,12 +31,12 @@ import Difference from '../models/Difference';
 //   controller: "scenario"
 // }];
 
-class ScenarioController{
+class SessionController{
   constructor(){
     return {
       find:this.find.bind(this),
       delete: this.delete.bind(this),
-      saveHar: this.saveHar.bind(this),
+      save: this.save.bind(this),
     }
   }
 
@@ -53,19 +54,20 @@ class ScenarioController{
     });
   }
 
-  async saveHar(ctx) {
-    const run_id = ctx.request.body.run_id;
+  async save(ctx) {
+    const run_id = ctx.request.body.fields.run;
     const lastStepSequence = await Request.find({run_id: run_id}).count();
-    const scenario = await Scenario.findById(ctx.params._id);
+    // const scenario = await Scenario.findById(ctx.params._id);
     let readStream;
     try {
       readStream = JSON.parse(fs.readFileSync(ctx.request.body.files.file.path));
     } catch (e) {
       if (e) {
-        return ctx.body = template.render(`${config.app.base}session/${ctx.request.body.fields.run_id}?error=${e}`)
+        console.log("error", e);
       }
     }
     const session = await Session.create(ctx.request.body.fields);
+    console.log("inside session save",session.sequence)
     let finalData = [];
     readStream.log.entries.forEach((entry, index) => {
       let data = {request: {}, response: {}};
@@ -80,30 +82,19 @@ class ScenarioController{
       data.response.headers = this._parse(entry.response.headers);
       data.response.cookies = this._parse(entry.response.cookies);
       data.response.body = entry.response.content.text;
-      data.project_id = ctx.request.body.fields.project_id;
-      data.scenario_id = ctx.request.body.fields.scenario_id;
-      data.run_id = ctx.request.body.fields.run_id;
-      data.session_id = session._id;
+      data.run = ctx.request.body.fields.run;
+      data.session = session._id;
+      data.scenario = ctx.request.body.scenario;
       data.session_sequence = session.sequence;
-      data.step_sequence = lastStepSequence + index + 1;
+      data.sequence = lastStepSequence + index + 1;
       finalData.push(data);
     });
-
-    const differences = await Difference.create(finalData);
-    if (differences) {
-      ctx.body = template.render('app.scenario.steps', {
-        steps,
-        scenario,
-        global: {
-          title: scenario.name,
-          tabs: _tabs,
-          _id: ctx.params._id,
-          current: "steps",
-          sub: "Steps",
-          back: `/app/project/${scenario.project}/scenarios`
-        }
-      });
-    }
+    await Request.create(finalData);
+      return ctx.body ={
+          type: "success",
+          message: "Session saved, reloading...",
+          reload: true
+      };
   }
 
     _parse(arr,isEncoded){

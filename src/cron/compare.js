@@ -30,10 +30,8 @@ class Compare {
   }
 
   async start() {
-    await CompareModel.remove({_id:this.params._id});
     let firstRequests = await Request.find({run: this.params.runs[0]}).sort({sequence: 1});
     let secondRequests = await Request.find({run: this.params.runs[1]}).sort({sequence: 1});
-
     //filtering urls
     const filteredRequets1 = firstRequests.filter((req) => {
       const url = req.url;
@@ -46,28 +44,28 @@ class Compare {
       const extension = url.split(/\#|\?/)[0].split('.').pop().trim();
       return ignoredExt.indexOf(extension) === -1
     });
+        for(let i = 0; i < filteredRequets1.length; i++) {
+            console.log("session seq",filteredRequets1[i].session_sequence)
+            const urlIndex = filteredRequets2.findIndex(req => (req.url === filteredRequets1[i].url && req.session_sequence.toString() === filteredRequets1[i].session_sequence.toString()));
+            if (urlIndex === -1) {
+                this.mismatchedUrls.push({
+                    session_sequence: filteredRequets1[i].session_sequence,
+                    request: filteredRequets1[i]._id,
+                    url: filteredRequets1[i].request.url,
+                    runs: this.params.runs,
+                });
+            } else {
+                const diff = this._diff(filteredRequets1[i], filteredRequets2[urlIndex]);
+                if (diff) this.comparissions.push(...diff);
+                filteredRequets2.splice(urlIndex, 1);
+            }
 
-    for(let i = 0; i < filteredRequets1.length; i++) {
-      const urlIndex = filteredRequets2.findIndex(req => (req.url === filteredRequets1[i].url && req.step.toString() === filteredRequets1[i].step.toString()));
-      if (urlIndex === -1) {
-        this.mismatchedUrls.push({
-          step: filteredRequets1[i].step,
-          request: filteredRequets1[i]._id,
-          url: filteredRequets1[i].request.url,
-          runs: this.params.runs,
-        });
-      } else {
-        const diff = this._diff(filteredRequets1[i], filteredRequets2[urlIndex]);
-        if (diff) this.comparissions.push(...diff);
-        filteredRequets2.splice(urlIndex, 1);
-      }
-
-    }
-
-    process.send({
-      mismatchUrls:this.mismatchedUrls,
-      comparissions:this.comparissions
-    });
+        }
+        process.send({
+            mismatchUrls:this.mismatchedUrls,
+            comparissions:this.comparissions,
+            compare:this.params
+          });
   }
 
   _getDiff(r1, r2, type, obj) {
@@ -113,7 +111,7 @@ class Compare {
         run: r2.run,
       },
       scenario:r1.scenario,
-      step:r1.step
+        session_sequence:r1.session_sequence
     }
     if(headers[0] && headers[1]){
       temp.push(...this._getDiff(headers[0],headers[1],"header",obj))
@@ -145,7 +143,7 @@ class Compare {
               run: r2.run,
             },
             scenario:r1.scenario,
-            step:r1.step
+              session_sequence:r1.session_sequence
           });
         }
     return temp;

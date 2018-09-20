@@ -22,6 +22,7 @@
     }
 
     function show(params){
+        console.log("inside show",params);
       $continer.addClass('show ' + params.type).find('.message').text(params.message);
       hide(true);
     }
@@ -379,7 +380,6 @@
   $.fn.serializeObject = function(){
     var data = {};
     var formData = $(this).serializeArray();
-
     formData.forEach(function(d){
       data[d["name"]] = (d["value"] !== 'undefined' && d["value"] !== "")?d["value"]:"";
     });
