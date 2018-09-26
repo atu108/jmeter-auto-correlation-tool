@@ -13,6 +13,8 @@ import Compare from '../models/Compare';
 import Cron from '../cron';
 import Difference from '../models/Difference';
 import MisMatchUrl from '../models/MisMatchUrl';
+import Backtrack from '../models/Backtrack';
+import Correlation from '../models/Correlation';
 
 class RunController{
   constructor(){
@@ -60,8 +62,29 @@ class RunController{
     });
   }
 
+  async backtrack(ctx){
+    const runs = await Run.find({scenario:ctx.request.body.scenario});
+
+    const backtrack = await Backtrack.create({
+        title:"Backtrack"+ ctx.request.body.scenario_id,
+        run: ctx.request.body.ids,
+        scenario: runs.scenario,
+        status:"new"
+    })
+      const job = new Cron('backtrack', backtrack);
+    job.done( async (res)=>{
+      if(res.correlations.length > 0){
+      await Correlation.insertMany(res['backtracks']);
+      }
+      await Backtrack.create(res.backtrack._id, {status:"done"});
+    })
+      ctx.body = JSON.stringify({
+          type: "success",
+          message: "Backtracks added in qeueu to process"
+      });
+  }
+
   async save(ctx){
-    console.log(ctx.request.body);
     const run = await Run.create({
       scenario: ctx.request.body.scenario,
       title: ctx.request.body.title,

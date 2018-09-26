@@ -67,7 +67,7 @@ class SessionController{
       }
     }
     const session = await Session.create(ctx.request.body.fields);
-    console.log("inside session save",session.sequence)
+    console.log(ctx.request.body.fields);
     let finalData = [];
     readStream.log.entries.forEach((entry, index) => {
       let data = {request: {}, response: {}};
@@ -84,7 +84,7 @@ class SessionController{
       data.response.body = entry.response.content.text;
       data.run = ctx.request.body.fields.run;
       data.session = session._id;
-      data.scenario = ctx.request.body.scenario;
+      data.scenario = ctx.request.body.fields.scenario;
       data.session_sequence = session.sequence;
       data.sequence = lastStepSequence + index + 1;
       finalData.push(data);

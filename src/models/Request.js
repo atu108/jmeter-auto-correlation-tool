@@ -35,6 +35,10 @@ const RequestSchema = new Schema({
     type:Schema.Types.ObjectId,
     ref:"Session"
   },
+    scenario:{
+        type:Schema.Types.ObjectId,
+        ref:"Scenario"
+    },
   added_on: {
     type: Date,
     default: Date.now,

@@ -87,6 +87,7 @@
         <h3 class="weight700 modal-title">Session</h3>
             <form class="form" name="AddSession">
               <input type="hidden" id="RunId" name="run" value="" />
+              <input type="hidden" id="SessionSec" name="scenario" value="{{global._id}}" />
               <div class="form-row">
                 <label>Title</label>
                 <input type="text" id="SessionTitle" name="title" placeholder="Enter title" class="input-control title" data-validate="required" />
@@ -116,6 +117,7 @@
     var session_title = document.getElementById("SessionTitle").value;
     var session_sequence = document.getElementById("SessionSeq").value;
     var session_des = document.getElementById("SessionDes").value;
+    var session_scenario = document.getElementById("SessionSec").value;
     var session_file = document.getElementById("SessionFile").files[0];
     var session_data = new FormData();
     session_data.append('file', session_file);
@@ -123,6 +125,7 @@
     session_data.append('sequence', session_sequence);
     session_data.append('description', session_des);
     session_data.append('title', session_title);
+    session_data.append('scenario',session_scenario);
 
 
     fetch('http://0.0.0.0:4000/app/session/save', {

@@ -7,6 +7,7 @@ import Recording from '../models/Recording';
 import Step from '../models/Step';
 import Run from '../models/Run';
 import RunValue from '../models/RunValue';
+import Difference from '../models/Difference';
 
 const _tabs = [{
   label: "Runs",
@@ -65,7 +66,8 @@ class ScenarioController{
   async differences(ctx){
       const scenario = await Scenario.findById(ctx.params._id);
       const differences = await Difference.find({scenario:ctx.params._id});
-      ctx.body = template.render('app.scenario.differences',{differences,scenario,global:{title:scenario.name,tabs:_tabs,_id:ctx.params._id,current:"difference",sub:"Difference", back: `/app/project/${scenario.project}/scenarios`}})
+      console.log(differences)
+      ctx.body = template.render('app.scenario.differences',{differences,scenario,global:{title:scenario.name,tabs:_tabs,_id:ctx.params._id,current:"differnces",sub:"Differences", back: `/app/project/${scenario.project}/scenarios`}})
   }
 }
 
