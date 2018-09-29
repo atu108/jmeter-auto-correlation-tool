@@ -24,6 +24,7 @@
       <div class="col-md-12">
         <div class="list-container">
           @each(diff in differences)
+           <div class="list-item trigger" id="_{{run.id}}" data-status="{{run.status}}" data-event="click" data-model="common" data-callback="accordien" data-group=".run-info" data-ele="#RI{{run._id}}">
             <div class="inner">
               <div class="row">
                 <div class="sn weight400 trigger" data-event="click" data-model="common" data-callback="select" data-app-model="run" data-bulk-id="#RunBulkAction" data-id="{{diff._id}}">{{pad($loop.index + 1, 2)}}</div>
@@ -32,7 +33,7 @@
                   <div class="info">
                     <p class="px16 weight400 black-color">{{diff.url}}</p>
                     <p class="px12 weight400 grey-color">key: {{diff.key}}   Location: {{diff.location}}   Session: {{diff.session_sequence}}</p>
-
+                    <p class="px12 weight400 grey-color">First: {{diff.first.value}}   Second: {{diff.second.value}}</p>
                   </div>
                 </div>
               </div>

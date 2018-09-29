@@ -47,11 +47,13 @@ class RunController{
 
     job.done(async (res) => {
       if(res.comparissions.length > 0){
-        await Difference.insertMany(res["comparissions"]);
+        const differences = await Difference.insertMany(res["comparissions"]);
+        await this._updateComparision(differences);
       }
       if(res.comparissions.length > 0){
         await MisMatchUrl.insertMany(res["mismatchedUrls"]);
       }
+
       await Compare.findByIdAndUpdate(res.compare._id, {status: "done"});
 
     });
@@ -80,7 +82,7 @@ class RunController{
     })
       ctx.body = JSON.stringify({
           type: "success",
-          message: "Backtracks added in qeueu to process"
+          message: "Backtracks added in queue to process"
       });
   }
 
@@ -172,6 +174,20 @@ class RunController{
       })
       .on("error", (e, out, err) => console.log(e, err, out));
   }
+
+  async _updateComparision(object){
+    let objectCopy = [...object];
+    let check = [];
+    for(let i = 0; i < object.length ; i++){
+      for(let j = i; j < objectCopy.length; j++){
+        if(object[i].key === objectCopy[j].key && check.indexOf(j) === -1 && object[i]._id !== objectCopy[j]._id && object[i].first.value === objectCopy[j].first.value && object[i].second.value === objectCopy[j].second.value){
+            await Difference.findByIdAndUpdate(objectCopy[j]._id, {duplicate: object[i]._id});
+            check.push(j);
+        }
+      }
+    }
+  }
+
 }
 
 export default new RunController();

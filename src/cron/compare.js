@@ -45,7 +45,6 @@ class Compare {
       return ignoredExt.indexOf(extension) === -1
     });
         for(let i = 0; i < filteredRequets1.length; i++) {
-            console.log("session seq",filteredRequets1[i].session_sequence)
             const urlIndex = filteredRequets2.findIndex(req => (req.url === filteredRequets1[i].url && req.session_sequence.toString() === filteredRequets1[i].session_sequence.toString()));
             if (urlIndex === -1) {
                 this.mismatchedUrls.push({

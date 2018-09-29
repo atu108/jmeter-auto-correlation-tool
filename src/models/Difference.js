@@ -53,9 +53,31 @@ const DifferenceSchema = new Schema({
   updated_on: {
     type: Date,
     default: Date.now
+  },
+  duplicate:{
+    type:String,
+      default:''
   }
-});
 
+});
+// DifferenceSchema.virtual("firstRequest", {
+//     ref: "Request",
+//     localField: "first.request",
+//     foreignField: "_id",
+//     justOne: false
+// });
+// DifferenceSchema.virtual("secondRequest", {
+//     ref: "Request",
+//     localField: "request",
+//     foreignField: "_id",
+//     justOne: false
+// });
+DifferenceSchema.virtual("Session", {
+    ref: "Session",
+    localField: "session",
+    foreignField: "_id",
+    justOne: false
+});
 DifferenceSchema.plugin(MongooseError);
 DifferenceSchema.plugin(findOrCreate);
 

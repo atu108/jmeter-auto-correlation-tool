@@ -186,7 +186,7 @@ class BackTrack {
 
             const matched = matchedString[0].response.body.match(new RegExp(regArr[i].replace('<(.*?)', '(.[^<]*?)').replace('(.*?)>','(.*?)>{1}'), 'gi'));
             const matchedOtherRun = matchedInOtherRun.length > 0 ? matchedInOtherRun[0].response.body.match(new RegExp(regArr1[i].replace('<(.*?)', '(.[^<]*?)').replace('(.*?)>','(.*?)>{1}'), 'gi')) : 'NA';
-            console.log(matched,"||||||||||||",matchedOtherRun);
+            // console.log(matched,"||||||||||||",matchedOtherRun);
             let finalReg = {};
 
             if (matchedOtherRun !== 'NA') {
@@ -226,6 +226,8 @@ class BackTrack {
         }
         return regcount;
     }
+
+    //creates final reg by matching with multiple occurances if found in same url.
 
     _finalReg(matched, matchedOtherRun, values, key, caseNo) {
         if(caseNo === "url"){
@@ -308,7 +310,7 @@ class BackTrack {
         if(!obj1 || !obj2) return false;
         return this._compareObj(obj1,obj2);
     }
-
+//this is to compare tag by tab rather than characters while trying to find the final regex
     _parseTag(str){
         const len1 = str.length;
         let obj={};
@@ -325,7 +327,7 @@ class BackTrack {
         }
         return obj;
     }
-
+//comapres the different components of a tag whether two tags are equal if not make them same by replacing non matching words or components
     _compareObj(obj1,obj2){
         let str = '';
         for(let x in obj1){
@@ -361,7 +363,7 @@ class BackTrack {
         return str;
 
     }
-
+// this to comapre urls and fix their param values
     _compareUrl(url1,url2){
         const loc1 = new URL(url1);
         const loc2 = new URL(url2);
@@ -377,7 +379,7 @@ class BackTrack {
         }
         return decodeURIComponent(loc1.href);
     }
-
+// check if a string url
     _isURL(str) {
         let pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
             '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name and extension
