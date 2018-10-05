@@ -38,6 +38,7 @@ class Compare {
       const extension = url.split(/\#|\?/)[0].split('.').pop().trim();
       return ignoredExt.indexOf(extension) === -1
     });
+    // console.log(firstRequests.length,filteredRequets1.length)
 
     let filteredRequets2 = secondRequests.filter((req) => {
       const url = req.url;
@@ -45,6 +46,7 @@ class Compare {
       return ignoredExt.indexOf(extension) === -1
     });
         for(let i = 0; i < filteredRequets1.length; i++) {
+          // console.log("count", i ,"request2 length" ,filteredRequets2.length );
             const urlIndex = filteredRequets2.findIndex(req => (req.url === filteredRequets1[i].url && req.session_sequence.toString() === filteredRequets1[i].session_sequence.toString()));
             if (urlIndex === -1) {
                 this.mismatchedUrls.push({
@@ -76,14 +78,16 @@ class Compare {
           obj.first.value = r1[prop];
           obj.second.value = r2[prop];
           obj.location = type;
-          temp.push(obj)
+          let t = Object.assign({},obj);
+          temp.push(t)
         }
       } else {
         obj.key = prop;
         obj.first.value = r1[prop];
         obj.second.value = "";
         obj.location = type;
-        temp.push(obj)
+        let t = Object.assign({},obj);
+        temp.push(t)
       }
     }
     return temp;
@@ -110,7 +114,8 @@ class Compare {
         run: r2.run,
       },
       scenario:r1.scenario,
-        session_sequence:r1.session_sequence
+        session_sequence:r1.session_sequence,
+        session:r1.session
     }
     if(headers[0] && headers[1]){
       temp.push(...this._getDiff(headers[0],headers[1],"header",obj))
@@ -142,7 +147,8 @@ class Compare {
               run: r2.run,
             },
             scenario:r1.scenario,
-              session_sequence:r1.session_sequence
+              session_sequence:r1.session_sequence,
+              session:r1.session
           });
         }
     return temp;

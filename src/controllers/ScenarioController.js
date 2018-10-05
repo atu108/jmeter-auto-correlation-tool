@@ -8,6 +8,7 @@ import Step from '../models/Step';
 import Run from '../models/Run';
 import RunValue from '../models/RunValue';
 import Difference from '../models/Difference';
+import Correlation from '../models/Correlation';
 
 const _tabs = [{
   label: "Runs",
@@ -33,7 +34,8 @@ class ScenarioController{
       delete: this.delete.bind(this),
       steps: this.steps.bind(this),
       runs: this.runs.bind(this),
-        differences : this.differences.bind(this)
+        differences : this.differences.bind(this),
+        correlations: this.correlations.bind(this)
     }
   }
 
@@ -66,9 +68,13 @@ class ScenarioController{
   async differences(ctx){
       const scenario = await Scenario.findById(ctx.params._id);
       const differences = await Difference.find({scenario:ctx.params._id});
-      console.log(differences)
       ctx.body = template.render('app.scenario.differences',{differences,scenario,global:{title:scenario.name,tabs:_tabs,_id:ctx.params._id,current:"differnces",sub:"Differences", back: `/app/project/${scenario.project}/scenarios`}})
   }
+    async correlations(ctx){
+        const scenario = await Scenario.findById(ctx.params._id);
+        const correlations = await Correlation.find({scenario:ctx.params._id});
+        ctx.body = template.render('app.scenario.correlation',{correlations,scenario,global:{title:scenario.name,tabs:_tabs,_id:ctx.params._id,current:"correlations",sub:"Correlations", back: `/app/project/${scenario.project}/scenarios`}})
+    }
 }
 
 export default new ScenarioController();

@@ -140,6 +140,7 @@ class RunController{
       message: "Recording inititated, reloading...",
       reload: true
     });
+
     // request(config.app.harGenerator, {
     //   method: 'POST',
     //   body: JSON.stringify({
@@ -150,6 +151,8 @@ class RunController{
     // }).then(res => {
     //   if(res.status === 200) this._create_video(ctx.request.body.id);
     // }).catch(err => console.log(err));
+
+
   }
 
   async _create_video(id){

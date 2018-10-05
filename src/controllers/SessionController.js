@@ -56,7 +56,7 @@ class SessionController{
 
   async save(ctx) {
     const run_id = ctx.request.body.fields.run;
-    const lastStepSequence = await Request.find({run_id: run_id}).count();
+    const lastStepSequence = await Request.find({run: run_id}).count();
     // const scenario = await Scenario.findById(ctx.params._id);
     let readStream;
     try {
@@ -67,8 +67,8 @@ class SessionController{
       }
     }
     const session = await Session.create(ctx.request.body.fields);
-    console.log(ctx.request.body.fields);
     let finalData = [];
+    console.log(run_id, readStream.log.entries.length);
     readStream.log.entries.forEach((entry, index) => {
       let data = {request: {}, response: {}};
       data.url = entry.request.url.split('?')[0];

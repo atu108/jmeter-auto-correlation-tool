@@ -6,6 +6,8 @@ import Compare from '../models/Compare';
 import Difference from '../models/Difference';
 import Request from '../models/Request';
 import Step from "../models/Step";
+import Session from "../models/Session";
+import Correlation from "../models/Correlation";
 
 
 class backtrack {
@@ -29,15 +31,19 @@ class backtrack {
         mongoose.Promise = global.Promise;
     }
 
-    async start() {
-        const diffs = await Difference.find({scenario:'5b9e004a3bdf8033cfe20edb'}).populate('first.request',['sequence']).populate('second.request',['sequence']);
-        // console.log(diffs[0].first.request);
-        // console.log(diffs[0].second.request);
-        const loopTimes = diffs.length;
-        console.log("kitni baar chalega",loopTimes);
-        for(let i = 0; i < loopTimes.length; i++){
-            await this._searchInBody(diffs[i]);
-        }
+    async start(ctx) {
+        let correlations = [];
+        const diffs = await Difference.find({scenario:'5b9e004a3bdf8033cfe20edb'}).populate('first.request',['sequence']).populate('second.request',['sequence']).populate('session');
+        // const loopTimes = diffs.length;
+        //
+        // for(let i = 0; i < loopTimes; i++){
+        //     let correlation = await this._searchInBody(diffs[i]);
+        //     if(correlation){
+        //         correlations.push(correlation);
+        //     }
+        // }
+        // await Correlation.insertMany(correlations);
+        // ctx.body = {type:"Success", message:"It done check Db"};
 
         // process.send({
         //     mismatchUrls:this.mismatchedUrls,
@@ -47,6 +53,7 @@ class backtrack {
     }
 
     async _searchInBody(diff){
+         // return
         //prepare regex for both run
         // search in run 1
         // if found then get the url and session from 1st
@@ -60,11 +67,14 @@ class backtrack {
         let key = diff.key.split('U+FF0E').join('.');
         let value1 = diff.first.value;
         let value2 = diff.second.value;
+
+        // console.log(diff._id,value1, value2);
+
         let stepSeq = [diff.first.request.sequence, diff.second.request.sequence];
-        console.log("step sequences", stepSeq);
+        console.log("",stepSeq);
         let runs = [diff.first.run, diff.second.run];
-        const regArr = [`<(.*?)${key}=${value1}(.*?)>`, `<(.*?)${key}(.[^<]*?)${value1}(.*?)>`, `<(.*?)${value1}(.[^<]*?)${key}(.*?)>`];
-        const regArr1 = [`<(.*?)${key}=${value2}(.*?)>`, `<(.*?)${key}(.[^<]*?)${value2}(.*?)>`, `<(.*?)${value2}(.[^<]*?)${key}(.*?)>`];
+        const regArr = [`<(.*?)${key}=${(value1).replace('+',' ')}(.*?)>`, `<(.*?)${key}(.[^<]*?)${value1.replace('+',' ')}(.*?)>`, `<(.*?)${value1.replace('+',' ')}(.[^<]*?)${key}(.*?)>`];
+        const regArr1 = [`<(.*?)${key}=${value2.replace('+',' ')}(.*?)>`, `<(.*?)${key}(.[^<]*?)${value2.replace('+',' ')}(.*?)>`, `<(.*?)${value2.replace('+',' ')}(.[^<]*?)${key}(.*?)>`];
 
         for (let i = 0; i < regArr.length; i++) {
             const reg = new RegExp(regArr[i], 'i');
@@ -73,80 +83,245 @@ class backtrack {
                 run: runs[0],
                 sequence: { $lt: stepSeq[0] },
                 'response.body': reg,
-            }).sort({ step_sequence: -1 });
+            }).sort({ step_sequence: -1 }).populate('session');
             if (matched1.length < 1) continue;
-            console.log("first match in run 1",matched1);
+
             //added url check in run2
             const matched2 = await Request.find({
                 run: runs[1],
-                url: matched1[0].url,
+                url:matched1[0].url,
                 session_sequence: matched1[0].session_sequence,
                 'response.body': reg1
-            }).sort({ step_sequence: -1 });
-            console.log("first match in run 2",matched2);
+            }).sort({ step_sequence: -1 }).populate('session');
+            const matched = matched1[0].response.body.match(new RegExp(regArr[i].replace('<(.*?)', '(.[^<]*?)').replace('(.*?)>','(.*?)>{1}'), 'gi'));
+            const matchedOtherRun = matched2.length > 0 ? matched2[0].response.body.match(new RegExp(regArr1[i].replace('<(.*?)', '(.[^<]*?)').replace('(.*?)>','(.*?)>{1}'), 'gi')) : 'NA';
+
+            let finalReg = {};
+
+            if (matchedOtherRun !== 'NA') {
+                finalReg = this._finalReg(matched, matchedOtherRun, [value1, value2], key, i)
+            }
+
+            return {
+                key: key,
+                priority: 1,
+                compared_url: diff.url,
+                location: diff.location,
+                reg_count: finalReg.hasOwnProperty('reg')?this._countReg(finalReg['reg']):'NA',
+                optimal_reg_number: '',
+                reg: regArr[i],
+                final_regex: finalReg.hasOwnProperty('reg')?finalReg['reg']:false,
+                first: {
+                    url: matched1[0].url,
+                    matched: finalReg.hasOwnProperty('pos1')?matched[finalReg['pos1']]:matched.join('||'),
+                    session_title: matched1[0].session.title,
+                    session_sequence:  matched1[0].session.sequence,
+                    request:matched1[0]._id,
+                    run: matched1[0].run
+
+                },
+                second: {
+                    url: matched2[0] ? matched2[0].url : 'NA',
+                    matched: finalReg.hasOwnProperty('pos2')?matchedOtherRun[finalReg['pos2']]:matchedOtherRun !== 'NA'?matchedOtherRun.join('||'):'NA',
+                    session_title: matched2[0].session.title,
+                    session_sequence:  matched2[0].session.sequence,
+                    request:matched2[0]._id,
+                    run: matched2[0].run
+
+                },
+                scenario:diff.scenario
+            }
+
         }
 
-
-
+        return false;
     }
 
-    manageMultipleUrl(){
-
+    _countReg(str){
+        let regcount = '';
+        const count =  str.split('(.*?)').length;
+        for(let i = 1; i < count; i++){
+            regcount += `$${i}$`;
+        }
+        return regcount;
     }
 
-    finalReg(){
-
+    _finalReg(matched, matchedOtherRun, values, key, caseNo) {
+        if(caseNo === "url"){
+            if (matched[0].replace(values[0], '') === matchedOtherRun[0].replace(values[1], '')) {
+                return {
+                    reg: matched[0].replace(values[0], '(.*?)'),
+                    pos1: 0,
+                    pos2: 0
+                };
+            }else{
+                return false;
+            }
+        }
+        const length1 = matched.length;
+        const length2 = matchedOtherRun.length;
+        const temp = length1 - length2;
+        let i;
+        let j;
+        if(temp === 0){
+            for(i = 0; i < length1; i++){
+                if (matched[i].replace(values[0], '') === matchedOtherRun[i].replace(values[1], '')) {
+                    return {
+                        reg: matched[i].replace(values[0], '(.*?)'),
+                        pos1: i,
+                        pos2: i
+                    };
+                }
+            }
+            return {
+                reg: `${this._fixBoundary(matched[0],matchedOtherRun[0]) !== false ?this._fixBoundary(matched[0],matchedOtherRun[0])+'>':false}`,
+                pos1: 0,
+                pos2: 0
+            };
+        }
+        if(temp < 0){
+            for(i = 0; i < length2; i++){
+                for(j = 0; j < length1; j++){
+                    if (matched[j].replace(values[0], '') === matchedOtherRun[i].replace(values[1], '')) {
+                        return {
+                            reg: matched[j].replace(values[0], '(.*?)'),
+                            pos1: j,
+                            pos2: i
+                        };
+                    }
+                }
+            }
+            return {
+                reg: `${this._fixBoundary(matched[0],matchedOtherRun[0]) !== false ?this._fixBoundary(matched[0],matchedOtherRun[0])+'>':false}`,
+                pos1: 0,
+                pos2: 0
+            };
+        }
+        if(temp > 0){
+            for(i = 0; i < length1; i++){
+                for(j = 0; j < length2; j++){
+                    if (matched[i].replace(values[0], '') === matchedOtherRun[j].replace(values[1], '')) {
+                        return {
+                            reg: matched[j].replace(values[0], '(.*?)'),
+                            pos1: i,
+                            pos2: j
+                        };
+                    }
+                }
+            }
+            return {
+                reg: `${this._fixBoundary(matched[0],matchedOtherRun[0]) !== false ?this._fixBoundary(matched[0],matchedOtherRun[0])+'>':false}`,
+                pos1: 0,
+                pos2: 0
+            };
+        }
+        return false;
     }
 
-    fixBoundary(){
+    _fixBoundary(str1,str2){
+        const arr1 = str1.split(' ');
+        const arr2 = str2.split(' ');
+        if(arr1.length < 1 || arr1.length < 1) return false;
+        const obj1 = this._parseTag(arr1);
+        const obj2 = this._parseTag(arr2);
+        if(!obj1 || !obj2) return false;
+        return this._compareObj(obj1,obj2);
+    }
+//this is to compare tag by tab rather than characters while trying to find the final regex
+    _parseTag(str){
+        const len1 = str.length;
+        let obj={};
+        // console.log(str[0]);
+        obj['tag'] = str[0].slice(1,str[0].length);
+        for(let i = 1; i < len1; i++){
+            if(str[i].indexOf('=') === -1) return false;
+            let temp = str[i].split(/=(.+)/);
+            if(len1-1 === i){
+                obj[temp[0]] = temp[1].slice(0, -1);
+            }else{
+                obj[temp[0]] = temp[1];
+            }
+        }
+        return obj;
+    }
+//comapres the different components of a tag whether two tags are equal if not make them same by replacing non matching words or components
+    _compareObj(obj1,obj2){
+        let str = '';
+        for(let x in obj1){
+            //checking the property in other obj
+            if(obj2.hasOwnProperty(x)){
 
+                //check if the value is url
+                if(this._isURL(obj1[x])){
+                    str = `${str} ${x}=${this._compareUrl(obj1[x],obj2[x])}`
+                }else{
+                    //check if value is tag
+                    if(x === 'tag'){
+                        //check if both tags are same
+                        if(obj1[x] === obj2[x]){
+                            //modify str
+                            str = `${str}<${obj1[x]}`;
+                        }else{
+                            str = `${str}<(.*?)`
+                        }
+
+                    }else{
+                        if(obj1[x] === obj2[x]){
+                            str = `${str} ${x}=${obj1[x]}`
+                        }else{
+                            str = `${str} ${x}=(.*?)`
+                        }
+                    }
+
+                }
+            }
+        }
+        //console.log("str",str);
+        return str;
+    }
+// this to comapre urls and fix their param values
+    _compareUrl(url1,url2){
+        const loc1 = new URL(url1);
+        const loc2 = new URL(url2);
+        let params1 = loc1.searchParams;
+        let params2 = loc2.searchParams;
+        for (const [name, value] of params1) {
+            if(params2.has(name)){
+                if(params2.get(name) !== value){
+                    loc1.searchParams.set(name, '(.*?)')
+                }
+            }
+
+        }
+        return decodeURIComponent(loc1.href);
+    }
+// check if a string url
+    _isURL(str) {
+        let pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name and extension
+            '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+            '(\\:\\d+)?'+ // port
+            '(\\/[-a-z\\d%@_.~+&:]*)*'+ // path
+            '(\\?[;&a-z\\d%@_.,~+&:=-]*)?'+ // query string
+            '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+
+        return pattern.test(str);
     }
 
 
-    // to do
-    // async _searchInHeader(obj, key, values, stepSequences) {
-    //     const priority = 3;
-    //     const found = await Step.find({
-    //         run_id: obj.run_ids[0],
-    //         step_sequence: { $lt: stepSequences[0] },
-    //         'response.headers': { [key]: values[0] },
-    //     }, [`response.headers.${key}`, 'url', 'session_id']).sort({ step_sequence: -1 });
-    //     if (found.length < 1) return null;
-    //     const temp = found[0];
-    //     const file_details = await this._whichFile(temp.session_id);
-
-        // reg in header e.g keep-Alive:(.+?)\n
-
-        // return {
-        //     key:key,
-        //     priority:3,
-        //     compared_url:obj.url,
-        //     location:obj.location,
-        //     reg_count:'Na',
-        //     optimal_reg_number:'Na',
-        //     reg: 'Na',
-        //     final_regex:'Na',
-        //     first: {
-        //         url:,
-        //         matched:,
-        //         session_title:,
-        //         session_sequence:,
-        //         request:,
-        //         run:
-        //     },
-        //     second: {
-        //         url:,
-        //         matched:,
-        //         session_title:,
-        //         session_sequence:,
-        //         request:,
-        //         run:
-        //
-        //     },
-        //     backtrack_id:{ type: Schema.Types.ObjectId, ref: 'Backtrack' },
-        //     session_id: { type: Schema.Types.ObjectId, ref: 'Session' },
-        //     compare_id: { type: Schema.Types.ObjectId, ref: 'Compare' },
-        // };
+    async _whichFile(id) {
+        if (id === false) {
+            return {
+                file: 'Not Found',
+                sequence: 'Not Found',
+            }
+        }
+        const session = await Session.find({ _id: id });
+        return {
+            file: session[0].title,
+            sequence: session[0].sequence,
+        }
+    }
 
 }
 

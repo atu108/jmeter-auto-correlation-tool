@@ -72,12 +72,12 @@ const DifferenceSchema = new Schema({
 //     foreignField: "_id",
 //     justOne: false
 // });
-DifferenceSchema.virtual("Session", {
-    ref: "Session",
-    localField: "session",
-    foreignField: "_id",
-    justOne: false
-});
+// DifferenceSchema.virtual("Session", {
+//     ref: "Session",
+//     localField: "session",
+//     foreignField: "_id",
+//     justOne: false
+// });
 DifferenceSchema.plugin(MongooseError);
 DifferenceSchema.plugin(findOrCreate);
 

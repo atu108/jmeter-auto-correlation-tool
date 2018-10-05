@@ -48,11 +48,11 @@ const CorrelationSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: "Run"
         }
-
     },
-    backtrack_id:{ type: Schema.Types.ObjectId, ref: 'Backtrack' },
-    session_id: { type: Schema.Types.ObjectId, ref: 'Session' },
-    compare_id: { type: Schema.Types.ObjectId, ref: 'Compare' },
+    scenario:{
+        type: Schema.Types.ObjectId,
+        ref:"Scenario"
+    }
 });
 
 
