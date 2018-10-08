@@ -8,6 +8,7 @@ import Request from '../models/Request';
 import Step from "../models/Step";
 import Session from "../models/Session";
 import Correlation from "../models/Correlation";
+import RunController from '../controllers/RunController';
 
 
 class backtrack {
@@ -34,16 +35,21 @@ class backtrack {
     async start(ctx) {
         let correlations = [];
         const diffs = await Difference.find({scenario:'5b9e004a3bdf8033cfe20edb'}).populate('first.request',['sequence']).populate('second.request',['sequence']).populate('session');
-        // const loopTimes = diffs.length;
-        //
-        // for(let i = 0; i < loopTimes; i++){
-        //     let correlation = await this._searchInBody(diffs[i]);
-        //     if(correlation){
-        //         correlations.push(correlation);
-        //     }
-        // }
-        // await Correlation.insertMany(correlations);
-        // ctx.body = {type:"Success", message:"It done check Db"};
+
+        const loopTimes = diffs.length;
+
+        for(let i = 0; i < loopTimes; i++){
+            if(diffs[i].duplicate !== ''){
+                continue;
+            }
+            let correlation = await this._searchInBody(diffs[i]);
+            if(correlation){
+                correlations.push(correlation);
+            }
+        }
+        await Correlation.insertMany(correlations);
+        await RunController.generateJmx();
+        ctx.body = {type:"Success", message:"It done check Db",};
 
         // process.send({
         //     mismatchUrls:this.mismatchedUrls,
@@ -53,7 +59,10 @@ class backtrack {
     }
 
     async _searchInBody(diff){
-         // return
+        if(diff.location === 'url'){
+            // console.log("url found");
+            return false;
+        }
         //prepare regex for both run
         // search in run 1
         // if found then get the url and session from 1st
@@ -65,13 +74,13 @@ class backtrack {
         //finally find the regex count and then optimal reg number // hamare kaam ka kaon sa hai will be used in creation of JMX.
 
         let key = diff.key.split('U+FF0E').join('.');
-        let value1 = diff.first.value;
-        let value2 = diff.second.value;
+        let value1 = diff.first.value.replace('+', ' ');
+        let value2 = diff.second.value.replace('+', ' ');
 
         // console.log(diff._id,value1, value2);
 
         let stepSeq = [diff.first.request.sequence, diff.second.request.sequence];
-        console.log("",stepSeq);
+
         let runs = [diff.first.run, diff.second.run];
         const regArr = [`<(.*?)${key}=${(value1).replace('+',' ')}(.*?)>`, `<(.*?)${key}(.[^<]*?)${value1.replace('+',' ')}(.*?)>`, `<(.*?)${value1.replace('+',' ')}(.[^<]*?)${key}(.*?)>`];
         const regArr1 = [`<(.*?)${key}=${value2.replace('+',' ')}(.*?)>`, `<(.*?)${key}(.[^<]*?)${value2.replace('+',' ')}(.*?)>`, `<(.*?)${value2.replace('+',' ')}(.[^<]*?)${key}(.*?)>`];
@@ -79,11 +88,13 @@ class backtrack {
         for (let i = 0; i < regArr.length; i++) {
             const reg = new RegExp(regArr[i], 'i');
             const reg1 = new RegExp(regArr1[i], 'i');
+            //console.log("step sequence here", stepSeq);
             const matched1 = await Request.find({
                 run: runs[0],
                 sequence: { $lt: stepSeq[0] },
                 'response.body': reg,
             }).sort({ step_sequence: -1 }).populate('session');
+            //console.log(matched1);
             if (matched1.length < 1) continue;
 
             //added url check in run2
@@ -99,7 +110,10 @@ class backtrack {
             let finalReg = {};
 
             if (matchedOtherRun !== 'NA') {
+                // console.log("matched arry1", matched);
+                // console.log("matched arry2", matchedOtherRun);
                 finalReg = this._finalReg(matched, matchedOtherRun, [value1, value2], key, i)
+                // console.log("final reg", finalReg);
             }
 
             return {
@@ -165,6 +179,11 @@ class backtrack {
         let j;
         if(temp === 0){
             for(i = 0; i < length1; i++){
+                // console.log("values", values);
+                // console.log(matched, "------", matchedOtherRun);
+                // console.log("inside final 1",matched[i].replace(values[0], ''));
+                // console.log("inside final 2",matchedOtherRun[i].replace(values[1], ''));
+
                 if (matched[i].replace(values[0], '') === matchedOtherRun[i].replace(values[1], '')) {
                     return {
                         reg: matched[i].replace(values[0], '(.*?)'),

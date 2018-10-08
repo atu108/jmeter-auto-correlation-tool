@@ -15,14 +15,16 @@ import Difference from '../models/Difference';
 import MisMatchUrl from '../models/MisMatchUrl';
 import Backtrack from '../models/Backtrack';
 import Correlation from '../models/Correlation';
-
+import Session from '../models/Session';
+import {URL} from 'url';
 class RunController{
   constructor(){
     return {
       record: this.record.bind(this),
       save: this.save.bind(this),
       compare: this.compare.bind(this),
-      delete: this.delete.bind(this)
+      delete: this.delete.bind(this),
+        generateJmx : this.generateJmx.bind(this)
     }
   }
 
@@ -190,6 +192,216 @@ class RunController{
       }
     }
   }
+
+  // async generateJmx(ctx){
+  //   const startXML = '';
+  //   const endXML = '';
+  //
+  //   const dynamicXML = '';
+  //   const sessions = await Session.findAll({scenario:ctx.params.id});
+  //   for(let i = 0; i< sessions.length; i++){
+  //       const requests = await Request.findAll({});
+  //     }
+  // }
+
+  async generateJmx(){
+
+      // run will be paseed to this function
+      const run = '5baf5ebce9044e71dde270ee';
+      const startXml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
+          '<jmeterTestPlan version="1.2" properties="3.2" jmeter="3.3 r1808647">\n' +
+          '  <hashTree>\n' +
+          '    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan" enabled="true">\n' +
+          '      <stringProp name="TestPlan.comments"></stringProp>\n' +
+          '      <boolProp name="TestPlan.functional_mode">false</boolProp>\n' +
+          '      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>\n' +
+          '      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">\n' +
+          '        <collectionProp name="Arguments.arguments"/>\n' +
+          '      </elementProp>\n' +
+          '      <stringProp name="TestPlan.user_define_classpath"></stringProp>\n' +
+          '    </TestPlan>\n' +
+          '    <hashTree>\n' +
+          '      <CacheManager guiclass="CacheManagerGui" testclass="CacheManager" testname="HTTP Cache Manager" enabled="true">\n' +
+          '        <boolProp name="clearEachIteration">true</boolProp>\n' +
+          '        <boolProp name="useExpires">false</boolProp>\n' +
+          '      </CacheManager>\n' +
+          '      <hashTree/>\n' +
+          '      <CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookie Manager" enabled="true">\n' +
+          '        <collectionProp name="CookieManager.cookies"/>\n' +
+          '        <boolProp name="CookieManager.clearEachIteration">true</boolProp>\n' +
+          '      </CookieManager>\n' +
+          '      <hashTree/>\n' +
+          '      <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="UserCredential" enabled="true">\n' +
+          '        <stringProp name="delimiter">,</stringProp>\n' +
+          '        <stringProp name="fileEncoding"></stringProp>\n' +
+          '        <stringProp name="filename">E:\\Cemex\\Cemex\\TestScripts\\Prod7_8_newWF\\TestData_P8\\TestDataCredential_v1.csv</stringProp>\n' +
+          '        <boolProp name="ignoreFirstLine">false</boolProp>\n' +
+          '        <boolProp name="quotedData">false</boolProp>\n' +
+          '        <boolProp name="recycle">true</boolProp>\n' +
+          '        <stringProp name="shareMode">shareMode.all</stringProp>\n' +
+          '        <boolProp name="stopThread">false</boolProp>\n' +
+          '        <stringProp name="variableNames">Username</stringProp>\n' +
+          '      </CSVDataSet>\n' +
+          '      <hashTree/>\n' +
+          '      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="P8_TC01_Advance_Payment_ReferencedPayment" enabled="true">\n' +
+          '        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>\n' +
+          '        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">\n' +
+          '          <boolProp name="LoopController.continue_forever">false</boolProp>\n' +
+          '          <stringProp name="LoopController.loops">1</stringProp>\n' +
+          '        </elementProp>\n' +
+          '        <stringProp name="ThreadGroup.num_threads">1</stringProp>\n' +
+          '        <stringProp name="ThreadGroup.ramp_time">1</stringProp>\n' +
+          '        <longProp name="ThreadGroup.start_time">1511866023000</longProp>\n' +
+          '        <longProp name="ThreadGroup.end_time">1511866023000</longProp>\n' +
+          '        <boolProp name="ThreadGroup.scheduler">false</boolProp>\n' +
+          '        <stringProp name="ThreadGroup.duration"></stringProp>\n' +
+          '        <stringProp name="ThreadGroup.delay"></stringProp>\n' +
+          '      </ThreadGroup>\n' +
+          '      <hashTree>';
+      const endXml = '</hashTree><ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="Aggregate Report" enabled="true">\n' +
+          '          <boolProp name="ResultCollector.error_logging">false</boolProp>\n' +
+          '          <objProp>\n' +
+          '            <name>saveConfig</name>\n' +
+          '            <value class="SampleSaveConfiguration">\n' +
+          '              <time>true</time>\n' +
+          '              <latency>true</latency>\n' +
+          '              <timestamp>true</timestamp>\n' +
+          '              <success>true</success>\n' +
+          '              <label>true</label>\n' +
+          '              <code>true</code>\n' +
+          '              <message>true</message>\n' +
+          '              <threadName>true</threadName>\n' +
+          '              <dataType>true</dataType>\n' +
+          '              <encoding>false</encoding>\n' +
+          '              <assertions>true</assertions>\n' +
+          '              <subresults>true</subresults>\n' +
+          '              <responseData>false</responseData>\n' +
+          '              <samplerData>false</samplerData>\n' +
+          '              <xml>false</xml>\n' +
+          '              <fieldNames>true</fieldNames>\n' +
+          '              <responseHeaders>false</responseHeaders>\n' +
+          '              <requestHeaders>false</requestHeaders>\n' +
+          '              <responseDataOnError>false</responseDataOnError>\n' +
+          '              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>\n' +
+          '              <assertionsResultsToSave>0</assertionsResultsToSave>\n' +
+          '              <bytes>true</bytes>\n' +
+          '              <sentBytes>true</sentBytes>\n' +
+          '              <threadCounts>true</threadCounts>\n' +
+          '              <idleTime>true</idleTime>\n' +
+          '              <connectTime>true</connectTime>\n' +
+          '            </value>\n' +
+          '          </objProp>\n' +
+          '          <stringProp name="filename">C:/ddffd/shdkjd/sfsfs.jtl</stringProp>\n' +
+          '        </ResultCollector>\n' +
+          '        <hashTree/>\n' +
+          '      </hashTree>\n' +
+          '    </hashTree>\n' +
+          '    <WorkBench guiclass="WorkBenchGui" testclass="WorkBench" testname="WorkBench" enabled="true">\n' +
+          '      <boolProp name="WorkBench.save">true</boolProp>\n' +
+          '    </WorkBench>\n' +
+          '    <hashTree/>\n' +
+          '  </hashTree>\n' +
+          '</jmeterTestPlan>';
+
+      let dynamicData ='';
+      const sessions = await Session.find({run});
+
+      for(let i = 0; i < sessions.length; i++){
+          let requests = await Request.find({session:sessions[i]._id}).sort({sequence: 1});
+          dynamicData += `<TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="${sessions[i].title}" enabled="true">
+          <boolProp name="TransactionController.includeTimers">false</boolProp>
+          <boolProp name="TransactionController.parent">false</boolProp>
+        </TransactionController><hashTree>`;
+          for(let j = 0; j < requests.length; j++){
+              let hasReg = await Correlation.find({"first.request":requests[j]._id,final_regex:{$ne:'false'}});
+              let myURL = new URL(requests[j].url);
+              dynamicData += `<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="${myURL.pathname}" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
+            ${requests[j].request.post_data.length === 0?
+                  `<collectionProp name="Arguments.arguments"/>`:
+                  `<collectionProp name="Arguments.arguments">${requests[j].request.post_data.map((post_data)=>
+                      `<elementProp name="key" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.name">${Object.keys(post_data)[0]}</stringProp>
+                  <stringProp name="Argument.value">${post_data[Object.keys(post_data)[0]]}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                </elementProp>`).join('')}
+              </collectionProp>`}
+            </elementProp>
+            <stringProp name="HTTPSampler.domain">${myURL.hostname}</stringProp>
+            <stringProp name="HTTPSampler.port">${myURL.port}</stringProp>
+            <stringProp name="HTTPSampler.protocol">${myURL.protocol.slice(0,-1)}</stringProp>
+            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+            <stringProp name="HTTPSampler.path">${myURL.pathname}</stringProp>
+            <stringProp name="HTTPSampler.method">${requests[j].request.method}</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+            <stringProp name="HTTPSampler.implementation">Java</stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+              <collectionProp name="HeaderManager.headers">
+              ${requests[j].request.headers.map((header)=>`
+                  <elementProp name="${Object.keys(header)[0]}" elementType="Header">
+                  <stringProp name="Header.name">${Object.keys(header)[0]}</stringProp>
+                  <stringProp name="Header.value">${header[Object.keys(header)[0]]}</stringProp>
+            </elementProp>`).join('')}
+            </collectionProp>
+            </HeaderManager>
+            <hashTree/>
+            ${hasReg.map((hasReg)=>`<RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="client_id_REX" enabled="true">
+              <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+              <stringProp name="RegexExtractor.refname">${hasReg.key}_Cor</stringProp>
+              <stringProp name="RegexExtractor.regex">${this._encodeHtml(hasReg.final_regex)}</stringProp>
+              <stringProp name="RegexExtractor.template">${hasReg.regCount}</stringProp>
+              <stringProp name="RegexExtractor.default">${hasReg.key}_Not_Found</stringProp>
+              <stringProp name="RegexExtractor.match_number">1</stringProp>
+            </RegexExtractor>
+            <hashTree/>`).join('')}
+            </hashTree>`
+          }
+          dynamicData +='</hashTree>'
+      }
+      const  runDetails = await Run.findById(run).populate('scenario');
+      let file = fs.createWriteStream(`${config.storage.path}${runDetails.scenario.name}.jmx`);
+      file.write(startXml+dynamicData+endXml);
+
+      file.close();
+      return `/jmx/${runDetails.scenario.name}.jmx`;
+  }
+    _encodeHtml(str){
+        const escapeChars = {
+            '¢' : 'cent',
+            '£' : 'pound',
+            '¥' : 'yen',
+            '€': 'euro',
+            '©' :'copy',
+            '®' : 'reg',
+            '<' : 'lt',
+            '>' : 'gt',
+            '"' : 'quot',
+            '&' : 'amp',
+            '\'' : '#39'
+        };
+
+        let regexString = '[';
+        for(let key in escapeChars) {
+            regexString += key;
+        }
+        regexString += ']';
+
+        let regex = new RegExp( regexString, 'g');
+
+        return str.replace(regex, function(m) {
+            return '&' + escapeChars[m] + ';';
+        });
+    };
 
 }
 
