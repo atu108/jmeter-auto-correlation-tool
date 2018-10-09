@@ -9,6 +9,7 @@ import Step from "../models/Step";
 import Session from "../models/Session";
 import Correlation from "../models/Correlation";
 import RunController from '../controllers/RunController';
+const cheerio = require("cheerio");
 
 
 class backtrack {
@@ -42,7 +43,7 @@ class backtrack {
             if(diffs[i].duplicate !== ''){
                 continue;
             }
-            let correlation = await this._searchInBody(diffs[i]);
+            let correlation = await this.searchInBodyNew(diffs[i]);
             if(correlation){
                 correlations.push(correlation);
             }
@@ -342,6 +343,41 @@ class backtrack {
         }
     }
 
+    async searchInBodyNew(diff){
+        let key = diff.key.split('U+FF0E').join('.');
+        let value1 = diff.first.value.replace('+', ' ');
+        let value2 = diff.second.value.replace('+', ' ');
+
+        let stepSeq = [diff.first.request.sequence, diff.second.request.sequence];
+
+        let runs = [diff.first.run, diff.second.run];
+        const allRequests = await Request.find({run:runs[0],sequence:{$lt:stepSeq[0]}});
+        for(let i = 0; i < allRequests.length; i++){
+            let body = allRequests[i].response.body;
+            let inputs = this.findInput(body,key,value1);
+            if(inputs){
+                let second = await Request.find({run:run[1],url:allRequests[i].url, session_sequence:allRequests[i].session_sequence});
+                let secondInputs = this.findInput(second[0].body,key,value2);
+                if(secondInputs){
+                    console.log("found in both");
+                    break;
+                }
+            }
+        }
+    }
+
+    findInput(body,key,value){
+        let $ = cheerio.load(body.replace((/\\/g, "")));
+        let inputs = $('input').attr('name', key).attr('value', value);
+        console.log(inputs);
+        if(Object.keys(inputs).length > 0){
+            return inputs;
+        }else{
+            return false;
+        }
+
+
+    }
 }
 
 // process.on('message', async (params) => {
