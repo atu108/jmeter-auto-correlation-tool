@@ -43,14 +43,20 @@ class backtrack {
             if(diffs[i].duplicate !== ''){
                 continue;
             }
-            let correlation = await this.searchInBodyNew(diffs[i]);
+            let correlation = await this.searchInBodyNew(diffs[i],this.checkExactMatch);
+            console.log("checking correlations", correlation);
             if(correlation){
                 correlations.push(correlation);
+            }else{
+                correlation = await this.searchInBodyNew(diffs[i],this.checkLooseMatch);
+                if(correlation){
+                    correlations.push(correlation);
+                }
             }
         }
         await Correlation.insertMany(correlations);
-        await RunController.generateJmx();
-        ctx.body = {type:"Success", message:"It done check Db",};
+        // await RunController.generateJmx();
+        // ctx.body = {type:"Success", message:"It done check Db",};
 
         // process.send({
         //     mismatchUrls:this.mismatchedUrls,
@@ -343,41 +349,139 @@ class backtrack {
         }
     }
 
-    async searchInBodyNew(diff){
+    async searchInBodyNew(diff, match ){
+        //location params 
+        //a href 
+       
         let key = diff.key.split('U+FF0E').join('.');
         let value1 = diff.first.value.replace('+', ' ');
         let value2 = diff.second.value.replace('+', ' ');
-
+        let finalReg = '';
         let stepSeq = [diff.first.request.sequence, diff.second.request.sequence];
+        console.log("inside new serach", key, "--", value1, "--",value2);
 
         let runs = [diff.first.run, diff.second.run];
-        const allRequests = await Request.find({run:runs[0],sequence:{$lt:stepSeq[0]}});
+        const allRequests = await Request.find({run:runs[0],sequence:{$lt:stepSeq[0]}}).sort({ step_sequence: -1 });
         for(let i = 0; i < allRequests.length; i++){
+            console.log("in url", allRequests[i].url);
             let body = allRequests[i].response.body;
-            let inputs = this.findInput(body,key,value1);
+            if(body === undefined || !body){
+               continue;
+            }
+            // if(i == 0){
+            //     console.log("body of balze", body)
+            // }
+           
+
+            // console.log("run1 body", body, "url", allRequests[i].url);
+            let inputs = this.findInput(body.toString(), key, value1);
+            console.log("cheching inputs",inputs);
+            // console.log("inputs", inputs);
+            //1st if value found just ones then find in other and if found your done
+            //2nd if value not found in inouttag then find it in select if found in both your are done
+            //3rd case revisit 
             if(inputs){
-                let second = await Request.find({run:run[1],url:allRequests[i].url, session_sequence:allRequests[i].session_sequence});
-                let secondInputs = this.findInput(second[0].body,key,value2);
+                console.log("found in run1");
+                let second = await Request.find({run:run[1],url:allRequests[i].url, session_sequence:allRequests[i].session_sequence, 'request.method':allRequests[i].request.method});
+                console.log("second requests", second.length);
+                let secondInputs = this.findInput(second[0].response.body,key,value2);
                 if(secondInputs){
-                    console.log("found in both");
-                    break;
+                    const forFinalReg = this.match(inputs, secondInputs);
+                    if(forFinalReg){
+                        console.log("in side final input")
+                        finalReg = this._fixBoundary(forFinalReg[0], forFinalReg[1]);
+                        return {
+                            key: key,
+                            priority: 1,
+                            compared_url: diff.url,
+                            location: diff.location,
+                            reg_count: finalReg.hasOwnProperty('reg')?this._countReg(finalReg['reg']):'NA',
+                            optimal_reg_number: '',
+                            final_regex: finalReg.hasOwnProperty('reg')?finalReg['reg']:false,
+                            first: {
+                                url: allRequests[i].url,
+                                matched: cheerio.html(forFinalReg[0]),
+                                session_title: allRequests[i].session.title,
+                                session_sequence:  allRequests[i].session.sequence,
+                                request:allRequests[i]._id,
+                                run: allRequests[i].run
+                
+                            },
+                            second: {
+                                url: second[0].url,
+                                matched: cheerio.html(forFinalReg[1]),
+                                session_title: second[0].session.title,
+                                session_sequence:  second[0].session.sequence,
+                                request: second[0]._id,
+                                run: second[0].run
+                
+                            },
+                            scenario:diff.scenario
+                        }
+                    }
                 }
             }
         }
+        return false;
     }
 
-    findInput(body,key,value){
+    checkExactMatch(tag, tag2){
+        console.log("input check match")
+        for(let i = 0; i < tag.length; i++){
+            const index = tag2.findIndex( tg => tag[i].type === tg.type &&
+                    tag[i].name === tg.name &&
+                    tag[i].parent.type === tg.parent.type &&
+                    tag[i].parent.name === tg.parent.name &&
+                    ((tag[i].next.type === tg.next.type && tag[i].next.type === 'tag' && tag[i].next.name === tg.next.name) 
+                    || (tag[i].next.type === tg.next.type && tag[i].next.type === 'text' && tag[i].next.body === tg.next.body)) &&
+                    ((tag[i].prev.type === tg.prev.type && tag[i].prev.type === 'tag' && tag[i].prev.name === tg.prev.name) 
+                    || (tag[i].prev.type === tg.prev.type && tag[i].prev.type === 'text' && tag[i].prev.body === tg.prev.body))
+                ) 
+            if(index !== -1){
+                return [tag[i], tag2[index]];
+            }
+        }
+        return false;
+    }
+
+    checkLooseMatch(tag, tag2){
+        for(let i = 0; i < tag.length; i++){
+            const index = tag2.findIndex( tg => tag[i].type === tg.type &&
+                    tag[i].name === tg.name &&
+                    tag[i].parent.type === tg.parent.type &&
+                    tag[i].parent.name === tg.parent.name
+                ) 
+            if(index !== -1){
+                return [tag[i], tag2[index]];
+            }
+        }
+        return false;
+    }
+    
+    findInput(body, key, value){
+        console.log(typeof body.replace((/\\/g, "")))
         let $ = cheerio.load(body.replace((/\\/g, "")));
-        let inputs = $('input').attr('name', key).attr('value', value);
-        console.log(inputs);
-        if(Object.keys(inputs).length > 0){
+        let inputs = $('input').toArray;
+        if(inputs.length > 0){
+            console.log("found one backtrack")
             return inputs;
+            // return inputs;
         }else{
             return false;
         }
-
-
     }
+
+    findSelect(body, key, value){
+        let $ = cheerio.load(body.replace((/\\/g, "")));
+        let selects = $('select[name='+ key +'] option[value=' + value + ']').toArray;
+        if(selects.length > 0){
+            return selects;
+        }else{
+            return false;
+        }
+    }
+
+
 }
 
 // process.on('message', async (params) => {
