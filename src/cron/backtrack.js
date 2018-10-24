@@ -38,20 +38,16 @@ class backtrack {
         const diffs = await Difference.find({scenario:'5b9e004a3bdf8033cfe20edb'}).populate('first.request',['sequence']).populate('second.request',['sequence']).populate('session');
 
         const loopTimes = diffs.length;
-
+        console.log("loop times", loopTimes);
         for(let i = 0; i < loopTimes; i++){
+            console.log(i);
             if(diffs[i].duplicate !== ''){
                 continue;
             }
-            let correlation = await this.searchInBodyNew(diffs[i],this.checkExactMatch);
+            let correlation = await this.searchInBodyNew(diffs[i]);
             console.log("checking correlations", correlation);
             if(correlation){
                 correlations.push(correlation);
-            }else{
-                correlation = await this.searchInBodyNew(diffs[i],this.checkLooseMatch);
-                if(correlation){
-                    correlations.push(correlation);
-                }
             }
         }
         await Correlation.insertMany(correlations);
@@ -245,22 +241,29 @@ class backtrack {
     }
 
     _fixBoundary(str1,str2){
+        // console.log("strings ", str1, str2)
         const arr1 = str1.split(' ');
         const arr2 = str2.split(' ');
+        // console.log("both arrys", arr1, arr2);
         if(arr1.length < 1 || arr1.length < 1) return false;
         const obj1 = this._parseTag(arr1);
+        // console.log("object parsed 1 ",obj1)
         const obj2 = this._parseTag(arr2);
+        // console.log("object parsed 2 ",obj2)
+        // console.log(obj2)
         if(!obj1 || !obj2) return false;
         return this._compareObj(obj1,obj2);
     }
 //this is to compare tag by tab rather than characters while trying to find the final regex
     _parseTag(str){
+        console.log("in parse tag", str);
         const len1 = str.length;
         let obj={};
         // console.log(str[0]);
         obj['tag'] = str[0].slice(1,str[0].length);
         for(let i = 1; i < len1; i++){
             if(str[i].indexOf('=') === -1) return false;
+            // console.log("reached inside")
             let temp = str[i].split(/=(.+)/);
             if(len1-1 === i){
                 obj[temp[0]] = temp[1].slice(0, -1);
@@ -349,55 +352,56 @@ class backtrack {
         }
     }
 
-    async searchInBodyNew(diff, match ){
-        //location params 
-        //a href 
-       
+    async searchInBodyNew(diff){
         let key = diff.key.split('U+FF0E').join('.');
         let value1 = diff.first.value.replace('+', ' ');
         let value2 = diff.second.value.replace('+', ' ');
         let finalReg = '';
         let stepSeq = [diff.first.request.sequence, diff.second.request.sequence];
-        console.log("inside new serach", key, "--", value1, "--",value2);
+        // console.log("inside new serach", key, "--", value1, "--",value2);
 
         let runs = [diff.first.run, diff.second.run];
         const allRequests = await Request.find({run:runs[0],sequence:{$lt:stepSeq[0]}}).sort({ step_sequence: -1 });
+        console.log(allRequests.length);
         for(let i = 0; i < allRequests.length; i++){
-            console.log("in url", allRequests[i].url);
             let body = allRequests[i].response.body;
-            if(body === undefined || !body){
+            if(body === undefined || !body || body == ''){
                continue;
             }
-            // if(i == 0){
-            //     console.log("body of balze", body)
-            // }
-           
+            let tags = {}
+            tags.value = this.findInput(body, key, value1);
+            tags.type = 1
+            if(!tags.value){
+               tags.value = this.findSelect(body, key, value1);
+               console.log(tags.value)
+               tags.type = 2
+            }
 
-            // console.log("run1 body", body, "url", allRequests[i].url);
-            let inputs = this.findInput(body.toString(), key, value1);
-            console.log("cheching inputs",inputs);
-            // console.log("inputs", inputs);
-            //1st if value found just ones then find in other and if found your done
-            //2nd if value not found in inouttag then find it in select if found in both your are done
-            //3rd case revisit 
-            if(inputs){
-                console.log("found in run1");
-                let second = await Request.find({run:run[1],url:allRequests[i].url, session_sequence:allRequests[i].session_sequence, 'request.method':allRequests[i].request.method});
-                console.log("second requests", second.length);
-                let secondInputs = this.findInput(second[0].response.body,key,value2);
-                if(secondInputs){
-                    const forFinalReg = this.match(inputs, secondInputs);
+            if(tags.value && tags.value.length > 0){
+                let second = await Request.find({run:runs[1],url:allRequests[i].url, session_sequence:allRequests[i].session_sequence, 'request.method':allRequests[i].request.method});
+                let sencondTags = [];
+                if(tags.type === 1){
+                    sencondTags = this.findInput(second[0].response.body, key , value2)
+                }else{
+                    sencondTags = this.findSelect(second[0].response.body, key , value2)
+                }
+                if(sencondTags.length > 0){
+                    let forFinalReg = this.checkExactMatch(tags.value, sencondTags);
+                    if(!forFinalReg){
+                        forFinalReg = this.checkLooseMatch(tags.value, sencondTags);
+                    }
                     if(forFinalReg){
-                        console.log("in side final input")
-                        finalReg = this._fixBoundary(forFinalReg[0], forFinalReg[1]);
+                        forFinalReg[0].attribs.value = forFinalReg[0].attribs.value.replace(" ", '+');
+                        forFinalReg[1].attribs.value = forFinalReg[1].attribs.value.replace(" ", '+');
+                        finalReg = this._fixBoundary(cheerio.html(forFinalReg[0]), cheerio.html(forFinalReg[1]));
                         return {
                             key: key,
                             priority: 1,
                             compared_url: diff.url,
                             location: diff.location,
-                            reg_count: finalReg.hasOwnProperty('reg')?this._countReg(finalReg['reg']):'NA',
+                            reg_count: this._countReg(finalReg+'>'),
                             optimal_reg_number: '',
-                            final_regex: finalReg.hasOwnProperty('reg')?finalReg['reg']:false,
+                            final_regex: finalReg+'>',
                             first: {
                                 url: allRequests[i].url,
                                 matched: cheerio.html(forFinalReg[0]),
@@ -426,7 +430,7 @@ class backtrack {
     }
 
     checkExactMatch(tag, tag2){
-        console.log("input check match")
+        //console.log("input check match")
         for(let i = 0; i < tag.length; i++){
             const index = tag2.findIndex( tg => tag[i].type === tg.type &&
                     tag[i].name === tg.name &&
@@ -459,21 +463,26 @@ class backtrack {
     }
     
     findInput(body, key, value){
-        console.log(typeof body.replace((/\\/g, "")))
-        let $ = cheerio.load(body.replace((/\\/g, "")));
-        let inputs = $('input').toArray;
+        try{
+            let $ = cheerio.load(body.replace((/\\/g, "")));
+            let inputs = $('input[name='+ key +'][value="'+ value +'"]').toArray();
+        // console.log("inputs check", typeof inputs, "all inouts", inputs[0]);
         if(inputs.length > 0){
-            console.log("found one backtrack")
             return inputs;
             // return inputs;
         }else{
             return false;
         }
+        }catch(e){
+            console.log(e);
+        }
+        
+        
     }
 
     findSelect(body, key, value){
         let $ = cheerio.load(body.replace((/\\/g, "")));
-        let selects = $('select[name='+ key +'] option[value=' + value + ']').toArray;
+        let selects = $('select[name='+ key +'] option[value="' + value + '"]').toArray;
         if(selects.length > 0){
             return selects;
         }else{
