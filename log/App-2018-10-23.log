@@ -1,0 +1,508 @@
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-10-23] APP-ERROR: SyntaxError: Malformed attribute selector: name=Content-Lengthvalue=Rome]
+    at parseSelector (/home/lalit/webroot/testingtool/node_modules/css-what/index.js:152:12)
+    at parse (/home/lalit/webroot/testingtool/node_modules/css-what/index.js:82:13)
+    at compileUnsafe (/home/lalit/webroot/testingtool/node_modules/cheerio/node_modules/css-select/lib/compile.js:31:14)
+    at select (/home/lalit/webroot/testingtool/node_modules/cheerio/node_modules/css-select/index.js:18:49)
+    at CSSselect (/home/lalit/webroot/testingtool/node_modules/cheerio/node_modules/css-select/index.js:41:9)
+    at initialize.exports.find (/home/lalit/webroot/testingtool/node_modules/cheerio/lib/api/traversing.js:40:21)
+    at initialize.module.exports (/home/lalit/webroot/testingtool/node_modules/cheerio/lib/cheerio.js:88:18)
+    at new initialize (/home/lalit/webroot/testingtool/node_modules/cheerio/lib/static.js:34:20)
+    at initialize (/home/lalit/webroot/testingtool/node_modules/cheerio/lib/static.js:31:14)
+    at backtrack.findInput (/home/lalit/webroot/testingtool/src/cron/backtrack.js:464:22)
+    at backtrack._callee4$ (/home/lalit/webroot/testingtool/src/cron/backtrack.js:377:31)
+    at tryCatch (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:65:40)
+    at Generator.invoke [as _invoke] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:303:22)
+    at Generator.prototype.(anonymous function) [as next] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:117:21)
+    at step (/home/lalit/webroot/testingtool/src/cron/backtrack.js:55:191)
+    at /home/lalit/webroot/testingtool/src/cron/backtrack.js:55:361
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-10-23] APP-ERROR: ReferenceError: inputs is not defined
+    at backtrack.findInput (/home/lalit/webroot/testingtool/src/cron/backtrack.js:468:9)
+    at backtrack._callee4$ (/home/lalit/webroot/testingtool/src/cron/backtrack.js:377:31)
+    at tryCatch (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:65:40)
+    at Generator.invoke [as _invoke] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:303:22)
+    at Generator.prototype.(anonymous function) [as next] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:117:21)
+    at step (/home/lalit/webroot/testingtool/src/cron/backtrack.js:55:191)
+    at /home/lalit/webroot/testingtool/src/cron/backtrack.js:55:361
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-10-23] APP-ERROR: 
+[2018-10-23] APP-INFO: xxx GET /app/run/backtrack 404 449ms
+[2018-10-23] APP-ERROR: 
+[2018-10-23] APP-INFO: xxx GET /app/run/backtrack 404 322ms
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-10-23] APP-ERROR: 
+[2018-10-23] APP-INFO: xxx GET /app/run/backtrack 404 492ms
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-10-23] APP-ERROR: 
+[2018-10-23] APP-INFO: xxx GET /app/run/backtrack 404 486ms
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-10-23] APP-ERROR: 
+[2018-10-23] APP-INFO: xxx GET /app/run/backtrack 404 422ms
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-10-23] APP-ERROR: TypeError: Cannot read property 'toString' of undefined
+    at backtrack._callee4$ (/home/lalit/webroot/testingtool/src/cron/backtrack.js:377:46)
+    at tryCatch (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:65:40)
+    at Generator.invoke [as _invoke] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:303:22)
+    at Generator.prototype.(anonymous function) [as next] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:117:21)
+    at step (/home/lalit/webroot/testingtool/src/cron/backtrack.js:55:191)
+    at /home/lalit/webroot/testingtool/src/cron/backtrack.js:55:361
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2018-10-23] APP-ERROR: TypeError: Cannot read property 'toString' of undefined
+    at backtrack._callee4$ (/home/lalit/webroot/testingtool/src/cron/backtrack.js:377:46)
+    at tryCatch (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:65:40)
+    at Generator.invoke [as _invoke] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:303:22)
+    at Generator.prototype.(anonymous function) [as next] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:117:21)
+    at step (/home/lalit/webroot/testingtool/src/cron/backtrack.js:55:191)
+    at /home/lalit/webroot/testingtool/src/cron/backtrack.js:55:361
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-10-23] APP-ERROR: TypeError: Cannot read property 'toString' of undefined
+    at backtrack._callee4$ (/home/lalit/webroot/testingtool/src/cron/backtrack.js:377:46)
+    at tryCatch (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:65:40)
+    at Generator.invoke [as _invoke] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:303:22)
+    at Generator.prototype.(anonymous function) [as next] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:117:21)
+    at step (/home/lalit/webroot/testingtool/src/cron/backtrack.js:55:191)
+    at /home/lalit/webroot/testingtool/src/cron/backtrack.js:55:361
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-10-23] APP-ERROR: TypeError: Cannot read property 'toString' of undefined
+    at backtrack._callee4$ (/home/lalit/webroot/testingtool/src/cron/backtrack.js:377:46)
+    at tryCatch (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:65:40)
+    at Generator.invoke [as _invoke] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:303:22)
+    at Generator.prototype.(anonymous function) [as next] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:117:21)
+    at step (/home/lalit/webroot/testingtool/src/cron/backtrack.js:55:191)
+    at /home/lalit/webroot/testingtool/src/cron/backtrack.js:55:361
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-10-23] APP-ERROR: TypeError: Cannot read property 'toString' of undefined
+    at backtrack._callee4$ (/home/lalit/webroot/testingtool/src/cron/backtrack.js:377:46)
+    at tryCatch (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:65:40)
+    at Generator.invoke [as _invoke] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:303:22)
+    at Generator.prototype.(anonymous function) [as next] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:117:21)
+    at step (/home/lalit/webroot/testingtool/src/cron/backtrack.js:55:191)
+    at /home/lalit/webroot/testingtool/src/cron/backtrack.js:55:361
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2018-10-23] APP-ERROR: TypeError: Cannot read property 'toString' of undefined
+    at backtrack._callee4$ (/home/lalit/webroot/testingtool/src/cron/backtrack.js:377:46)
+    at tryCatch (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:65:40)
+    at Generator.invoke [as _invoke] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:303:22)
+    at Generator.prototype.(anonymous function) [as next] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:117:21)
+    at step (/home/lalit/webroot/testingtool/src/cron/backtrack.js:55:191)
+    at /home/lalit/webroot/testingtool/src/cron/backtrack.js:55:361
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2018-10-23] APP-ERROR: TypeError: Cannot read property 'toString' of undefined
+    at backtrack._callee4$ (/home/lalit/webroot/testingtool/src/cron/backtrack.js:377:46)
+    at tryCatch (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:65:40)
+    at Generator.invoke [as _invoke] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:303:22)
+    at Generator.prototype.(anonymous function) [as next] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:117:21)
+    at step (/home/lalit/webroot/testingtool/src/cron/backtrack.js:55:191)
+    at /home/lalit/webroot/testingtool/src/cron/backtrack.js:55:361
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-10-23] APP-ERROR: TypeError: Cannot read property 'toString' of undefined
+    at backtrack._callee4$ (/home/lalit/webroot/testingtool/src/cron/backtrack.js:377:46)
+    at tryCatch (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:65:40)
+    at Generator.invoke [as _invoke] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:303:22)
+    at Generator.prototype.(anonymous function) [as next] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:117:21)
+    at step (/home/lalit/webroot/testingtool/src/cron/backtrack.js:55:191)
+    at /home/lalit/webroot/testingtool/src/cron/backtrack.js:55:361
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-ERROR: TypeError: Cannot read property 'toString' of undefined
+    at backtrack._callee4$ (/home/lalit/webroot/testingtool/src/cron/backtrack.js:377:46)
+    at tryCatch (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:65:40)
+    at Generator.invoke [as _invoke] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:303:22)
+    at Generator.prototype.(anonymous function) [as next] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:117:21)
+    at step (/home/lalit/webroot/testingtool/src/cron/backtrack.js:55:191)
+    at /home/lalit/webroot/testingtool/src/cron/backtrack.js:55:361
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-ERROR: TypeError: Cannot read property 'toString' of undefined
+    at backtrack._callee4$ (/home/lalit/webroot/testingtool/src/cron/backtrack.js:377:46)
+    at tryCatch (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:65:40)
+    at Generator.invoke [as _invoke] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:303:22)
+    at Generator.prototype.(anonymous function) [as next] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:117:21)
+    at step (/home/lalit/webroot/testingtool/src/cron/backtrack.js:55:191)
+    at /home/lalit/webroot/testingtool/src/cron/backtrack.js:55:361
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-ERROR: TypeError: _config2.default.log is not a function
+    at backtrack._callee4$ (/home/lalit/webroot/testingtool/src/cron/backtrack.js:377:20)
+    at tryCatch (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:65:40)
+    at Generator.invoke [as _invoke] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:303:22)
+    at Generator.prototype.(anonymous function) [as next] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:117:21)
+    at step (/home/lalit/webroot/testingtool/src/cron/backtrack.js:55:191)
+    at /home/lalit/webroot/testingtool/src/cron/backtrack.js:55:361
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2018-10-23] APP-ERROR: TypeError: _config2.default.log is not a function
+    at backtrack._callee4$ (/home/lalit/webroot/testingtool/src/cron/backtrack.js:377:20)
+    at tryCatch (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:65:40)
+    at Generator.invoke [as _invoke] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:303:22)
+    at Generator.prototype.(anonymous function) [as next] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:117:21)
+    at step (/home/lalit/webroot/testingtool/src/cron/backtrack.js:55:191)
+    at /home/lalit/webroot/testingtool/src/cron/backtrack.js:55:361
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-ERROR: TypeError: Cannot read property 'toString' of undefined
+    at backtrack._callee4$ (/home/lalit/webroot/testingtool/src/cron/backtrack.js:376:46)
+    at tryCatch (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:65:40)
+    at Generator.invoke [as _invoke] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:303:22)
+    at Generator.prototype.(anonymous function) [as next] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:117:21)
+    at step (/home/lalit/webroot/testingtool/src/cron/backtrack.js:55:191)
+    at /home/lalit/webroot/testingtool/src/cron/backtrack.js:55:361
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2018-10-23] APP-INFO: --> GET / 200 130ms
+[2018-10-23] APP-INFO: --> GET /app/auth/login 200 39ms
+[2018-10-23] APP-INFO: --> POST /app/auth/login 200 289ms
+[2018-10-23] APP-INFO: --> GET /app 200 98ms
+[2018-10-23] APP-INFO: --> GET /app/project/5b16ca833192d5212014da03/scenarios 200 132ms
+[2018-10-23] APP-INFO: --> GET /app/scenario/5b9e004a3bdf8033cfe20edb/runs 200 107ms
+[2018-10-23] APP-INFO: --> GET /app/scenario/5b9e004a3bdf8033cfe20edb/differnces 200 58ms
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-ERROR: TypeError: Cannot read property 'toString' of undefined
+    at backtrack._callee4$ (/home/lalit/webroot/testingtool/src/cron/backtrack.js:376:46)
+    at tryCatch (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:65:40)
+    at Generator.invoke [as _invoke] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:303:22)
+    at Generator.prototype.(anonymous function) [as next] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:117:21)
+    at step (/home/lalit/webroot/testingtool/src/cron/backtrack.js:55:191)
+    at /home/lalit/webroot/testingtool/src/cron/backtrack.js:55:361
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-ERROR: TypeError: Cannot read property 'toString' of undefined
+    at backtrack._callee4$ (/home/lalit/webroot/testingtool/src/cron/backtrack.js:376:46)
+    at tryCatch (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:65:40)
+    at Generator.invoke [as _invoke] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:303:22)
+    at Generator.prototype.(anonymous function) [as next] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:117:21)
+    at step (/home/lalit/webroot/testingtool/src/cron/backtrack.js:55:191)
+    at /home/lalit/webroot/testingtool/src/cron/backtrack.js:55:361
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-ERROR: TypeError: Cannot read property 'toString' of undefined
+    at backtrack._callee4$ (/home/lalit/webroot/testingtool/src/cron/backtrack.js:376:46)
+    at tryCatch (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:65:40)
+    at Generator.invoke [as _invoke] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:303:22)
+    at Generator.prototype.(anonymous function) [as next] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:117:21)
+    at step (/home/lalit/webroot/testingtool/src/cron/backtrack.js:55:191)
+    at /home/lalit/webroot/testingtool/src/cron/backtrack.js:55:361
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-ERROR: TypeError: Cannot read property 'toString' of undefined
+    at backtrack._callee4$ (/home/lalit/webroot/testingtool/src/cron/backtrack.js:377:46)
+    at tryCatch (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:65:40)
+    at Generator.invoke [as _invoke] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:303:22)
+    at Generator.prototype.(anonymous function) [as next] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:117:21)
+    at step (/home/lalit/webroot/testingtool/src/cron/backtrack.js:55:191)
+    at /home/lalit/webroot/testingtool/src/cron/backtrack.js:55:361
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-ERROR: 
+[2018-10-23] APP-INFO: xxx GET /app/run/backtrack 404 67ms
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-ERROR: 
+[2018-10-23] APP-INFO: xxx GET /app/run/backtrack 404 69ms
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-ERROR: 
+[2018-10-23] APP-INFO: xxx GET /app/run/backtrack 404 68ms
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-ERROR: TypeError: Cannot read property 'toString' of undefined
+    at backtrack._callee4$ (/home/lalit/webroot/testingtool/src/cron/backtrack.js:377:46)
+    at tryCatch (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:65:40)
+    at Generator.invoke [as _invoke] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:303:22)
+    at Generator.prototype.(anonymous function) [as next] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:117:21)
+    at step (/home/lalit/webroot/testingtool/src/cron/backtrack.js:55:191)
+    at /home/lalit/webroot/testingtool/src/cron/backtrack.js:55:361
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-ERROR: TypeError: Cannot read property 'toString' of undefined
+    at backtrack._callee4$ (/home/lalit/webroot/testingtool/src/cron/backtrack.js:372:46)
+    at tryCatch (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:65:40)
+    at Generator.invoke [as _invoke] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:303:22)
+    at Generator.prototype.(anonymous function) [as next] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:117:21)
+    at step (/home/lalit/webroot/testingtool/src/cron/backtrack.js:55:191)
+    at /home/lalit/webroot/testingtool/src/cron/backtrack.js:55:361
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-ERROR: TypeError: Cannot read property 'toString' of undefined
+    at backtrack._callee4$ (/home/lalit/webroot/testingtool/src/cron/backtrack.js:372:46)
+    at tryCatch (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:65:40)
+    at Generator.invoke [as _invoke] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:303:22)
+    at Generator.prototype.(anonymous function) [as next] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:117:21)
+    at step (/home/lalit/webroot/testingtool/src/cron/backtrack.js:55:191)
+    at /home/lalit/webroot/testingtool/src/cron/backtrack.js:55:361
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-ERROR: TypeError: Cannot read property 'toString' of undefined
+    at backtrack._callee4$ (/home/lalit/webroot/testingtool/src/cron/backtrack.js:372:46)
+    at tryCatch (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:65:40)
+    at Generator.invoke [as _invoke] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:303:22)
+    at Generator.prototype.(anonymous function) [as next] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:117:21)
+    at step (/home/lalit/webroot/testingtool/src/cron/backtrack.js:55:191)
+    at /home/lalit/webroot/testingtool/src/cron/backtrack.js:55:361
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-ERROR: ReferenceError: inputs is not defined
+    at backtrack._callee4$ (/home/lalit/webroot/testingtool/src/cron/backtrack.js:609:33)
+    at tryCatch (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:65:40)
+    at Generator.invoke [as _invoke] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:303:22)
+    at Generator.prototype.(anonymous function) [as next] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:117:21)
+    at step (/home/lalit/webroot/testingtool/src/cron/backtrack.js:55:191)
+    at /home/lalit/webroot/testingtool/src/cron/backtrack.js:55:361
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-ERROR: TypeError: Cannot use 'in' operator to search for '_id' in true
+    at model.Document.$__buildDoc (/home/lalit/webroot/testingtool/node_modules/mongoose/lib/document.js:222:24)
+    at model.Document (/home/lalit/webroot/testingtool/node_modules/mongoose/lib/document.js:67:20)
+    at model.Model (/home/lalit/webroot/testingtool/node_modules/mongoose/lib/model.js:49:12)
+    at new model (/home/lalit/webroot/testingtool/node_modules/mongoose/lib/model.js:3798:13)
+    at /home/lalit/webroot/testingtool/node_modules/mongoose/lib/model.js:2114:13
+    at /home/lalit/webroot/testingtool/node_modules/async/internal/parallel.js:27:9
+    at replenish (/home/lalit/webroot/testingtool/node_modules/async/internal/eachOfLimit.js:64:17)
+    at /home/lalit/webroot/testingtool/node_modules/async/internal/eachOfLimit.js:68:9
+    at _parallel (/home/lalit/webroot/testingtool/node_modules/async/internal/parallel.js:26:5)
+    at parallelLimit (/home/lalit/webroot/testingtool/node_modules/async/parallelLimit.js:39:26)
+    at Function.Model.insertMany (/home/lalit/webroot/testingtool/node_modules/mongoose/lib/model.js:2130:3)
+    at /home/lalit/webroot/testingtool/node_modules/kareem/index.js:250:8
+    at args (/home/lalit/webroot/testingtool/node_modules/kareem/index.js:76:20)
+    at Function.<anonymous> (/home/lalit/webroot/testingtool/src/utility/mongoose-error.js:5:9)
+    at next (/home/lalit/webroot/testingtool/node_modules/kareem/index.js:86:14)
+    at Kareem.execPre (/home/lalit/webroot/testingtool/node_modules/kareem/index.js:103:8)
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-ERROR: TypeError: Cannot use 'in' operator to search for '_id' in true
+    at model.Document.$__buildDoc (/home/lalit/webroot/testingtool/node_modules/mongoose/lib/document.js:222:24)
+    at model.Document (/home/lalit/webroot/testingtool/node_modules/mongoose/lib/document.js:67:20)
+    at model.Model (/home/lalit/webroot/testingtool/node_modules/mongoose/lib/model.js:49:12)
+    at new model (/home/lalit/webroot/testingtool/node_modules/mongoose/lib/model.js:3798:13)
+    at /home/lalit/webroot/testingtool/node_modules/mongoose/lib/model.js:2114:13
+    at /home/lalit/webroot/testingtool/node_modules/async/internal/parallel.js:27:9
+    at replenish (/home/lalit/webroot/testingtool/node_modules/async/internal/eachOfLimit.js:64:17)
+    at /home/lalit/webroot/testingtool/node_modules/async/internal/eachOfLimit.js:68:9
+    at _parallel (/home/lalit/webroot/testingtool/node_modules/async/internal/parallel.js:26:5)
+    at parallelLimit (/home/lalit/webroot/testingtool/node_modules/async/parallelLimit.js:39:26)
+    at Function.Model.insertMany (/home/lalit/webroot/testingtool/node_modules/mongoose/lib/model.js:2130:3)
+    at /home/lalit/webroot/testingtool/node_modules/kareem/index.js:250:8
+    at args (/home/lalit/webroot/testingtool/node_modules/kareem/index.js:76:20)
+    at Function.<anonymous> (/home/lalit/webroot/testingtool/src/utility/mongoose-error.js:5:9)
+    at next (/home/lalit/webroot/testingtool/node_modules/kareem/index.js:86:14)
+    at Kareem.execPre (/home/lalit/webroot/testingtool/node_modules/kareem/index.js:103:8)
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-INFO: xxx GET /app/run/backtrack 404 360ms
+[2018-10-23] APP-ERROR: 
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-ERROR: ReferenceError: run is not defined
+    at backtrack._callee4$ (/home/lalit/webroot/testingtool/src/cron/backtrack.js:383:54)
+    at tryCatch (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:65:40)
+    at Generator.invoke [as _invoke] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:303:22)
+    at Generator.prototype.(anonymous function) [as next] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:117:21)
+    at step (/home/lalit/webroot/testingtool/src/cron/backtrack.js:55:191)
+    at /home/lalit/webroot/testingtool/src/cron/backtrack.js:55:361
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-ERROR: ReferenceError: run is not defined
+    at backtrack._callee4$ (/home/lalit/webroot/testingtool/src/cron/backtrack.js:383:54)
+    at tryCatch (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:65:40)
+    at Generator.invoke [as _invoke] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:303:22)
+    at Generator.prototype.(anonymous function) [as next] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:117:21)
+    at step (/home/lalit/webroot/testingtool/src/cron/backtrack.js:55:191)
+    at /home/lalit/webroot/testingtool/src/cron/backtrack.js:55:361
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-ERROR: ReferenceError: run is not defined
+    at backtrack._callee4$ (/home/lalit/webroot/testingtool/src/cron/backtrack.js:383:54)
+    at tryCatch (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:65:40)
+    at Generator.invoke [as _invoke] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:303:22)
+    at Generator.prototype.(anonymous function) [as next] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:117:21)
+    at step (/home/lalit/webroot/testingtool/src/cron/backtrack.js:55:191)
+    at /home/lalit/webroot/testingtool/src/cron/backtrack.js:55:361
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-ERROR: ReferenceError: run is not defined
+    at backtrack._callee4$ (/home/lalit/webroot/testingtool/src/cron/backtrack.js:383:54)
+    at tryCatch (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:65:40)
+    at Generator.invoke [as _invoke] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:303:22)
+    at Generator.prototype.(anonymous function) [as next] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:117:21)
+    at step (/home/lalit/webroot/testingtool/src/cron/backtrack.js:55:191)
+    at /home/lalit/webroot/testingtool/src/cron/backtrack.js:55:361
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-ERROR: ReferenceError: run is not defined
+    at backtrack._callee4$ (/home/lalit/webroot/testingtool/src/cron/backtrack.js:384:54)
+    at tryCatch (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:65:40)
+    at Generator.invoke [as _invoke] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:303:22)
+    at Generator.prototype.(anonymous function) [as next] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:117:21)
+    at step (/home/lalit/webroot/testingtool/src/cron/backtrack.js:55:191)
+    at /home/lalit/webroot/testingtool/src/cron/backtrack.js:55:361
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-ERROR: TypeError: str1.split is not a function
+    at backtrack._fixBoundary (/home/lalit/webroot/testingtool/src/cron/backtrack.js:244:27)
+    at backtrack._callee4$ (/home/lalit/webroot/testingtool/src/cron/backtrack.js:391:41)
+    at tryCatch (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:65:40)
+    at Generator.invoke [as _invoke] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:303:22)
+    at Generator.prototype.(anonymous function) [as next] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:117:21)
+    at step (/home/lalit/webroot/testingtool/src/cron/backtrack.js:55:191)
+    at /home/lalit/webroot/testingtool/src/cron/backtrack.js:55:361
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-ERROR: TypeError: str1.split is not a function
+    at backtrack._fixBoundary (/home/lalit/webroot/testingtool/src/cron/backtrack.js:244:27)
+    at backtrack._callee4$ (/home/lalit/webroot/testingtool/src/cron/backtrack.js:391:41)
+    at tryCatch (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:65:40)
+    at Generator.invoke [as _invoke] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:303:22)
+    at Generator.prototype.(anonymous function) [as next] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:117:21)
+    at step (/home/lalit/webroot/testingtool/src/cron/backtrack.js:55:191)
+    at /home/lalit/webroot/testingtool/src/cron/backtrack.js:55:361
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-ERROR: TypeError: str1.split is not a function
+    at backtrack._fixBoundary (/home/lalit/webroot/testingtool/src/cron/backtrack.js:244:27)
+    at backtrack._callee4$ (/home/lalit/webroot/testingtool/src/cron/backtrack.js:390:41)
+    at tryCatch (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:65:40)
+    at Generator.invoke [as _invoke] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:303:22)
+    at Generator.prototype.(anonymous function) [as next] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:117:21)
+    at step (/home/lalit/webroot/testingtool/src/cron/backtrack.js:55:191)
+    at /home/lalit/webroot/testingtool/src/cron/backtrack.js:55:361
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-ERROR: { __v: 0,
+  key: 'toPort',
+  priority: 1,
+  compared_url: 'http://blazedemo.com/reserve.php',
+  location: 'post_data',
+  reg_count: 'NA',
+  optimal_reg_number: null,
+  final_regex: 'false',
+  scenario: 5b9e004a3bdf8033cfe20edb,
+  _id: 5bcf5be7c07f131784511360,
+  second:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="New York">',
+     request: 5bcc497696a1a92eedbffd22,
+     run: 5ba255b716ba6e92e5ce908c },
+  first:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="Rome">',
+     request: 5bcc492c96a1a92eedbffd0e,
+     run: 5b9e004a3bdf8033cfe20eec } }
+[2018-10-23] APP-INFO: xxx GET /app/run/backtrack 404 3224ms
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-ERROR: { __v: 0,
+  key: 'toPort',
+  priority: 1,
+  compared_url: 'http://blazedemo.com/reserve.php',
+  location: 'post_data',
+  reg_count: 'NA',
+  optimal_reg_number: null,
+  final_regex: 'false',
+  scenario: 5b9e004a3bdf8033cfe20edb,
+  _id: 5bcf5f3495a90c18b6657ebb,
+  second:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="New York">',
+     request: 5bcc497696a1a92eedbffd22,
+     run: 5ba255b716ba6e92e5ce908c },
+  first:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="Rome">',
+     request: 5bcc492c96a1a92eedbffd0e,
+     run: 5b9e004a3bdf8033cfe20eec } }
+[2018-10-23] APP-INFO: xxx GET /app/run/backtrack 404 2537ms
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-ERROR: { __v: 0,
+  key: 'toPort',
+  priority: 1,
+  compared_url: 'http://blazedemo.com/reserve.php',
+  location: 'post_data',
+  reg_count: 'NA',
+  optimal_reg_number: null,
+  final_regex: 'false',
+  scenario: 5b9e004a3bdf8033cfe20edb,
+  _id: 5bcf5f47c0122f18fcb64771,
+  second:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="New York">',
+     request: 5bcc497696a1a92eedbffd22,
+     run: 5ba255b716ba6e92e5ce908c },
+  first:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="Rome">',
+     request: 5bcc492c96a1a92eedbffd0e,
+     run: 5b9e004a3bdf8033cfe20eec } }
+[2018-10-23] APP-INFO: xxx GET /app/run/backtrack 404 2415ms
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-ERROR: { __v: 0,
+  key: 'toPort',
+  priority: 1,
+  compared_url: 'http://blazedemo.com/reserve.php',
+  location: 'post_data',
+  reg_count: '',
+  optimal_reg_number: null,
+  final_regex: '<input type="text" name="toPort" value="Rome">',
+  scenario: 5b9e004a3bdf8033cfe20edb,
+  _id: 5bcf5fd9c811a019bd848a13,
+  second:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="New York">',
+     request: 5bcc497696a1a92eedbffd22,
+     run: 5ba255b716ba6e92e5ce908c },
+  first:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="Rome">',
+     request: 5bcc492c96a1a92eedbffd0e,
+     run: 5b9e004a3bdf8033cfe20eec } }
+[2018-10-23] APP-INFO: xxx GET /app/run/backtrack 404 2710ms
+[2018-10-23] APP-INFO: Server started at http://0.0.0.0:8080/
+[2018-10-23] APP-ERROR: { __v: 0,
+  key: 'toPort',
+  priority: 1,
+  compared_url: 'http://blazedemo.com/reserve.php',
+  location: 'post_data',
+  reg_count: '',
+  optimal_reg_number: null,
+  final_regex: '<input type="text" name="toPort" value="Rome">',
+  scenario: 5b9e004a3bdf8033cfe20edb,
+  _id: 5bcf600b58e0e11b2c850cde,
+  second:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="New York">',
+     request: 5bcc497696a1a92eedbffd22,
+     run: 5ba255b716ba6e92e5ce908c },
+  first:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="Rome">',
+     request: 5bcc492c96a1a92eedbffd0e,
+     run: 5b9e004a3bdf8033cfe20eec } }
+[2018-10-23] APP-INFO: xxx GET /app/run/backtrack 404 2329ms

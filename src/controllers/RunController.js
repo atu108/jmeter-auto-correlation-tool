@@ -17,6 +17,7 @@ import Backtrack from '../models/Backtrack';
 import Correlation from '../models/Correlation';
 import Session from '../models/Session';
 import {URL} from 'url';
+import { resolveArray } from '../utility/jmxConstants';
 class RunController{
   constructor(){
     return {
@@ -207,7 +208,7 @@ class RunController{
   async generateJmx(){
 
       // run will be paseed to this function
-      const run = '5baf5ebce9044e71dde270ee';
+      const run = '5b9e004a3bdf8033cfe20eec';
       const startXml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
           '<jmeterTestPlan version="1.2" properties="3.2" jmeter="3.3 r1808647">\n' +
           '  <hashTree>\n' +
@@ -314,19 +315,16 @@ class RunController{
         </TransactionController><hashTree>`;
           for(let j = 0; j < requests.length; j++){
               let hasReg = await Correlation.find({"first.request":requests[j]._id,final_regex:{$ne:'false'}});
+              console.log("hr");
+              let moreDynamic = await resolveArray(requests[j].request.post_data, requests[j]._id);
+              console.log("heeelo trlr", moreDynamic);
+              //let hasDiff = await Difference.find({"first.request":requests[j]._id});
               let myURL = new URL(requests[j].url);
               dynamicData += `<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="${myURL.pathname}" enabled="true">
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             ${requests[j].request.post_data.length === 0?
                   `<collectionProp name="Arguments.arguments"/>`:
-                  `<collectionProp name="Arguments.arguments">${requests[j].request.post_data.map((post_data)=>
-                      `<elementProp name="key" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.name">${Object.keys(post_data)[0]}</stringProp>
-                  <stringProp name="Argument.value">${post_data[Object.keys(post_data)[0]]}</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                </elementProp>`).join('')}
+                  `<collectionProp name="Arguments.arguments">${moreDynamic}
               </collectionProp>`}
             </elementProp>
             <stringProp name="HTTPSampler.domain">${myURL.hostname}</stringProp>
@@ -357,7 +355,7 @@ class RunController{
             <hashTree/>
             ${hasReg.map((hasReg)=>`<RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="client_id_REX" enabled="true">
               <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-              <stringProp name="RegexExtractor.refname">${hasReg.key}_Cor</stringProp>
+              <stringProp name="RegexExtractor.refname">${hasReg.reg_name}</stringProp>
               <stringProp name="RegexExtractor.regex">${this._encodeHtml(hasReg.final_regex)}</stringProp>
               <stringProp name="RegexExtractor.template">${hasReg.regCount}</stringProp>
               <stringProp name="RegexExtractor.default">${hasReg.key}_Not_Found</stringProp>
@@ -368,12 +366,13 @@ class RunController{
           }
           dynamicData +='</hashTree>'
       }
-      const  runDetails = await Run.findById(run).populate('scenario');
-      let file = fs.createWriteStream(`${config.storage.path}${runDetails.scenario.name}.jmx`);
-      file.write(startXml+dynamicData+endXml);
-
+      // const  runDetails = await Run.findById(run).populate('scenario');
+      console.log("jmx to read",dynamicData);
+  
+      let file = fs.createWriteStream(`${config.storage.path}atul.jmx`);
+      file.write(startXml+dynamicData+endXml);  
       file.close();
-      return `/jmx/${runDetails.scenario.name}.jmx`;
+      return true;
   }
     _encodeHtml(str){
         const escapeChars = {

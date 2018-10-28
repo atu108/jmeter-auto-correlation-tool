@@ -51,14 +51,8 @@ class backtrack {
             }
         }
         await Correlation.insertMany(correlations);
-        // await RunController.generateJmx();
-        // ctx.body = {type:"Success", message:"It done check Db",};
-
-        // process.send({
-        //     mismatchUrls:this.mismatchedUrls,
-        //     comparissions:this.comparissions,
-        //     compare:this.params
-        // });
+        await RunController.generateJmx();
+        ctx.body = {type:"Success", message:"It done check Db"};
     }
 
     async _searchInBody(diff){
@@ -400,7 +394,7 @@ class backtrack {
                             compared_url: diff.url,
                             location: diff.location,
                             reg_count: this._countReg(finalReg+'>'),
-                            optimal_reg_number: '',
+                            reg_name: "prefEasy_Cor",
                             final_regex: finalReg+'>',
                             first: {
                                 url: allRequests[i].url,
