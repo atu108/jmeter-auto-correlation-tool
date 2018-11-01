@@ -315,16 +315,14 @@ class RunController{
         </TransactionController><hashTree>`;
           for(let j = 0; j < requests.length; j++){
               let hasReg = await Correlation.find({"first.request":requests[j]._id,final_regex:{$ne:'false'}});
-              console.log("hr");
-              let moreDynamic = await resolveArray(requests[j].request.post_data, requests[j]._id);
-              console.log("heeelo trlr", moreDynamic);
+              // console.log("data to read", moreDynamic);
               //let hasDiff = await Difference.find({"first.request":requests[j]._id});
               let myURL = new URL(requests[j].url);
               dynamicData += `<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="${myURL.pathname}" enabled="true">
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             ${requests[j].request.post_data.length === 0?
                   `<collectionProp name="Arguments.arguments"/>`:
-                  `<collectionProp name="Arguments.arguments">${moreDynamic}
+                  `<collectionProp name="Arguments.arguments">${await resolveArray(requests[j].request.post_data, requests[j]._id)}
               </collectionProp>`}
             </elementProp>
             <stringProp name="HTTPSampler.domain">${myURL.hostname}</stringProp>
@@ -367,7 +365,7 @@ class RunController{
           dynamicData +='</hashTree>'
       }
       // const  runDetails = await Run.findById(run).populate('scenario');
-      console.log("jmx to read",dynamicData);
+      // console.log("jmx to read",dynamicData);
   
       let file = fs.createWriteStream(`${config.storage.path}atul.jmx`);
       file.write(startXml+dynamicData+endXml);  

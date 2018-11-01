@@ -52,6 +52,10 @@ const CorrelationSchema = new Schema({
     scenario:{
         type: Schema.Types.ObjectId,
         ref:"Scenario"
+    },
+    difference:{
+        type: Schema.Types.ObjectId,
+        ref:"Difference"
     }
 });
 

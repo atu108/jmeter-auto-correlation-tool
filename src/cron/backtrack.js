@@ -234,10 +234,13 @@ class backtrack {
         return false;
     }
 
-    _fixBoundary(str1,str2){
+    _fixBoundary(str1,str2,values){
+        let temp = [str1.replace(values[0],'(*?)'),str2.replace(values[1],'(*?)')]
+        if(temp[0] === temp[1])
+        return temp[0];
         // console.log("strings ", str1, str2)
-        const arr1 = str1.split(' ');
-        const arr2 = str2.split(' ');
+        const arr1 = temp[0].split(' ');
+        const arr2 = temp[1].split(' ');
         // console.log("both arrys", arr1, arr2);
         if(arr1.length < 1 || arr1.length < 1) return false;
         const obj1 = this._parseTag(arr1);
@@ -374,11 +377,12 @@ class backtrack {
             if(tags.value && tags.value.length > 0){
                 let second = await Request.find({run:runs[1],url:allRequests[i].url, session_sequence:allRequests[i].session_sequence, 'request.method':allRequests[i].request.method});
                 let sencondTags = [];
-                if(tags.type === 1){
-                    sencondTags = this.findInput(second[0].response.body, key , value2)
-                }else{
-                    sencondTags = this.findSelect(second[0].response.body, key , value2)
-                }
+                    if(tags.type === 1){
+                        sencondTags = this.findInput(second[0].response.body, key , value2)
+                    }else{
+                        sencondTags = this.findSelect(second[0].response.body, key , value2)
+                    }
+               
                 if(sencondTags.length > 0){
                     let forFinalReg = this.checkExactMatch(tags.value, sencondTags);
                     if(!forFinalReg){
@@ -387,14 +391,15 @@ class backtrack {
                     if(forFinalReg){
                         forFinalReg[0].attribs.value = forFinalReg[0].attribs.value.replace(" ", '+');
                         forFinalReg[1].attribs.value = forFinalReg[1].attribs.value.replace(" ", '+');
-                        finalReg = this._fixBoundary(cheerio.html(forFinalReg[0]), cheerio.html(forFinalReg[1]));
+                        finalReg = this._fixBoundary(cheerio.html(forFinalReg[0]), cheerio.html(forFinalReg[1]), [value1, value2]);
+                        const reg_name = this._getRegName(finalReg,cheerio.html(forFinalReg[0]),value1,key)
                         return {
                             key: key,
                             priority: 1,
                             compared_url: diff.url,
                             location: diff.location,
                             reg_count: this._countReg(finalReg+'>'),
-                            reg_name: "prefEasy_Cor",
+                            reg_name: reg_name,
                             final_regex: finalReg+'>',
                             first: {
                                 url: allRequests[i].url,
@@ -414,7 +419,8 @@ class backtrack {
                                 run: second[0].run
                 
                             },
-                            scenario:diff.scenario
+                            scenario:diff.scenario,
+                            difference:diff._id
                         }
                     }
                 }
@@ -422,6 +428,8 @@ class backtrack {
         }
         return false;
     }
+
+
 
     checkExactMatch(tag, tag2){
         //console.log("input check match")
@@ -484,8 +492,19 @@ class backtrack {
         }
     }
 
-
+    _getRegName(final,matched,value,key){
+    let resultArr = matched.match(new RegExp(final+">"))
+    for(let i = 1; i < resultArr.length; i++){
+        if(resultArr[i].replace(/"/g, '').replace(/'/g,'') === value){
+            return key+"_COR_g"+i;
+        }else{
+            console.log(resultArr[i].replace('"', '',g))
+        }
+    }
+    
+    }
 }
+
 
 // process.on('message', async (params) => {
 //     const compare = new Compare(params);

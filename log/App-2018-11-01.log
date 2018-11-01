@@ -1,0 +1,418 @@
+[2018-11-01] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-01] APP-ERROR: MongoError: failed to connect to server [127.0.0.1:27017] on first connect [MongoError: connect ECONNREFUSED 127.0.0.1:27017]
+    at Pool.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/topologies/server.js:336:35)
+    at Pool.emit (events.js:182:13)
+    at Pool.EventEmitter.emit (domain.js:442:20)
+    at Connection.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/pool.js:280:12)
+    at Object.onceWrapper (events.js:273:13)
+    at Connection.emit (events.js:182:13)
+    at Connection.EventEmitter.emit (domain.js:442:20)
+    at Socket.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/connection.js:187:49)
+    at Object.onceWrapper (events.js:273:13)
+    at Socket.emit (events.js:182:13)
+    at Socket.EventEmitter.emit (domain.js:442:20)
+    at emitErrorNT (internal/streams/destroy.js:82:8)
+    at emitErrorAndCloseNT (internal/streams/destroy.js:50:3)
+    at process._tickCallback (internal/process/next_tick.js:63:19)
+[2018-11-01] APP-ERROR: MongoError: failed to connect to server [127.0.0.1:27017] on first connect [MongoError: connect ECONNREFUSED 127.0.0.1:27017]
+    at Pool.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/topologies/server.js:336:35)
+    at Pool.emit (events.js:182:13)
+    at Pool.EventEmitter.emit (domain.js:442:20)
+    at Connection.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/pool.js:280:12)
+    at Object.onceWrapper (events.js:273:13)
+    at Connection.emit (events.js:182:13)
+    at Connection.EventEmitter.emit (domain.js:442:20)
+    at Socket.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/connection.js:187:49)
+    at Object.onceWrapper (events.js:273:13)
+    at Socket.emit (events.js:182:13)
+    at Socket.EventEmitter.emit (domain.js:442:20)
+    at emitErrorNT (internal/streams/destroy.js:82:8)
+    at emitErrorAndCloseNT (internal/streams/destroy.js:50:3)
+    at process._tickCallback (internal/process/next_tick.js:63:19)
+[2018-11-01] APP-ERROR: MongoError: failed to connect to server [127.0.0.1:27017] on first connect [MongoError: connect ECONNREFUSED 127.0.0.1:27017]
+    at Pool.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/topologies/server.js:336:35)
+    at Pool.emit (events.js:182:13)
+    at Pool.EventEmitter.emit (domain.js:442:20)
+    at Connection.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/pool.js:280:12)
+    at Object.onceWrapper (events.js:273:13)
+    at Connection.emit (events.js:182:13)
+    at Connection.EventEmitter.emit (domain.js:442:20)
+    at Socket.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/connection.js:187:49)
+    at Object.onceWrapper (events.js:273:13)
+    at Socket.emit (events.js:182:13)
+    at Socket.EventEmitter.emit (domain.js:442:20)
+    at emitErrorNT (internal/streams/destroy.js:82:8)
+    at emitErrorAndCloseNT (internal/streams/destroy.js:50:3)
+    at process._tickCallback (internal/process/next_tick.js:63:19)
+[2018-11-01] APP-ERROR: MongoError: failed to connect to server [127.0.0.1:27017] on first connect [MongoError: connect ECONNREFUSED 127.0.0.1:27017]
+    at Pool.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/topologies/server.js:336:35)
+    at Pool.emit (events.js:182:13)
+    at Pool.EventEmitter.emit (domain.js:442:20)
+    at Connection.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/pool.js:280:12)
+    at Object.onceWrapper (events.js:273:13)
+    at Connection.emit (events.js:182:13)
+    at Connection.EventEmitter.emit (domain.js:442:20)
+    at Socket.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/connection.js:187:49)
+    at Object.onceWrapper (events.js:273:13)
+    at Socket.emit (events.js:182:13)
+    at Socket.EventEmitter.emit (domain.js:442:20)
+    at emitErrorNT (internal/streams/destroy.js:82:8)
+    at emitErrorAndCloseNT (internal/streams/destroy.js:50:3)
+    at process._tickCallback (internal/process/next_tick.js:63:19)
+[2018-11-01] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-01] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-01] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-01] APP-ERROR: { __v: 0,
+  key: 'toPort',
+  priority: 1,
+  compared_url: 'http://blazedemo.com/reserve.php',
+  location: 'post_data',
+  reg_count: '$1$',
+  reg_name: 'toPort_COR_g-1',
+  final_regex: '<input type="text" name="toPort" value=(.*?)>',
+  scenario: 5b9e004a3bdf8033cfe20edb,
+  difference: 5bd569dfffb4760c99a65f94,
+  _id: 5bdb38c14a880f160ab0fd74,
+  second:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="New+York">',
+     request: 5bd569b4ffb4760c99a65f7e,
+     run: 5ba255b716ba6e92e5ce908c },
+  first:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="Rome">',
+     request: 5bd5698fffb4760c99a65f6a,
+     run: 5b9e004a3bdf8033cfe20eec } }
+[2018-11-01] APP-INFO: --> GET /app/run/backtrack 200 4031ms
+[2018-11-01] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-01] APP-ERROR: { __v: 0,
+  key: 'toPort',
+  priority: 1,
+  compared_url: 'http://blazedemo.com/reserve.php',
+  location: 'post_data',
+  reg_count: '$1$',
+  reg_name: 'toPort_COR_g-1',
+  final_regex: '<input type="text" name="toPort" value=(.*?)>',
+  scenario: 5b9e004a3bdf8033cfe20edb,
+  difference: 5bd569dfffb4760c99a65f94,
+  _id: 5bdb3914e676d91770ab38e0,
+  second:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="New+York">',
+     request: 5bd569b4ffb4760c99a65f7e,
+     run: 5ba255b716ba6e92e5ce908c },
+  first:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="Rome">',
+     request: 5bd5698fffb4760c99a65f6a,
+     run: 5b9e004a3bdf8033cfe20eec } }
+[2018-11-01] APP-INFO: --> GET /app/run/backtrack 200 3685ms
+[2018-11-01] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-01] APP-ERROR: { __v: 0,
+  key: 'toPort',
+  priority: 1,
+  compared_url: 'http://blazedemo.com/reserve.php',
+  location: 'post_data',
+  reg_count: '$1$',
+  reg_name: 'toPort_COR_g-1',
+  final_regex: '<input type="text" name="toPort" value=(.*?)>',
+  scenario: 5b9e004a3bdf8033cfe20edb,
+  difference: 5bd569dfffb4760c99a65f94,
+  _id: 5bdb39a76920c717efb3f6d0,
+  second:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="New+York">',
+     request: 5bd569b4ffb4760c99a65f7e,
+     run: 5ba255b716ba6e92e5ce908c },
+  first:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="Rome">',
+     request: 5bd5698fffb4760c99a65f6a,
+     run: 5b9e004a3bdf8033cfe20eec } }
+[2018-11-01] APP-INFO: --> GET /app/run/backtrack 200 3778ms
+[2018-11-01] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-01] APP-ERROR: { __v: 0,
+  key: 'toPort',
+  priority: 1,
+  compared_url: 'http://blazedemo.com/reserve.php',
+  location: 'post_data',
+  reg_count: '$1$',
+  reg_name: 'toPort_COR_g-1',
+  final_regex: '<input type="text" name="toPort" value=(.*?)>',
+  scenario: 5b9e004a3bdf8033cfe20edb,
+  difference: 5bd569dfffb4760c99a65f94,
+  _id: 5bdb3a1b7b74c21a393d8920,
+  second:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="New+York">',
+     request: 5bd569b4ffb4760c99a65f7e,
+     run: 5ba255b716ba6e92e5ce908c },
+  first:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="Rome">',
+     request: 5bd5698fffb4760c99a65f6a,
+     run: 5b9e004a3bdf8033cfe20eec } }
+[2018-11-01] APP-INFO: --> GET /app/run/backtrack 200 3496ms
+[2018-11-01] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-01] APP-ERROR: { __v: 0,
+  key: 'toPort',
+  priority: 1,
+  compared_url: 'http://blazedemo.com/reserve.php',
+  location: 'post_data',
+  reg_count: '$1$',
+  reg_name: 'toPort_COR_g-1',
+  final_regex: '<input type="text" name="toPort" value=(.*?)>',
+  scenario: 5b9e004a3bdf8033cfe20edb,
+  difference: 5bd569dfffb4760c99a65f94,
+  _id: 5bdb3aa3154e881ada0983f6,
+  second:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="New+York">',
+     request: 5bd569b4ffb4760c99a65f7e,
+     run: 5ba255b716ba6e92e5ce908c },
+  first:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="Rome">',
+     request: 5bd5698fffb4760c99a65f6a,
+     run: 5b9e004a3bdf8033cfe20eec } }
+[2018-11-01] APP-INFO: --> GET /app/run/backtrack 200 4147ms
+[2018-11-01] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-01] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-01] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-01] APP-ERROR: { __v: 0,
+  key: 'toPort',
+  priority: 1,
+  compared_url: 'http://blazedemo.com/reserve.php',
+  location: 'post_data',
+  reg_count: '$1$',
+  final_regex: '<input type="text" name="toPort" value=(.*?)>',
+  scenario: 5b9e004a3bdf8033cfe20edb,
+  difference: 5bd569dfffb4760c99a65f94,
+  _id: 5bdb3b8454d96d1deee43e6b,
+  second:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="New+York">',
+     request: 5bd569b4ffb4760c99a65f7e,
+     run: 5ba255b716ba6e92e5ce908c },
+  first:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="Rome">',
+     request: 5bd5698fffb4760c99a65f6a,
+     run: 5b9e004a3bdf8033cfe20eec } }
+[2018-11-01] APP-INFO: --> GET /app/run/backtrack 200 3712ms
+[2018-11-01] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-01] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-01] APP-ERROR: { __v: 0,
+  key: 'toPort',
+  priority: 1,
+  compared_url: 'http://blazedemo.com/reserve.php',
+  location: 'post_data',
+  reg_count: '$1$',
+  final_regex: '<input type="text" name="toPort" value=(.*?)>',
+  scenario: 5b9e004a3bdf8033cfe20edb,
+  difference: 5bd569dfffb4760c99a65f94,
+  _id: 5bdb3c004ca00e1f7b2930ad,
+  second:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="New+York">',
+     request: 5bd569b4ffb4760c99a65f7e,
+     run: 5ba255b716ba6e92e5ce908c },
+  first:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="Rome">',
+     request: 5bd5698fffb4760c99a65f6a,
+     run: 5b9e004a3bdf8033cfe20eec } }
+[2018-11-01] APP-INFO: --> GET /app/run/backtrack 200 3762ms
+[2018-11-01] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-01] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-01] APP-ERROR: { __v: 0,
+  key: 'toPort',
+  priority: 1,
+  compared_url: 'http://blazedemo.com/reserve.php',
+  location: 'post_data',
+  reg_count: '$1$',
+  final_regex: '<input type="text" name="toPort" value=(.*?)>',
+  scenario: 5b9e004a3bdf8033cfe20edb,
+  difference: 5bd569dfffb4760c99a65f94,
+  _id: 5bdb3c5dae02292118ff9c11,
+  second:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="New+York">',
+     request: 5bd569b4ffb4760c99a65f7e,
+     run: 5ba255b716ba6e92e5ce908c },
+  first:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="Rome">',
+     request: 5bd5698fffb4760c99a65f6a,
+     run: 5b9e004a3bdf8033cfe20eec } }
+[2018-11-01] APP-INFO: --> GET /app/run/backtrack 200 3762ms
+[2018-11-01] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-01] APP-ERROR: { __v: 0,
+  key: 'toPort',
+  priority: 1,
+  compared_url: 'http://blazedemo.com/reserve.php',
+  location: 'post_data',
+  reg_count: '$1$',
+  final_regex: '<input type="text" name="toPort" value=(.*?)>',
+  scenario: 5b9e004a3bdf8033cfe20edb,
+  difference: 5bd569dfffb4760c99a65f94,
+  _id: 5bdb3cbf7d008721a935acef,
+  second:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="New+York">',
+     request: 5bd569b4ffb4760c99a65f7e,
+     run: 5ba255b716ba6e92e5ce908c },
+  first:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="Rome">',
+     request: 5bd5698fffb4760c99a65f6a,
+     run: 5b9e004a3bdf8033cfe20eec } }
+[2018-11-01] APP-INFO: --> GET /app/run/backtrack 200 3727ms
+[2018-11-01] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-01] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-01] APP-ERROR: { __v: 0,
+  key: 'toPort',
+  priority: 1,
+  compared_url: 'http://blazedemo.com/reserve.php',
+  location: 'post_data',
+  reg_count: '$1$',
+  final_regex: '<input type="text" name="toPort" value=(.*?)>',
+  scenario: 5b9e004a3bdf8033cfe20edb,
+  difference: 5bd569dfffb4760c99a65f94,
+  _id: 5bdb3ce0360072223858dee6,
+  second:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="New+York">',
+     request: 5bd569b4ffb4760c99a65f7e,
+     run: 5ba255b716ba6e92e5ce908c },
+  first:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="Rome">',
+     request: 5bd5698fffb4760c99a65f6a,
+     run: 5b9e004a3bdf8033cfe20eec } }
+[2018-11-01] APP-INFO: --> GET /app/run/backtrack 200 3732ms
+[2018-11-01] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-01] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-01] APP-ERROR: { __v: 0,
+  key: 'toPort',
+  priority: 1,
+  compared_url: 'http://blazedemo.com/reserve.php',
+  location: 'post_data',
+  reg_count: '$1$',
+  final_regex: '<input type="text" name="toPort" value=(.*?)>',
+  scenario: 5b9e004a3bdf8033cfe20edb,
+  difference: 5bd569dfffb4760c99a65f94,
+  _id: 5bdb3d1e498a202341cf225d,
+  second:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="New+York">',
+     request: 5bd569b4ffb4760c99a65f7e,
+     run: 5ba255b716ba6e92e5ce908c },
+  first:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="Rome">',
+     request: 5bd5698fffb4760c99a65f6a,
+     run: 5b9e004a3bdf8033cfe20eec } }
+[2018-11-01] APP-INFO: --> GET /app/run/backtrack 200 3650ms
+[2018-11-01] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-01] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-01] APP-ERROR: { __v: 0,
+  key: 'toPort',
+  priority: 1,
+  compared_url: 'http://blazedemo.com/reserve.php',
+  location: 'post_data',
+  reg_count: '$1$',
+  final_regex: '<input type="text" name="toPort" value=(.*?)>',
+  scenario: 5b9e004a3bdf8033cfe20edb,
+  difference: 5bd569dfffb4760c99a65f94,
+  _id: 5bdb3d48a889f22422fc950d,
+  second:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="New+York">',
+     request: 5bd569b4ffb4760c99a65f7e,
+     run: 5ba255b716ba6e92e5ce908c },
+  first:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="Rome">',
+     request: 5bd5698fffb4760c99a65f6a,
+     run: 5b9e004a3bdf8033cfe20eec } }
+[2018-11-01] APP-INFO: --> GET /app/run/backtrack 200 3747ms
+[2018-11-01] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-01] APP-ERROR: { __v: 0,
+  key: 'toPort',
+  priority: 1,
+  compared_url: 'http://blazedemo.com/reserve.php',
+  location: 'post_data',
+  reg_count: '$1$',
+  final_regex: '<input type="text" name="toPort" value=(.*?)>',
+  scenario: 5b9e004a3bdf8033cfe20edb,
+  difference: 5bd569dfffb4760c99a65f94,
+  _id: 5bdb3d7eba69e42461b5bf89,
+  second:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="New+York">',
+     request: 5bd569b4ffb4760c99a65f7e,
+     run: 5ba255b716ba6e92e5ce908c },
+  first:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="Rome">',
+     request: 5bd5698fffb4760c99a65f6a,
+     run: 5b9e004a3bdf8033cfe20eec } }
+[2018-11-01] APP-INFO: --> GET /app/run/backtrack 200 3724ms
+[2018-11-01] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-01] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-01] APP-ERROR: ReferenceError: g is not defined
+    at backtrack._getRegName (/home/lalit/webroot/testingtool/src/cron/backtrack.js:507:54)
+    at backtrack._callee4$ (/home/lalit/webroot/testingtool/src/cron/backtrack.js:395:47)
+    at tryCatch (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:65:40)
+    at Generator.invoke [as _invoke] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:303:22)
+    at Generator.prototype.(anonymous function) [as next] (/home/lalit/webroot/testingtool/node_modules/regenerator-runtime/runtime.js:117:21)
+    at step (/home/lalit/webroot/testingtool/src/cron/backtrack.js:55:191)
+    at /home/lalit/webroot/testingtool/src/cron/backtrack.js:55:361
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2018-11-01] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-01] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-01] APP-ERROR: { __v: 0,
+  key: 'toPort',
+  priority: 1,
+  compared_url: 'http://blazedemo.com/reserve.php',
+  location: 'post_data',
+  reg_count: '$1$',
+  reg_name: 'toPort_COR_g1',
+  final_regex: '<input type="text" name="toPort" value=(.*?)>',
+  scenario: 5b9e004a3bdf8033cfe20edb,
+  difference: 5bd569dfffb4760c99a65f94,
+  _id: 5bdb3ed7b6d3ea26fb0fdeec,
+  second:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="New+York">',
+     request: 5bd569b4ffb4760c99a65f7e,
+     run: 5ba255b716ba6e92e5ce908c },
+  first:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="Rome">',
+     request: 5bd5698fffb4760c99a65f6a,
+     run: 5b9e004a3bdf8033cfe20eec } }
+[2018-11-01] APP-INFO: --> GET /app/run/backtrack 200 3585ms
+[2018-11-01] APP-ERROR: { __v: 0,
+  key: 'toPort',
+  priority: 1,
+  compared_url: 'http://blazedemo.com/reserve.php',
+  location: 'post_data',
+  reg_count: '$1$',
+  reg_name: 'toPort_COR_g1',
+  final_regex: '<input type="text" name="toPort" value=(.*?)>',
+  scenario: 5b9e004a3bdf8033cfe20edb,
+  difference: 5bd569dfffb4760c99a65f94,
+  _id: 5bdb3f45b6d3ea26fb0fdeed,
+  second:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="New+York">',
+     request: 5bd569b4ffb4760c99a65f7e,
+     run: 5ba255b716ba6e92e5ce908c },
+  first:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="Rome">',
+     request: 5bd5698fffb4760c99a65f6a,
+     run: 5b9e004a3bdf8033cfe20eec } }
+[2018-11-01] APP-INFO: Server started at http://0.0.0.0:4000/
