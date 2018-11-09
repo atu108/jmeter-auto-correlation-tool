@@ -1,0 +1,54 @@
+<header>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <ul class="nav pull-left">
+          <li><a href="/app" class="brand"></a></li>
+          <li><a href="/app/projects" class="white-color px10 uppercase light">Projects</a></li>
+          <li><a href="" class="white-color px10 uppercase light">Support</a></li>
+          <li><a href="" class="green-color px10 uppercase"><i class="icon-cloud-download"></i> Chrome Extension</a></li>
+        </ul>
+        <ul class="nav pull-right">
+          <li><a href="" class="red-color uppercase px10 weight700">Upgrade Now</a></li>
+          <li>
+            <div class="dropdown">
+              <div class="overlay"></div>
+              <a href="javascript:void(0);" class="dropdown-trigger white-color light px12">Ashok Vishwakarma <i class="icon-angle-down"></i></a>
+              <ul class="dropdown-options right">
+                <li><a href="">Settings</a></li>
+                <li><a href="/app/auth/logout">Logout</a></li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        @if(global.tabs)
+        <div class="page-title sub-nav-shown">
+        @else
+        <div class="page-title">
+        @endif
+          <a href="/app" class="brand"></a>
+          @if(global.sub)
+          <h2 class="weight100"><a href="{{global.back}}" class="white-color weight400">{{global.title}}</a> / {{global.sub}}</h2>
+          @else
+          <h2 class="weight100">{{global.title}}</h2>
+          @endif
+          @if(global.tabs)
+          <ul class="sub-nav">
+            @each(tab in global.tabs)
+            <li
+              @if(global.current === tab.action)
+              class="active"
+              @endif
+            ><a href="/app/{{tab.controller}}/{{global._id}}/{{tab.action}}">{{tab.label}}</a></li>
+            @endeach
+          </ul>
+          @endif
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

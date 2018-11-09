@@ -12,6 +12,5 @@ router.post('/record', auth, RunController.record)
   .post('/save', auth, RunController.save)
   .post('/compare', auth, RunController.compare)
   .post('/delete', auth, RunController.delete)
-    .get('/backtrack', backtrack.start)
 
 export default router;

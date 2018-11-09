@@ -35,7 +35,8 @@ class ScenarioController{
       steps: this.steps.bind(this),
       runs: this.runs.bind(this),
         differences : this.differences.bind(this),
-        correlations: this.correlations.bind(this)
+        correlations: this.correlations.bind(this),
+        save: this.save.bind(this)
     }
   }
 
@@ -59,6 +60,17 @@ class ScenarioController{
     ctx.body = template.render('app.scenario.steps', {steps, scenario, global: {title: scenario.name, tabs: _tabs, _id: ctx.params._id, current: "steps", sub: "Steps", back: `/app/project/${scenario.project}/scenarios`}});
   }
 
+  async save(ctx){
+  console.log("here", ctx);
+  let {name , project , start_url } = ctx.request.body;
+  await Scenario.create({name, project, start_url});
+  ctx.body = JSON.stringify({
+      type: "success",
+      message: "Project saved, reloading...",
+      reload: true
+    });
+  }
+
   async runs(ctx){
     const scenario = await Scenario.findById(ctx.params._id);
     const runs = await Run.find({scenario: ctx.params._id}).populate('sessions');
@@ -66,6 +78,7 @@ class ScenarioController{
   }
 
   async differences(ctx){
+    console.log("called here", ctx.params);
       const scenario = await Scenario.findById(ctx.params._id);
       const differences = await Difference.find({scenario:ctx.params._id});
       ctx.body = template.render('app.scenario.differences',{differences,scenario,global:{title:scenario.name,tabs:_tabs,_id:ctx.params._id,current:"differnces",sub:"Differences", back: `/app/project/${scenario.project}/scenarios`}})

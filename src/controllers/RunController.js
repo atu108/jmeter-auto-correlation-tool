@@ -25,7 +25,7 @@ class RunController{
       save: this.save.bind(this),
       compare: this.compare.bind(this),
       delete: this.delete.bind(this),
-        generateJmx : this.generateJmx.bind(this)
+      generateJmx : this.generateJmx.bind(this),
     }
   }
 
@@ -50,7 +50,8 @@ class RunController{
 
     job.done(async (res) => {
       if(res.comparissions.length > 0){
-        const differences = await Difference.insertMany(res["comparissions"]);
+        var differences = await Difference.insertMany(res["comparissions"]);
+        console.log("differns", differences)
         await this._updateComparision(differences);
       }
       if(res.comparissions.length > 0){
@@ -58,7 +59,10 @@ class RunController{
       }
 
       await Compare.findByIdAndUpdate(res.compare._id, {status: "done"});
-
+      if(differences.length > 0){
+        await this.backtrack(differences[0].scenario)
+      }
+      
     });
 
     ctx.body = JSON.stringify({
@@ -67,26 +71,23 @@ class RunController{
     });
   }
 
-  async backtrack(ctx){
-    const runs = await Run.find({scenario:ctx.request.body.scenario});
+  async backtrack(scenario){
+    console.log("called here")
+    const runs = await Run.find({scenario:scenario});
 
     const backtrack = await Backtrack.create({
-        title:"Backtrack"+ ctx.request.body.scenario_id,
-        run: ctx.request.body.ids,
-        scenario: runs.scenario,
+        title:"Backtrack"+ scenario,
+        run: [runs[0]._id, runs[1]._id],
+        scenario: runs[0].scenario,
         status:"new"
     })
       const job = new Cron('backtrack', backtrack);
     job.done( async (res)=>{
       if(res.correlations.length > 0){
-      await Correlation.insertMany(res['backtracks']);
+        await Correlation.insertMany(res['backtracks']);
       }
       await Backtrack.create(res.backtrack._id, {status:"done"});
     })
-      ctx.body = JSON.stringify({
-          type: "success",
-          message: "Backtracks added in queue to process"
-      });
   }
 
   async save(ctx){
@@ -96,27 +97,6 @@ class RunController{
       description: ctx.request.body.description,
       status: "done"
     });
-
-    // const steIds = Object.keys(ctx.request.body.values);
-    //
-    // if(steIds && steIds.length > 0){
-    //   const steps = await Step.find({_id:{$in:steIds}});
-    //
-    //   const values = [];
-    //
-    //   steps.forEach(step => {
-    //     values.push({
-    //       step: step._id,
-    //       target: step.target,
-    //       sequence: step.sequence,
-    //       value: ctx.request.body.values[step._id],
-    //       run: run._id
-    //     });
-    //   });
-    //
-    //   await RunValue.insertMany(values);
-    // }
-
     ctx.body = JSON.stringify({
       type: "success",
       message: "Recording saved, reloading...",
@@ -353,7 +333,7 @@ class RunController{
             <hashTree/>
             ${hasReg.map((hasReg)=>`<RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="client_id_REX" enabled="true">
               <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-              <stringProp name="RegexExtractor.refname">${hasReg.reg_name}</stringProp>
+              <stringProp name="RegexExtractor.refname">${hasReg.key + "_COR"}</stringProp>
               <stringProp name="RegexExtractor.regex">${this._encodeHtml(hasReg.final_regex)}</stringProp>
               <stringProp name="RegexExtractor.template">${hasReg.regCount}</stringProp>
               <stringProp name="RegexExtractor.default">${hasReg.key}_Not_Found</stringProp>

@@ -10,6 +10,7 @@
       LOGIN: '/app/auth/login'
     },
     SCENARIO: {
+      SAVE: '/app/scenario/save',
       DELETE: '/app/scenario/delete'
     },
     RUN: {
@@ -18,9 +19,16 @@
       COMPARE: '/app/run/compare',
       DELETE: '/app/run/delete'
     },
-      SESSION:{
+    SESSION:{
       SAVE:'/app/session/save'
-      }
+    },
+    PROJECT:{
+      SAVE:'app/project/save',
+      DELETE: 'app/project/delete'
+    },
+    CORRELATIONS:{
+      GENEREATE:'app/run/backtrack'
+    }
   };
 
   var App = {
@@ -164,7 +172,29 @@
         })
 
         return false;
-      }
+      },
+      openModel: function(e){
+        var $ele = $(e.currentTarget);
+        var values = $ele.data("values");
+        Util.modal.open($("#AddScenario"), {
+          beforeOpen: function($container){
+            App.run.form = new Util.Validator($container.find(".form").attr("name"));
+            App.run.$container = $container;
+          }
+        });
+
+        return false;
+      },
+        save: function(){
+          if(!App.run.form.checkDirty()) App.run.form.validate();
+          if(!App.run.form.valid()) return false;
+          var data = App.run.form.data();
+          Util.request.post(URL.SCENARIO.SAVE, JSON.stringify(data)).then(function(res){
+            Util.alert.show(res);
+            if(res.reload) Util.redirect(location.href, true);
+          });
+          return false;
+        }
     },
     step:{
       selected: []
@@ -226,6 +256,22 @@
 
         return false;
       },
+      backtrack: function(){
+        this.selected.forEach(function(rid){
+          var status = $("#_" + rid).data("status");
+          if(status !== "done"){
+            statusCheck = true;
+          }
+        });
+
+        if(statusCheck) return Util.alert.show({type: 'error', message: 'One or more run is in new or pending state.'}) && false;
+
+        Util.request.post(URL.RUN.COMPARE, JSON.stringify({ids: this.selected})).then(function(res){
+          Util.alert.show(res);
+        });
+
+        return false;
+      },
       delete: function(e){
         var $ele = $(e.currentTarget);
         var mode = $ele.data('mode');
@@ -250,6 +296,9 @@
         return false;
       }
     },
+    correlations:{
+
+    },
     session:{
         openModel: function(e){
             var $ele = $(e.currentTarget);
@@ -266,6 +315,32 @@
             Util.alert.show(res);
             if(res.reload) Util.redirect(location.href, true);
         }
+    },
+    project:{
+      openModel: function(e){
+        console.log("reached here");
+        Util.modal.open($("#AddProject"), {
+          beforeOpen: function($container){
+            App.run.form = new Util.Validator($container.find(".form").attr("name"));
+            App.run.$container = $container;
+          }
+        });
+      },
+      save: function(){
+        if(!App.run.form.checkDirty()) App.run.form.validate();
+        if(!App.run.form.valid()) return false;
+
+        var data = App.run.form.data();
+        Util.request.post(URL.PROJECT.SAVE, JSON.stringify(data)).then(function(res){
+          Util.alert.show(res);
+          if(res.reload) Util.redirect(location.href, true);
+        });
+        return false;
+      },
+
+      delete: function(){
+
+      }
     }
   };
 

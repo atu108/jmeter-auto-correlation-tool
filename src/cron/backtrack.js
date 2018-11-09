@@ -15,14 +15,10 @@ const cheerio = require("cheerio");
 class backtrack {
 
     constructor(params) {
-        // this.params = params;
-        // this.runs = params.runs;
-        // this.correlations = [];
-        // this.current = 0;
+        this.params = params;
+        this.correlations = [];
+        this.current = 0;
         this.connect();
-        return{
-            start:this.start.bind(this)
-        }
     }
 
     connect() {
@@ -33,26 +29,22 @@ class backtrack {
         mongoose.Promise = global.Promise;
     }
 
-    async start(ctx) {
-        let correlations = [];
-        const diffs = await Difference.find({scenario:'5b9e004a3bdf8033cfe20edb'}).populate('first.request',['sequence']).populate('second.request',['sequence']).populate('session');
-
+    async start() {
+        const diffs = await Difference.find({scenario:this.params.scenario}).populate('first.request',['sequence']).populate('second.request',['sequence']).populate('session');
         const loopTimes = diffs.length;
-        console.log("loop times", loopTimes);
         for(let i = 0; i < loopTimes; i++){
             console.log(i);
             if(diffs[i].duplicate !== ''){
                 continue;
             }
             let correlation = await this.searchInBodyNew(diffs[i]);
-            console.log("checking correlations", correlation);
             if(correlation){
-                correlations.push(correlation);
+                this.correlations.push(correlation);
             }
         }
-        await Correlation.insertMany(correlations);
-        await RunController.generateJmx();
-        ctx.body = {type:"Success", message:"It done check Db"};
+        process.send({
+            correlations:this.correlations
+          });
     }
 
     async _searchInBody(diff){
@@ -359,18 +351,20 @@ class backtrack {
 
         let runs = [diff.first.run, diff.second.run];
         const allRequests = await Request.find({run:runs[0],sequence:{$lt:stepSeq[0]}}).sort({ step_sequence: -1 });
-        console.log(allRequests.length);
         for(let i = 0; i < allRequests.length; i++){
             let body = allRequests[i].response.body;
             if(body === undefined || !body || body == ''){
                continue;
             }
+            if(diff.location === 'url'){
+                return this._findAchorTag(body,key,value,allRequests[i]);
+            }
+            
             let tags = {}
             tags.value = this.findInput(body, key, value1);
             tags.type = 1
             if(!tags.value){
                tags.value = this.findSelect(body, key, value1);
-               console.log(tags.value)
                tags.type = 2
             }
 
@@ -389,6 +383,7 @@ class backtrack {
                         forFinalReg = this.checkLooseMatch(tags.value, sencondTags);
                     }
                     if(forFinalReg){
+                        //removed empty space with + in cheerio returned object
                         forFinalReg[0].attribs.value = forFinalReg[0].attribs.value.replace(" ", '+');
                         forFinalReg[1].attribs.value = forFinalReg[1].attribs.value.replace(" ", '+');
                         finalReg = this._fixBoundary(cheerio.html(forFinalReg[0]), cheerio.html(forFinalReg[1]), [value1, value2]);
@@ -503,6 +498,62 @@ class backtrack {
     }
     
     }
+
+    // _findAchorTag(body,value1,value2, request){
+    //     try{
+    //         let $ = cheerio.load(body.replace((/\\/g, "")));
+    //         let anchor1 = $('a[href="'+value1+'"]').toArray();
+    //     // console.log("inputs check", typeof inputs, "all inouts", inputs[0]);
+    //     if(anchor1.length > 0){
+    //         let anchor2 = $('a[href="'+value2+'"]').toArray();
+    //         if(anchor2.length > 0){
+    //             let forFinalReg = this.checkExactMatch(anchor1, anchor2)
+    //             if(!forFinalReg){
+    //                 forFinalReg = this.checkLooseMatch(anchor1, anchor2);
+    //             }
+    //             if(forFinalReg){
+    //                 finalReg = this._fixBoundary(cheerio.html(forFinalReg[0]), cheerio.html(forFinalReg[1]), [value1, value2]);
+    //                 //const reg_name = this._getRegName(finalReg,cheerio.html(forFinalReg[0]),value1)
+    //                 const reg_name = "pending"
+    //                 return {
+    //                     key: key,
+    //                     priority: 1,
+    //                     compared_url: diff.url,
+    //                     location: diff.location,
+    //                     reg_count: this._countReg(finalReg+'>'),
+    //                     reg_name: reg_name,
+    //                     final_regex: finalReg+'>',
+    //                     first: {
+    //                         url: request.url,
+    //                         matched: cheerio.html(forFinalReg[0]),
+    //                         session_title: request.session.title,
+    //                         session_sequence:  request.session.sequence,
+    //                         request:request._id,
+    //                         run: request.run
+            
+    //                     },
+    //                     second: {
+    //                         url: second[0].url,
+    //                         matched: cheerio.html(forFinalReg[1]),
+    //                         session_title: second[0].session.title,
+    //                         session_sequence:  second[0].session.sequence,
+    //                         request: second[0]._id,
+    //                         run: second[0].run
+            
+    //                     },
+    //                     scenario:diff.scenario,
+    //                     difference:diff._id
+    //                 }
+    //             }
+    //         }
+          
+    //     }else{
+    //         return false;
+    //     }
+    //     }catch(e){
+    //         console.log(e);
+    //     }
+    // }
 }
 
 

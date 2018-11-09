@@ -9,6 +9,7 @@ const router = new Router({
 
 router.get('/', auth, ProjectController.index)
   .get('/projects', auth, ProjectController.index)
+  .post('/project/save', auth, ProjectController.save)
   .get('/project/:_id/scenarios', auth, ProjectController.scenarios);
 
 export default router;

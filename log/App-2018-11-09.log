@@ -1,0 +1,1521 @@
+[2018-11-09] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-09] APP-ERROR: MongoError: failed to connect to server [127.0.0.1:27017] on first connect [MongoError: connect ECONNREFUSED 127.0.0.1:27017]
+    at Pool.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/topologies/server.js:336:35)
+    at Pool.emit (events.js:182:13)
+    at Pool.EventEmitter.emit (domain.js:442:20)
+    at Connection.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/pool.js:280:12)
+    at Object.onceWrapper (events.js:273:13)
+    at Connection.emit (events.js:182:13)
+    at Connection.EventEmitter.emit (domain.js:442:20)
+    at Socket.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/connection.js:189:49)
+    at Object.onceWrapper (events.js:273:13)
+    at Socket.emit (events.js:182:13)
+    at Socket.EventEmitter.emit (domain.js:442:20)
+    at emitErrorNT (internal/streams/destroy.js:82:8)
+    at emitErrorAndCloseNT (internal/streams/destroy.js:50:3)
+    at process._tickCallback (internal/process/next_tick.js:63:19)
+[2018-11-09] APP-ERROR: MongoError: failed to connect to server [127.0.0.1:27017] on first connect [MongoError: connect ECONNREFUSED 127.0.0.1:27017]
+    at Pool.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/topologies/server.js:336:35)
+    at Pool.emit (events.js:182:13)
+    at Pool.EventEmitter.emit (domain.js:442:20)
+    at Connection.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/pool.js:280:12)
+    at Object.onceWrapper (events.js:273:13)
+    at Connection.emit (events.js:182:13)
+    at Connection.EventEmitter.emit (domain.js:442:20)
+    at Socket.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/connection.js:189:49)
+    at Object.onceWrapper (events.js:273:13)
+    at Socket.emit (events.js:182:13)
+    at Socket.EventEmitter.emit (domain.js:442:20)
+    at emitErrorNT (internal/streams/destroy.js:82:8)
+    at emitErrorAndCloseNT (internal/streams/destroy.js:50:3)
+    at process._tickCallback (internal/process/next_tick.js:63:19)
+[2018-11-09] APP-ERROR: MongoError: failed to connect to server [127.0.0.1:27017] on first connect [MongoError: connect ECONNREFUSED 127.0.0.1:27017]
+    at Pool.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/topologies/server.js:336:35)
+    at Pool.emit (events.js:182:13)
+    at Pool.EventEmitter.emit (domain.js:442:20)
+    at Connection.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/pool.js:280:12)
+    at Object.onceWrapper (events.js:273:13)
+    at Connection.emit (events.js:182:13)
+    at Connection.EventEmitter.emit (domain.js:442:20)
+    at Socket.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/connection.js:189:49)
+    at Object.onceWrapper (events.js:273:13)
+    at Socket.emit (events.js:182:13)
+    at Socket.EventEmitter.emit (domain.js:442:20)
+    at emitErrorNT (internal/streams/destroy.js:82:8)
+    at emitErrorAndCloseNT (internal/streams/destroy.js:50:3)
+    at process._tickCallback (internal/process/next_tick.js:63:19)
+[2018-11-09] APP-ERROR: MongoError: failed to connect to server [127.0.0.1:27017] on first connect [MongoError: connect ECONNREFUSED 127.0.0.1:27017]
+    at Pool.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/topologies/server.js:336:35)
+    at Pool.emit (events.js:182:13)
+    at Pool.EventEmitter.emit (domain.js:442:20)
+    at Connection.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/pool.js:280:12)
+    at Object.onceWrapper (events.js:273:13)
+    at Connection.emit (events.js:182:13)
+    at Connection.EventEmitter.emit (domain.js:442:20)
+    at Socket.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/connection.js:189:49)
+    at Object.onceWrapper (events.js:273:13)
+    at Socket.emit (events.js:182:13)
+    at Socket.EventEmitter.emit (domain.js:442:20)
+    at emitErrorNT (internal/streams/destroy.js:82:8)
+    at emitErrorAndCloseNT (internal/streams/destroy.js:50:3)
+    at process._tickCallback (internal/process/next_tick.js:63:19)
+[2018-11-09] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-09] APP-ERROR: MongoError: failed to connect to server [127.0.0.1:27017] on first connect [MongoError: connect ECONNREFUSED 127.0.0.1:27017]
+    at Pool.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/topologies/server.js:336:35)
+    at Pool.emit (events.js:182:13)
+    at Pool.EventEmitter.emit (domain.js:442:20)
+    at Connection.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/pool.js:280:12)
+    at Object.onceWrapper (events.js:273:13)
+    at Connection.emit (events.js:182:13)
+    at Connection.EventEmitter.emit (domain.js:442:20)
+    at Socket.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/connection.js:189:49)
+    at Object.onceWrapper (events.js:273:13)
+    at Socket.emit (events.js:182:13)
+    at Socket.EventEmitter.emit (domain.js:442:20)
+    at emitErrorNT (internal/streams/destroy.js:82:8)
+    at emitErrorAndCloseNT (internal/streams/destroy.js:50:3)
+    at process._tickCallback (internal/process/next_tick.js:63:19)
+[2018-11-09] APP-ERROR: MongoError: failed to connect to server [127.0.0.1:27017] on first connect [MongoError: connect ECONNREFUSED 127.0.0.1:27017]
+    at Pool.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/topologies/server.js:336:35)
+    at Pool.emit (events.js:182:13)
+    at Pool.EventEmitter.emit (domain.js:442:20)
+    at Connection.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/pool.js:280:12)
+    at Object.onceWrapper (events.js:273:13)
+    at Connection.emit (events.js:182:13)
+    at Connection.EventEmitter.emit (domain.js:442:20)
+    at Socket.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/connection.js:189:49)
+    at Object.onceWrapper (events.js:273:13)
+    at Socket.emit (events.js:182:13)
+    at Socket.EventEmitter.emit (domain.js:442:20)
+    at emitErrorNT (internal/streams/destroy.js:82:8)
+    at emitErrorAndCloseNT (internal/streams/destroy.js:50:3)
+    at process._tickCallback (internal/process/next_tick.js:63:19)
+[2018-11-09] APP-ERROR: MongoError: failed to connect to server [127.0.0.1:27017] on first connect [MongoError: connect ECONNREFUSED 127.0.0.1:27017]
+    at Pool.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/topologies/server.js:336:35)
+    at Pool.emit (events.js:182:13)
+    at Pool.EventEmitter.emit (domain.js:442:20)
+    at Connection.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/pool.js:280:12)
+    at Object.onceWrapper (events.js:273:13)
+    at Connection.emit (events.js:182:13)
+    at Connection.EventEmitter.emit (domain.js:442:20)
+    at Socket.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/connection.js:189:49)
+    at Object.onceWrapper (events.js:273:13)
+    at Socket.emit (events.js:182:13)
+    at Socket.EventEmitter.emit (domain.js:442:20)
+    at emitErrorNT (internal/streams/destroy.js:82:8)
+    at emitErrorAndCloseNT (internal/streams/destroy.js:50:3)
+    at process._tickCallback (internal/process/next_tick.js:63:19)
+[2018-11-09] APP-ERROR: MongoError: failed to connect to server [127.0.0.1:27017] on first connect [MongoError: connect ECONNREFUSED 127.0.0.1:27017]
+    at Pool.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/topologies/server.js:336:35)
+    at Pool.emit (events.js:182:13)
+    at Pool.EventEmitter.emit (domain.js:442:20)
+    at Connection.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/pool.js:280:12)
+    at Object.onceWrapper (events.js:273:13)
+    at Connection.emit (events.js:182:13)
+    at Connection.EventEmitter.emit (domain.js:442:20)
+    at Socket.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/connection.js:189:49)
+    at Object.onceWrapper (events.js:273:13)
+    at Socket.emit (events.js:182:13)
+    at Socket.EventEmitter.emit (domain.js:442:20)
+    at emitErrorNT (internal/streams/destroy.js:82:8)
+    at emitErrorAndCloseNT (internal/streams/destroy.js:50:3)
+    at process._tickCallback (internal/process/next_tick.js:63:19)
+[2018-11-09] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-09] APP-INFO: --> GET / 200 70ms
+[2018-11-09] APP-INFO: --> GET /app/auth/login 200 20ms
+[2018-11-09] APP-INFO: --> POST /app/auth/login 200 256ms
+[2018-11-09] APP-INFO: --> GET /app 200 70ms
+[2018-11-09] APP-INFO: --> GET /app/project/5bded4d787b1cf0b17e5f067/scenarios 200 104ms
+[2018-11-09] APP-INFO: --> POST /app/scenario/save 200 100ms
+[2018-11-09] APP-INFO: --> GET /app/project/5bded4d787b1cf0b17e5f067/scenarios 200 18ms
+[2018-11-09] APP-INFO: --> POST /app/scenario/delete 200 19ms
+[2018-11-09] APP-INFO: --> GET /app/project/5bded4d787b1cf0b17e5f067/scenarios 200 16ms
+[2018-11-09] APP-INFO: --> GET /app/projects 200 13ms
+[2018-11-09] APP-INFO: --> GET /app/project/5b16ca833192d5212014da03/scenarios 200 19ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5b9e004a3bdf8033cfe20edb/runs 200 123ms
+[2018-11-09] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-09] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-09] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-09] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-09] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-09] APP-INFO: --> GET / 200 46ms
+[2018-11-09] APP-INFO: --> GET /app/auth/register 200 93ms
+[2018-11-09] APP-INFO: --> POST /app/auth/undefined 200 24ms
+[2018-11-09] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-09] APP-INFO: --> GET /app/auth/login 200 124ms
+[2018-11-09] APP-INFO: --> POST /app/auth/login 200 564ms
+[2018-11-09] APP-INFO: --> GET /app 200 90ms
+[2018-11-09] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-09] APP-INFO: --> GET /app 200 54ms
+[2018-11-09] APP-INFO: --> POST /app/project/save 200 111ms
+[2018-11-09] APP-INFO: --> GET /app 200 25ms
+[2018-11-09] APP-INFO: --> GET /app/project/5be5687d0c289e193bf076f2/scenarios 200 33ms
+[2018-11-09] APP-INFO: --> POST /app/scenario/save 200 18ms
+[2018-11-09] APP-INFO: --> GET /app/project/5be5687d0c289e193bf076f2/scenarios 200 19ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 33ms
+[2018-11-09] APP-INFO: --> POST /app/run/save 200 6ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 65ms
+[2018-11-09] APP-INFO: --> POST /app/run/save 200 5ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 44ms
+[2018-11-09] APP-INFO: --> POST /app/session/save 200 73ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 23ms
+[2018-11-09] APP-INFO: --> POST /app/session/save 200 46ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 21ms
+[2018-11-09] APP-INFO: --> POST /app/run/compare 200 28ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/differnces 200 28ms
+[2018-11-09] APP-INFO: --> GET /favicon.ico 200 27ms
+[2018-11-09] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-09] APP-INFO: --> POST /app/session/save 200 330ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 141ms
+[2018-11-09] APP-INFO: --> POST /app/session/save 200 53ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 38ms
+[2018-11-09] APP-INFO: --> POST /app/run/compare 200 27ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/differnces 200 134ms
+[2018-11-09] APP-INFO: --> GET /favicon.ico 200 38ms
+[2018-11-09] APP-ERROR: { __v: 0,
+  url: 'http://blazedemo.com/reserve.php',
+  sequence: 8,
+  location: 'header',
+  key: 'Content-Length',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be56eb257d78b1b476893cd,
+  duplicate: '',
+  updated_on: 2018-11-09T11:25:38.297Z,
+  added_on: 2018-11-09T11:25:38.297Z,
+  second:
+   { value: 'New+York',
+     request: 5be56e9e57d78b1b476893c3,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value: 'Rome',
+     request: 5be56e8257d78b1b476893b9,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'http://blazedemo.com/reserve.php',
+  sequence: 8,
+  location: 'post_data',
+  key: 'fromPort',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be56eb257d78b1b476893ce,
+  duplicate: '',
+  updated_on: 2018-11-09T11:25:38.301Z,
+  added_on: 2018-11-09T11:25:38.301Z,
+  second:
+   { value: 'New+York',
+     request: 5be56e9e57d78b1b476893c3,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value: 'Rome',
+     request: 5be56e8257d78b1b476893b9,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'http://blazedemo.com/reserve.php',
+  sequence: 8,
+  location: 'post_data',
+  key: 'toPort',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be56eb257d78b1b476893cf,
+  duplicate: '',
+  updated_on: 2018-11-09T11:25:38.303Z,
+  added_on: 2018-11-09T11:25:38.303Z,
+  second:
+   { value: 'New+York',
+     request: 5be56e9e57d78b1b476893c3,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value: 'Rome',
+     request: 5be56e8257d78b1b476893b9,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'rst',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be56eb257d78b1b476893d0,
+  duplicate: '',
+  updated_on: 2018-11-09T11:25:38.305Z,
+  added_on: 2018-11-09T11:25:38.305Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'ap',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be56eb257d78b1b476893d1,
+  duplicate: '',
+  updated_on: 2018-11-09T11:25:38.306Z,
+  added_on: 2018-11-09T11:25:38.306Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'be',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be56eb257d78b1b476893d2,
+  duplicate: '',
+  updated_on: 2018-11-09T11:25:38.308Z,
+  added_on: 2018-11-09T11:25:38.308Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'fe',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be56eb257d78b1b476893d3,
+  duplicate: '',
+  updated_on: 2018-11-09T11:25:38.309Z,
+  added_on: 2018-11-09T11:25:38.309Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'dc',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be56eb257d78b1b476893d4,
+  duplicate: '',
+  updated_on: 2018-11-09T11:25:38.311Z,
+  added_on: 2018-11-09T11:25:38.311Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'perf',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be56eb257d78b1b476893d5,
+  duplicate: '',
+  updated_on: 2018-11-09T11:25:38.312Z,
+  added_on: 2018-11-09T11:25:38.312Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'url',
+  key: 'url',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be56eb257d78b1b476893d6,
+  duplicate: '',
+  updated_on: 2018-11-09T11:25:38.315Z,
+  added_on: 2018-11-09T11:25:38.315Z,
+  second:
+   { value:
+      'https://bam.nr-data.net/1/338cffe5d3?a=6657625&v=1071.385e752&to=YVxSYxACCxcEVRFfWlgWcVQWCgoKSkQARVBET1UZEgsV&rst=1213&ref=http://blazedemo.com/reserve.php&ap=5&be=875&fe=1162&dc=1023&perf=%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D&at=TRtRFVgYGBk%3D&jsonp=NREUM.setToken',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      'https://bam.nr-data.net/1/338cffe5d3?a=6657625&v=1071.385e752&to=YVxSYxACCxcEVRFfWlgWcVQWCgoKSkQARVBET1UZEgsV&rst=2768&ref=http://blazedemo.com/reserve.php&ap=7&be=2333&fe=2699&dc=2578&perf=%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D&at=TRtRFVgYGBk%3D&jsonp=NREUM.setToken',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } }
+[2018-11-09] APP-ERROR: { __v: 0,
+  _id: 5be56eb257d78b1b476893d7,
+  updated_on: 2018-11-09T11:25:38.398Z,
+  added_on: 2018-11-09T11:25:38.397Z,
+  runs: [] }
+[2018-11-09] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-09] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 89ms
+[2018-11-09] APP-INFO: --> POST /app/run/compare 200 44ms
+[2018-11-09] APP-ERROR: { __v: 0,
+  url: 'http://blazedemo.com/reserve.php',
+  sequence: 8,
+  location: 'header',
+  key: 'Content-Length',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be571354284431d33a73043,
+  duplicate: '',
+  updated_on: 2018-11-09T11:36:21.892Z,
+  added_on: 2018-11-09T11:36:21.892Z,
+  second:
+   { value: 'New+York',
+     request: 5be56e9e57d78b1b476893c3,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value: 'Rome',
+     request: 5be56e8257d78b1b476893b9,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'http://blazedemo.com/reserve.php',
+  sequence: 8,
+  location: 'post_data',
+  key: 'fromPort',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be571354284431d33a73044,
+  duplicate: '',
+  updated_on: 2018-11-09T11:36:21.898Z,
+  added_on: 2018-11-09T11:36:21.898Z,
+  second:
+   { value: 'New+York',
+     request: 5be56e9e57d78b1b476893c3,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value: 'Rome',
+     request: 5be56e8257d78b1b476893b9,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'http://blazedemo.com/reserve.php',
+  sequence: 8,
+  location: 'post_data',
+  key: 'toPort',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be571354284431d33a73045,
+  duplicate: '',
+  updated_on: 2018-11-09T11:36:21.902Z,
+  added_on: 2018-11-09T11:36:21.902Z,
+  second:
+   { value: 'New+York',
+     request: 5be56e9e57d78b1b476893c3,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value: 'Rome',
+     request: 5be56e8257d78b1b476893b9,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'rst',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be571354284431d33a73046,
+  duplicate: '',
+  updated_on: 2018-11-09T11:36:21.904Z,
+  added_on: 2018-11-09T11:36:21.904Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'ap',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be571354284431d33a73047,
+  duplicate: '',
+  updated_on: 2018-11-09T11:36:21.906Z,
+  added_on: 2018-11-09T11:36:21.906Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'be',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be571354284431d33a73048,
+  duplicate: '',
+  updated_on: 2018-11-09T11:36:21.909Z,
+  added_on: 2018-11-09T11:36:21.909Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'fe',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be571354284431d33a73049,
+  duplicate: '',
+  updated_on: 2018-11-09T11:36:21.911Z,
+  added_on: 2018-11-09T11:36:21.911Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'dc',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be571354284431d33a7304a,
+  duplicate: '',
+  updated_on: 2018-11-09T11:36:21.913Z,
+  added_on: 2018-11-09T11:36:21.913Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'perf',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be571354284431d33a7304b,
+  duplicate: '',
+  updated_on: 2018-11-09T11:36:21.915Z,
+  added_on: 2018-11-09T11:36:21.915Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'url',
+  key: 'url',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be571354284431d33a7304c,
+  duplicate: '',
+  updated_on: 2018-11-09T11:36:21.916Z,
+  added_on: 2018-11-09T11:36:21.916Z,
+  second:
+   { value:
+      'https://bam.nr-data.net/1/338cffe5d3?a=6657625&v=1071.385e752&to=YVxSYxACCxcEVRFfWlgWcVQWCgoKSkQARVBET1UZEgsV&rst=1213&ref=http://blazedemo.com/reserve.php&ap=5&be=875&fe=1162&dc=1023&perf=%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D&at=TRtRFVgYGBk%3D&jsonp=NREUM.setToken',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      'https://bam.nr-data.net/1/338cffe5d3?a=6657625&v=1071.385e752&to=YVxSYxACCxcEVRFfWlgWcVQWCgoKSkQARVBET1UZEgsV&rst=2768&ref=http://blazedemo.com/reserve.php&ap=7&be=2333&fe=2699&dc=2578&perf=%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D&at=TRtRFVgYGBk%3D&jsonp=NREUM.setToken',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } }
+[2018-11-09] APP-ERROR: { __v: 0,
+  _id: 5be571354284431d33a7304d,
+  updated_on: 2018-11-09T11:36:21.939Z,
+  added_on: 2018-11-09T11:36:21.939Z,
+  runs: [] }
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/differnces 200 40ms
+[2018-11-09] APP-INFO: --> GET /favicon.ico 200 18ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/differnces 200 25ms
+[2018-11-09] APP-INFO: --> GET /favicon.ico 200 6ms
+[2018-11-09] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-09] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/differnces 200 69ms
+[2018-11-09] APP-INFO: --> GET /favicon.ico 200 19ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 57ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 25ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 22ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 25ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 20ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 18ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/differnces 200 25ms
+[2018-11-09] APP-INFO: --> GET /favicon.ico 200 4ms
+[2018-11-09] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/differnces 200 72ms
+[2018-11-09] APP-INFO: --> GET /favicon.ico 200 19ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/differnces 200 23ms
+[2018-11-09] APP-INFO: --> GET /favicon.ico 200 5ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/differnces 200 20ms
+[2018-11-09] APP-INFO: --> GET /favicon.ico 200 3ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/differnces 200 20ms
+[2018-11-09] APP-INFO: --> GET /favicon.ico 200 3ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/differnces 200 26ms
+[2018-11-09] APP-INFO: --> GET /favicon.ico 200 3ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/differnces 200 17ms
+[2018-11-09] APP-INFO: --> GET /favicon.ico 200 5ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/differnces 200 23ms
+[2018-11-09] APP-INFO: --> GET /favicon.ico 200 3ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/differnces 200 23ms
+[2018-11-09] APP-INFO: --> GET /favicon.ico 200 8ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/differnces 200 24ms
+[2018-11-09] APP-INFO: --> GET /favicon.ico 200 5ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/differnces 200 27ms
+[2018-11-09] APP-INFO: --> GET /favicon.ico 200 4ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 44ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 26ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 22ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 31ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 21ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 32ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 17ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 20ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 17ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/differnces 200 17ms
+[2018-11-09] APP-INFO: --> GET /favicon.ico 200 5ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/differnces 200 23ms
+[2018-11-09] APP-INFO: --> GET /favicon.ico 200 2ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/differnces 200 19ms
+[2018-11-09] APP-INFO: --> GET /favicon.ico 200 4ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/differnces 200 24ms
+[2018-11-09] APP-INFO: --> GET /favicon.ico 200 4ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 22ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 20ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 24ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/differnces 200 22ms
+[2018-11-09] APP-INFO: --> GET /favicon.ico 200 4ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 25ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 25ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 17ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 16ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 20ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 25ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 15ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 20ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 18ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/differnces 200 23ms
+[2018-11-09] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-09] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/differnces 200 275ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 131ms
+[2018-11-09] APP-INFO: --> POST /app/run/compare 200 155ms
+[2018-11-09] APP-ERROR: { __v: 0,
+  url: 'http://blazedemo.com/reserve.php',
+  sequence: 8,
+  location: 'header',
+  key: 'Content-Length',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58bcda1283a26a5de9844,
+  duplicate: '',
+  updated_on: 2018-11-09T13:29:49.902Z,
+  added_on: 2018-11-09T13:29:49.902Z,
+  second:
+   { value: 'New+York',
+     request: 5be56e9e57d78b1b476893c3,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value: 'Rome',
+     request: 5be56e8257d78b1b476893b9,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'http://blazedemo.com/reserve.php',
+  sequence: 8,
+  location: 'post_data',
+  key: 'fromPort',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58bcda1283a26a5de9845,
+  duplicate: '',
+  updated_on: 2018-11-09T13:29:49.907Z,
+  added_on: 2018-11-09T13:29:49.907Z,
+  second:
+   { value: 'New+York',
+     request: 5be56e9e57d78b1b476893c3,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value: 'Rome',
+     request: 5be56e8257d78b1b476893b9,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'http://blazedemo.com/reserve.php',
+  sequence: 8,
+  location: 'post_data',
+  key: 'toPort',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58bcda1283a26a5de9846,
+  duplicate: '',
+  updated_on: 2018-11-09T13:29:49.908Z,
+  added_on: 2018-11-09T13:29:49.908Z,
+  second:
+   { value: 'New+York',
+     request: 5be56e9e57d78b1b476893c3,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value: 'Rome',
+     request: 5be56e8257d78b1b476893b9,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'rst',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58bcda1283a26a5de9847,
+  duplicate: '',
+  updated_on: 2018-11-09T13:29:49.910Z,
+  added_on: 2018-11-09T13:29:49.910Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'ap',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58bcda1283a26a5de9848,
+  duplicate: '',
+  updated_on: 2018-11-09T13:29:49.911Z,
+  added_on: 2018-11-09T13:29:49.911Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'be',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58bcda1283a26a5de9849,
+  duplicate: '',
+  updated_on: 2018-11-09T13:29:49.913Z,
+  added_on: 2018-11-09T13:29:49.913Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'fe',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58bcda1283a26a5de984a,
+  duplicate: '',
+  updated_on: 2018-11-09T13:29:49.916Z,
+  added_on: 2018-11-09T13:29:49.916Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'dc',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58bcda1283a26a5de984b,
+  duplicate: '',
+  updated_on: 2018-11-09T13:29:49.918Z,
+  added_on: 2018-11-09T13:29:49.918Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'perf',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58bcda1283a26a5de984c,
+  duplicate: '',
+  updated_on: 2018-11-09T13:29:49.920Z,
+  added_on: 2018-11-09T13:29:49.920Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'url',
+  key: 'url',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58bcda1283a26a5de984d,
+  duplicate: '',
+  updated_on: 2018-11-09T13:29:49.922Z,
+  added_on: 2018-11-09T13:29:49.922Z,
+  second:
+   { value:
+      'https://bam.nr-data.net/1/338cffe5d3?a=6657625&v=1071.385e752&to=YVxSYxACCxcEVRFfWlgWcVQWCgoKSkQARVBET1UZEgsV&rst=1213&ref=http://blazedemo.com/reserve.php&ap=5&be=875&fe=1162&dc=1023&perf=%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D&at=TRtRFVgYGBk%3D&jsonp=NREUM.setToken',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      'https://bam.nr-data.net/1/338cffe5d3?a=6657625&v=1071.385e752&to=YVxSYxACCxcEVRFfWlgWcVQWCgoKSkQARVBET1UZEgsV&rst=2768&ref=http://blazedemo.com/reserve.php&ap=7&be=2333&fe=2699&dc=2578&perf=%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D&at=TRtRFVgYGBk%3D&jsonp=NREUM.setToken',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } }
+[2018-11-09] APP-ERROR: { __v: 0,
+  _id: 5be58bcda1283a26a5de984e,
+  updated_on: 2018-11-09T13:29:49.942Z,
+  added_on: 2018-11-09T13:29:49.942Z,
+  runs: [] }
+[2018-11-09] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-09] APP-INFO: --> POST /app/run/compare 200 72ms
+[2018-11-09] APP-ERROR: { __v: 0,
+  url: 'http://blazedemo.com/reserve.php',
+  sequence: 8,
+  location: 'header',
+  key: 'Content-Length',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58c2e09384826e6c6dfb6,
+  duplicate: '',
+  updated_on: 2018-11-09T13:31:26.257Z,
+  added_on: 2018-11-09T13:31:26.257Z,
+  second:
+   { value: 'New+York',
+     request: 5be56e9e57d78b1b476893c3,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value: 'Rome',
+     request: 5be56e8257d78b1b476893b9,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'http://blazedemo.com/reserve.php',
+  sequence: 8,
+  location: 'post_data',
+  key: 'fromPort',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58c2e09384826e6c6dfb7,
+  duplicate: '',
+  updated_on: 2018-11-09T13:31:26.260Z,
+  added_on: 2018-11-09T13:31:26.260Z,
+  second:
+   { value: 'New+York',
+     request: 5be56e9e57d78b1b476893c3,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value: 'Rome',
+     request: 5be56e8257d78b1b476893b9,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'http://blazedemo.com/reserve.php',
+  sequence: 8,
+  location: 'post_data',
+  key: 'toPort',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58c2e09384826e6c6dfb8,
+  duplicate: '',
+  updated_on: 2018-11-09T13:31:26.262Z,
+  added_on: 2018-11-09T13:31:26.262Z,
+  second:
+   { value: 'New+York',
+     request: 5be56e9e57d78b1b476893c3,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value: 'Rome',
+     request: 5be56e8257d78b1b476893b9,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'rst',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58c2e09384826e6c6dfb9,
+  duplicate: '',
+  updated_on: 2018-11-09T13:31:26.263Z,
+  added_on: 2018-11-09T13:31:26.263Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'ap',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58c2e09384826e6c6dfba,
+  duplicate: '',
+  updated_on: 2018-11-09T13:31:26.265Z,
+  added_on: 2018-11-09T13:31:26.265Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'be',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58c2e09384826e6c6dfbb,
+  duplicate: '',
+  updated_on: 2018-11-09T13:31:26.266Z,
+  added_on: 2018-11-09T13:31:26.266Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'fe',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58c2e09384826e6c6dfbc,
+  duplicate: '',
+  updated_on: 2018-11-09T13:31:26.268Z,
+  added_on: 2018-11-09T13:31:26.268Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'dc',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58c2e09384826e6c6dfbd,
+  duplicate: '',
+  updated_on: 2018-11-09T13:31:26.269Z,
+  added_on: 2018-11-09T13:31:26.269Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'perf',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58c2e09384826e6c6dfbe,
+  duplicate: '',
+  updated_on: 2018-11-09T13:31:26.271Z,
+  added_on: 2018-11-09T13:31:26.270Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'url',
+  key: 'url',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58c2e09384826e6c6dfbf,
+  duplicate: '',
+  updated_on: 2018-11-09T13:31:26.272Z,
+  added_on: 2018-11-09T13:31:26.272Z,
+  second:
+   { value:
+      'https://bam.nr-data.net/1/338cffe5d3?a=6657625&v=1071.385e752&to=YVxSYxACCxcEVRFfWlgWcVQWCgoKSkQARVBET1UZEgsV&rst=1213&ref=http://blazedemo.com/reserve.php&ap=5&be=875&fe=1162&dc=1023&perf=%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D&at=TRtRFVgYGBk%3D&jsonp=NREUM.setToken',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      'https://bam.nr-data.net/1/338cffe5d3?a=6657625&v=1071.385e752&to=YVxSYxACCxcEVRFfWlgWcVQWCgoKSkQARVBET1UZEgsV&rst=2768&ref=http://blazedemo.com/reserve.php&ap=7&be=2333&fe=2699&dc=2578&perf=%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D&at=TRtRFVgYGBk%3D&jsonp=NREUM.setToken',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } }
+[2018-11-09] APP-ERROR: { __v: 0,
+  _id: 5be58c2e09384826e6c6dfc0,
+  updated_on: 2018-11-09T13:31:26.297Z,
+  added_on: 2018-11-09T13:31:26.297Z,
+  runs: [] }
+[2018-11-09] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-09] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-09] APP-INFO: --> POST /app/run/compare 200 75ms
+[2018-11-09] APP-ERROR: { __v: 0,
+  url: 'http://blazedemo.com/reserve.php',
+  sequence: 8,
+  location: 'header',
+  key: 'Content-Length',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58c9608168e276cbeda42,
+  duplicate: '',
+  updated_on: 2018-11-09T13:33:10.681Z,
+  added_on: 2018-11-09T13:33:10.681Z,
+  second:
+   { value: 'New+York',
+     request: 5be56e9e57d78b1b476893c3,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value: 'Rome',
+     request: 5be56e8257d78b1b476893b9,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'http://blazedemo.com/reserve.php',
+  sequence: 8,
+  location: 'post_data',
+  key: 'fromPort',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58c9608168e276cbeda43,
+  duplicate: '',
+  updated_on: 2018-11-09T13:33:10.686Z,
+  added_on: 2018-11-09T13:33:10.686Z,
+  second:
+   { value: 'New+York',
+     request: 5be56e9e57d78b1b476893c3,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value: 'Rome',
+     request: 5be56e8257d78b1b476893b9,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'http://blazedemo.com/reserve.php',
+  sequence: 8,
+  location: 'post_data',
+  key: 'toPort',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58c9608168e276cbeda44,
+  duplicate: '',
+  updated_on: 2018-11-09T13:33:10.691Z,
+  added_on: 2018-11-09T13:33:10.691Z,
+  second:
+   { value: 'New+York',
+     request: 5be56e9e57d78b1b476893c3,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value: 'Rome',
+     request: 5be56e8257d78b1b476893b9,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'rst',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58c9608168e276cbeda45,
+  duplicate: '',
+  updated_on: 2018-11-09T13:33:10.692Z,
+  added_on: 2018-11-09T13:33:10.692Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'ap',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58c9608168e276cbeda46,
+  duplicate: '',
+  updated_on: 2018-11-09T13:33:10.694Z,
+  added_on: 2018-11-09T13:33:10.694Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'be',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58c9608168e276cbeda47,
+  duplicate: '',
+  updated_on: 2018-11-09T13:33:10.695Z,
+  added_on: 2018-11-09T13:33:10.695Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'fe',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58c9608168e276cbeda48,
+  duplicate: '',
+  updated_on: 2018-11-09T13:33:10.697Z,
+  added_on: 2018-11-09T13:33:10.697Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'dc',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58c9608168e276cbeda49,
+  duplicate: '',
+  updated_on: 2018-11-09T13:33:10.698Z,
+  added_on: 2018-11-09T13:33:10.698Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'perf',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58c9608168e276cbeda4a,
+  duplicate: '',
+  updated_on: 2018-11-09T13:33:10.700Z,
+  added_on: 2018-11-09T13:33:10.700Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'url',
+  key: 'url',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58c9608168e276cbeda4b,
+  duplicate: '',
+  updated_on: 2018-11-09T13:33:10.702Z,
+  added_on: 2018-11-09T13:33:10.702Z,
+  second:
+   { value:
+      'https://bam.nr-data.net/1/338cffe5d3?a=6657625&v=1071.385e752&to=YVxSYxACCxcEVRFfWlgWcVQWCgoKSkQARVBET1UZEgsV&rst=1213&ref=http://blazedemo.com/reserve.php&ap=5&be=875&fe=1162&dc=1023&perf=%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D&at=TRtRFVgYGBk%3D&jsonp=NREUM.setToken',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      'https://bam.nr-data.net/1/338cffe5d3?a=6657625&v=1071.385e752&to=YVxSYxACCxcEVRFfWlgWcVQWCgoKSkQARVBET1UZEgsV&rst=2768&ref=http://blazedemo.com/reserve.php&ap=7&be=2333&fe=2699&dc=2578&perf=%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D&at=TRtRFVgYGBk%3D&jsonp=NREUM.setToken',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } }
+[2018-11-09] APP-ERROR: { __v: 0,
+  _id: 5be58c9608168e276cbeda4c,
+  updated_on: 2018-11-09T13:33:10.725Z,
+  added_on: 2018-11-09T13:33:10.725Z,
+  runs: [] }
+[2018-11-09] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-09] APP-INFO: --> POST /app/run/compare 200 80ms
+[2018-11-09] APP-ERROR: { __v: 0,
+  url: 'http://blazedemo.com/reserve.php',
+  sequence: 8,
+  location: 'header',
+  key: 'Content-Length',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58d3b9f2c6527c9e160a6,
+  duplicate: '',
+  updated_on: 2018-11-09T13:35:55.952Z,
+  added_on: 2018-11-09T13:35:55.952Z,
+  second:
+   { value: 'New+York',
+     request: 5be56e9e57d78b1b476893c3,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value: 'Rome',
+     request: 5be56e8257d78b1b476893b9,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'http://blazedemo.com/reserve.php',
+  sequence: 8,
+  location: 'post_data',
+  key: 'fromPort',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58d3b9f2c6527c9e160a7,
+  duplicate: '',
+  updated_on: 2018-11-09T13:35:55.959Z,
+  added_on: 2018-11-09T13:35:55.959Z,
+  second:
+   { value: 'New+York',
+     request: 5be56e9e57d78b1b476893c3,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value: 'Rome',
+     request: 5be56e8257d78b1b476893b9,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'http://blazedemo.com/reserve.php',
+  sequence: 8,
+  location: 'post_data',
+  key: 'toPort',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58d3b9f2c6527c9e160a8,
+  duplicate: '',
+  updated_on: 2018-11-09T13:35:55.961Z,
+  added_on: 2018-11-09T13:35:55.961Z,
+  second:
+   { value: 'New+York',
+     request: 5be56e9e57d78b1b476893c3,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value: 'Rome',
+     request: 5be56e8257d78b1b476893b9,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'rst',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58d3b9f2c6527c9e160a9,
+  duplicate: '',
+  updated_on: 2018-11-09T13:35:55.963Z,
+  added_on: 2018-11-09T13:35:55.963Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'ap',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58d3b9f2c6527c9e160aa,
+  duplicate: '',
+  updated_on: 2018-11-09T13:35:55.965Z,
+  added_on: 2018-11-09T13:35:55.965Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'be',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58d3b9f2c6527c9e160ab,
+  duplicate: '',
+  updated_on: 2018-11-09T13:35:55.966Z,
+  added_on: 2018-11-09T13:35:55.966Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'fe',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58d3b9f2c6527c9e160ac,
+  duplicate: '',
+  updated_on: 2018-11-09T13:35:55.968Z,
+  added_on: 2018-11-09T13:35:55.968Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'dc',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58d3b9f2c6527c9e160ad,
+  duplicate: '',
+  updated_on: 2018-11-09T13:35:55.970Z,
+  added_on: 2018-11-09T13:35:55.970Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'params',
+  key: 'perf',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58d3b9f2c6527c9e160ae,
+  duplicate: '',
+  updated_on: 2018-11-09T13:35:55.973Z,
+  added_on: 2018-11-09T13:35:55.973Z,
+  second:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      '%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } },{ __v: 0,
+  url: 'https://bam.nr-data.net/1/338cffe5d3',
+  sequence: 16,
+  location: 'url',
+  key: 'url',
+  scenario: 5be568880c289e193bf076f3,
+  session_sequence: 2,
+  session: 5be56e8257d78b1b476893b8,
+  _id: 5be58d3b9f2c6527c9e160af,
+  duplicate: '',
+  updated_on: 2018-11-09T13:35:55.975Z,
+  added_on: 2018-11-09T13:35:55.975Z,
+  second:
+   { value:
+      'https://bam.nr-data.net/1/338cffe5d3?a=6657625&v=1071.385e752&to=YVxSYxACCxcEVRFfWlgWcVQWCgoKSkQARVBET1UZEgsV&rst=1213&ref=http://blazedemo.com/reserve.php&ap=5&be=875&fe=1162&dc=1023&perf=%7B%22timing%22:%7B%22of%22:1519032429597,%22n%22:0,%22u%22:840,%22ue%22:840,%22f%22:5,%22dn%22:5,%22dne%22:5,%22c%22:6,%22ce%22:9,%22rq%22:10,%22rp%22:822,%22rpe%22:833,%22dl%22:850,%22di%22:1023,%22ds%22:1023,%22de%22:1109,%22dc%22:1162,%22l%22:1162,%22le%22:1171%7D,%22navigation%22:%7B%7D%7D&at=TRtRFVgYGBk%3D&jsonp=NREUM.setToken',
+     request: 5be56e9e57d78b1b476893cb,
+     run: 5be568a60c289e193bf076f5 },
+  first:
+   { value:
+      'https://bam.nr-data.net/1/338cffe5d3?a=6657625&v=1071.385e752&to=YVxSYxACCxcEVRFfWlgWcVQWCgoKSkQARVBET1UZEgsV&rst=2768&ref=http://blazedemo.com/reserve.php&ap=7&be=2333&fe=2699&dc=2578&perf=%7B%22timing%22:%7B%22of%22:1519031782396,%22n%22:0,%22u%22:2294,%22ue%22:2294,%22f%22:6,%22dn%22:6,%22dne%22:6,%22c%22:7,%22ce%22:9,%22rq%22:9,%22rp%22:2213,%22rpe%22:2286,%22dl%22:2310,%22di%22:2578,%22ds%22:2578,%22de%22:2660,%22dc%22:2697,%22l%22:2697,%22le%22:2704%7D,%22navigation%22:%7B%7D%7D&at=TRtRFVgYGBk%3D&jsonp=NREUM.setToken',
+     request: 5be56e8257d78b1b476893c1,
+     run: 5be568980c289e193bf076f4 } }
+[2018-11-09] APP-ERROR: { __v: 0,
+  _id: 5be58d3c9f2c6527c9e160b0,
+  updated_on: 2018-11-09T13:35:56.001Z,
+  added_on: 2018-11-09T13:35:56.001Z,
+  runs: [] }
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/corelations 200 90ms
+[2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/differnces 200 65ms

@@ -1,1 +1,212 @@
 [2018-11-02] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-02] APP-INFO: --> GET / 200 160ms
+[2018-11-02] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-02] APP-ERROR: MongoError: failed to connect to server [127.0.0.1:27017] on first connect [MongoError: connect ECONNREFUSED 127.0.0.1:27017]
+    at Pool.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/topologies/server.js:336:35)
+    at Pool.emit (events.js:182:13)
+    at Pool.EventEmitter.emit (domain.js:442:20)
+    at Connection.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/pool.js:280:12)
+    at Object.onceWrapper (events.js:273:13)
+    at Connection.emit (events.js:182:13)
+    at Connection.EventEmitter.emit (domain.js:442:20)
+    at Socket.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/connection.js:187:49)
+    at Object.onceWrapper (events.js:273:13)
+    at Socket.emit (events.js:182:13)
+    at Socket.EventEmitter.emit (domain.js:442:20)
+    at emitErrorNT (internal/streams/destroy.js:82:8)
+    at emitErrorAndCloseNT (internal/streams/destroy.js:50:3)
+    at process._tickCallback (internal/process/next_tick.js:63:19)
+[2018-11-02] APP-ERROR: MongoError: failed to connect to server [127.0.0.1:27017] on first connect [MongoError: connect ECONNREFUSED 127.0.0.1:27017]
+    at Pool.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/topologies/server.js:336:35)
+    at Pool.emit (events.js:182:13)
+    at Pool.EventEmitter.emit (domain.js:442:20)
+    at Connection.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/pool.js:280:12)
+    at Object.onceWrapper (events.js:273:13)
+    at Connection.emit (events.js:182:13)
+    at Connection.EventEmitter.emit (domain.js:442:20)
+    at Socket.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/connection.js:187:49)
+    at Object.onceWrapper (events.js:273:13)
+    at Socket.emit (events.js:182:13)
+    at Socket.EventEmitter.emit (domain.js:442:20)
+    at emitErrorNT (internal/streams/destroy.js:82:8)
+    at emitErrorAndCloseNT (internal/streams/destroy.js:50:3)
+    at process._tickCallback (internal/process/next_tick.js:63:19)
+[2018-11-02] APP-ERROR: MongoError: failed to connect to server [127.0.0.1:27017] on first connect [MongoError: connect ECONNREFUSED 127.0.0.1:27017]
+    at Pool.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/topologies/server.js:336:35)
+    at Pool.emit (events.js:182:13)
+    at Pool.EventEmitter.emit (domain.js:442:20)
+    at Connection.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/pool.js:280:12)
+    at Object.onceWrapper (events.js:273:13)
+    at Connection.emit (events.js:182:13)
+    at Connection.EventEmitter.emit (domain.js:442:20)
+    at Socket.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/connection.js:187:49)
+    at Object.onceWrapper (events.js:273:13)
+    at Socket.emit (events.js:182:13)
+    at Socket.EventEmitter.emit (domain.js:442:20)
+    at emitErrorNT (internal/streams/destroy.js:82:8)
+    at emitErrorAndCloseNT (internal/streams/destroy.js:50:3)
+    at process._tickCallback (internal/process/next_tick.js:63:19)
+[2018-11-02] APP-ERROR: MongoError: failed to connect to server [127.0.0.1:27017] on first connect [MongoError: connect ECONNREFUSED 127.0.0.1:27017]
+    at Pool.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/topologies/server.js:336:35)
+    at Pool.emit (events.js:182:13)
+    at Pool.EventEmitter.emit (domain.js:442:20)
+    at Connection.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/pool.js:280:12)
+    at Object.onceWrapper (events.js:273:13)
+    at Connection.emit (events.js:182:13)
+    at Connection.EventEmitter.emit (domain.js:442:20)
+    at Socket.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/connection.js:187:49)
+    at Object.onceWrapper (events.js:273:13)
+    at Socket.emit (events.js:182:13)
+    at Socket.EventEmitter.emit (domain.js:442:20)
+    at emitErrorNT (internal/streams/destroy.js:82:8)
+    at emitErrorAndCloseNT (internal/streams/destroy.js:50:3)
+    at process._tickCallback (internal/process/next_tick.js:63:19)
+[2018-11-02] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-02] APP-ERROR: MongoError: failed to connect to server [127.0.0.1:27017] on first connect [MongoError: connect ECONNREFUSED 127.0.0.1:27017]
+    at Pool.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/topologies/server.js:336:35)
+    at Pool.emit (events.js:182:13)
+    at Pool.EventEmitter.emit (domain.js:442:20)
+    at Connection.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/pool.js:280:12)
+    at Object.onceWrapper (events.js:273:13)
+    at Connection.emit (events.js:182:13)
+    at Connection.EventEmitter.emit (domain.js:442:20)
+    at Socket.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/connection.js:187:49)
+    at Object.onceWrapper (events.js:273:13)
+    at Socket.emit (events.js:182:13)
+    at Socket.EventEmitter.emit (domain.js:442:20)
+    at emitErrorNT (internal/streams/destroy.js:82:8)
+    at emitErrorAndCloseNT (internal/streams/destroy.js:50:3)
+    at process._tickCallback (internal/process/next_tick.js:63:19)
+[2018-11-02] APP-ERROR: MongoError: failed to connect to server [127.0.0.1:27017] on first connect [MongoError: connect ECONNREFUSED 127.0.0.1:27017]
+    at Pool.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/topologies/server.js:336:35)
+    at Pool.emit (events.js:182:13)
+    at Pool.EventEmitter.emit (domain.js:442:20)
+    at Connection.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/pool.js:280:12)
+    at Object.onceWrapper (events.js:273:13)
+    at Connection.emit (events.js:182:13)
+    at Connection.EventEmitter.emit (domain.js:442:20)
+    at Socket.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/connection.js:187:49)
+    at Object.onceWrapper (events.js:273:13)
+    at Socket.emit (events.js:182:13)
+    at Socket.EventEmitter.emit (domain.js:442:20)
+    at emitErrorNT (internal/streams/destroy.js:82:8)
+    at emitErrorAndCloseNT (internal/streams/destroy.js:50:3)
+    at process._tickCallback (internal/process/next_tick.js:63:19)
+[2018-11-02] APP-ERROR: MongoError: failed to connect to server [127.0.0.1:27017] on first connect [MongoError: connect ECONNREFUSED 127.0.0.1:27017]
+    at Pool.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/topologies/server.js:336:35)
+    at Pool.emit (events.js:182:13)
+    at Pool.EventEmitter.emit (domain.js:442:20)
+    at Connection.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/pool.js:280:12)
+    at Object.onceWrapper (events.js:273:13)
+    at Connection.emit (events.js:182:13)
+    at Connection.EventEmitter.emit (domain.js:442:20)
+    at Socket.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/connection.js:187:49)
+    at Object.onceWrapper (events.js:273:13)
+    at Socket.emit (events.js:182:13)
+    at Socket.EventEmitter.emit (domain.js:442:20)
+    at emitErrorNT (internal/streams/destroy.js:82:8)
+    at emitErrorAndCloseNT (internal/streams/destroy.js:50:3)
+    at process._tickCallback (internal/process/next_tick.js:63:19)
+[2018-11-02] APP-ERROR: MongoError: failed to connect to server [127.0.0.1:27017] on first connect [MongoError: connect ECONNREFUSED 127.0.0.1:27017]
+    at Pool.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/topologies/server.js:336:35)
+    at Pool.emit (events.js:182:13)
+    at Pool.EventEmitter.emit (domain.js:442:20)
+    at Connection.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/pool.js:280:12)
+    at Object.onceWrapper (events.js:273:13)
+    at Connection.emit (events.js:182:13)
+    at Connection.EventEmitter.emit (domain.js:442:20)
+    at Socket.<anonymous> (/home/lalit/webroot/testingtool/node_modules/mongodb-core/lib/connection/connection.js:187:49)
+    at Object.onceWrapper (events.js:273:13)
+    at Socket.emit (events.js:182:13)
+    at Socket.EventEmitter.emit (domain.js:442:20)
+    at emitErrorNT (internal/streams/destroy.js:82:8)
+    at emitErrorAndCloseNT (internal/streams/destroy.js:50:3)
+    at process._tickCallback (internal/process/next_tick.js:63:19)
+[2018-11-02] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-02] APP-ERROR: { __v: 0,
+  key: 'toPort',
+  priority: 1,
+  compared_url: 'http://blazedemo.com/reserve.php',
+  location: 'post_data',
+  reg_count: '$1$',
+  reg_name: 'toPort_COR_g1',
+  final_regex: '<input type="text" name="toPort" value=(.*?)>',
+  scenario: 5b9e004a3bdf8033cfe20edb,
+  difference: 5bd569dfffb4760c99a65f94,
+  _id: 5bdc6e10975b7e1a9242ff46,
+  second:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="New+York">',
+     request: 5bd569b4ffb4760c99a65f7e,
+     run: 5ba255b716ba6e92e5ce908c },
+  first:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="Rome">',
+     request: 5bd5698fffb4760c99a65f6a,
+     run: 5b9e004a3bdf8033cfe20eec } }
+[2018-11-02] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-02] APP-ERROR: { __v: 0,
+  key: 'toPort',
+  priority: 1,
+  compared_url: 'http://blazedemo.com/reserve.php',
+  location: 'post_data',
+  reg_count: '$1$',
+  reg_name: 'toPort_COR_g1',
+  final_regex: '<input type="text" name="toPort" value=(.*?)>',
+  scenario: 5b9e004a3bdf8033cfe20edb,
+  difference: 5bd569dfffb4760c99a65f94,
+  _id: 5bdc6e8bb75e961b280e22d6,
+  second:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="New+York">',
+     request: 5bd569b4ffb4760c99a65f7e,
+     run: 5ba255b716ba6e92e5ce908c },
+  first:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="Rome">',
+     request: 5bd5698fffb4760c99a65f6a,
+     run: 5b9e004a3bdf8033cfe20eec } }
+[2018-11-02] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-02] APP-ERROR: { __v: 0,
+  key: 'toPort',
+  priority: 1,
+  compared_url: 'http://blazedemo.com/reserve.php',
+  location: 'post_data',
+  reg_count: '$1$',
+  reg_name: 'toPort_COR_g1',
+  final_regex: '<input type="text" name="toPort" value=(.*?)>',
+  scenario: 5b9e004a3bdf8033cfe20edb,
+  difference: 5bd569dfffb4760c99a65f94,
+  _id: 5bdc6f316d93db1bbab49cb2,
+  second:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="New+York">',
+     request: 5bd569b4ffb4760c99a65f7e,
+     run: 5ba255b716ba6e92e5ce908c },
+  first:
+   { url: 'http://blazedemo.com/',
+     matched: '<input type="text" name="toPort" value="Rome">',
+     request: 5bd5698fffb4760c99a65f6a,
+     run: 5b9e004a3bdf8033cfe20eec } }
+[2018-11-02] APP-INFO: --> GET /app/run/backtrack 200 3430ms
+[2018-11-02] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-02] APP-INFO: --> GET / 200 58ms
+[2018-11-02] APP-INFO: --> GET /app/auth/login 200 84ms
+[2018-11-02] APP-INFO: --> POST /app/auth/login 200 718ms
+[2018-11-02] APP-INFO: --> GET /app 200 66ms
+[2018-11-02] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-02] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-02] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-02] APP-INFO: --> GET /app/project/5b16ca833192d5212014da03/scenarios 200 603ms
+[2018-11-02] APP-INFO: --> GET /app/scenario/5b9e004a3bdf8033cfe20edb/runs 200 114ms
+[2018-11-02] APP-INFO: --> GET /app/scenario/5b9e004a3bdf8033cfe20edb/differnces 200 107ms
+[2018-11-02] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-02] APP-INFO: --> GET /app/scenario/5b9e004a3bdf8033cfe20edb/runs 200 181ms
+[2018-11-02] APP-INFO: --> GET /app/scenario/5b9e004a3bdf8033cfe20edb/runs 200 23ms
+[2018-11-02] APP-INFO: --> POST /app/session/save 200 161ms
+[2018-11-02] APP-INFO: --> GET /app/scenario/5b9e004a3bdf8033cfe20edb/runs 200 25ms
+[2018-11-02] APP-INFO: --> POST /app/session/save 200 55ms
+[2018-11-02] APP-INFO: --> GET /app/scenario/5b9e004a3bdf8033cfe20edb/runs 200 27ms
+[2018-11-02] APP-INFO: --> POST /app/session/save 204 49ms
+[2018-11-02] APP-INFO: --> POST /app/session/save 204 8ms
+[2018-11-02] APP-INFO: Server started at http://0.0.0.0:4000/

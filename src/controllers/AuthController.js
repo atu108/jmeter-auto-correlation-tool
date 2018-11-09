@@ -20,7 +20,7 @@ class AuthController{
       if (user) {
         delete user.password;
         ctx.session.user = user;
-        ctx.body = JSON.stringify({type: 'success', message: 'Login success, redirecting...', redirect: '/app', _token:'ANJPP4070F'});
+        ctx.body = JSON.stringify({type: 'success', message: 'Login success, redirecting...', redirect: '/app', _token:'ANJPP4070F', user});
       }else{
         ctx.body = JSON.stringify({type: 'error', message: 'Invalid Login details'});
       }
@@ -34,7 +34,8 @@ class AuthController{
     if(ctx.session.user) return ctx.redirect('/app');
 
     if (ctx.request.method.toLowerCase() === 'post'){
-
+      // let {first_name, last_name, email, password }
+      // await User.create({ctx.request.})
     }
 
     ctx.body = template.render('app.auth.register', {global: {header: false, footer: false}});
