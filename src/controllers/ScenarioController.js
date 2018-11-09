@@ -9,6 +9,7 @@ import Run from '../models/Run';
 import RunValue from '../models/RunValue';
 import Difference from '../models/Difference';
 import Correlation from '../models/Correlation';
+import config from '../config';
 
 const _tabs = [{
   label: "Runs",

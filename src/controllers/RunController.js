@@ -25,7 +25,7 @@ class RunController{
       save: this.save.bind(this),
       compare: this.compare.bind(this),
       delete: this.delete.bind(this),
-      generateJmx : this.generateJmx.bind(this),
+      generateJmx : this.generateJmx.bind(this)
     }
   }
 
@@ -84,9 +84,13 @@ class RunController{
       const job = new Cron('backtrack', backtrack);
     job.done( async (res)=>{
       if(res.correlations.length > 0){
-        await Correlation.insertMany(res['backtracks']);
+        var corellations = await Correlation.insertMany(res['backtracks']);
       }
       await Backtrack.create(res.backtrack._id, {status:"done"});
+      if(corellations.length > 0){
+        await this.generateJmx(run[0], scenario);
+      }
+      
     })
   }
 
@@ -185,10 +189,9 @@ class RunController{
   //     }
   // }
 
-  async generateJmx(){
+  async generateJmx(run, scenario){
 
       // run will be paseed to this function
-      const run = '5b9e004a3bdf8033cfe20eec';
       const startXml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
           '<jmeterTestPlan version="1.2" properties="3.2" jmeter="3.3 r1808647">\n' +
           '  <hashTree>\n' +
@@ -347,7 +350,7 @@ class RunController{
       // const  runDetails = await Run.findById(run).populate('scenario');
       // console.log("jmx to read",dynamicData);
   
-      let file = fs.createWriteStream(`${config.storage.path}atul.jmx`);
+      let file = fs.createWriteStream(`${config.storage.path}${scenario}.jmx`);
       file.write(startXml+dynamicData+endXml);  
       file.close();
       return true;

@@ -37,6 +37,9 @@ app
   .use(serve(path.join(__dirname, '../uploads'), {
     gzip: true
   }))
+  .use(serve(path.join(__dirname, '../jmx'), {
+    gzip: true
+  }))
   .use(session({
     key: config.session.key,
     path: '/',
