@@ -5,3 +5,4 @@ logs
 .editorconfig
 .idea
 package-lock.json
+dist
