@@ -1804,3 +1804,59 @@
 [2018-11-09] APP-INFO: --> GET /app/project/5be5687d0c289e193bf076f2/scenarios 200 463ms
 [2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/runs 200 158ms
 [2018-11-09] APP-INFO: --> GET /app/scenario/5be568880c289e193bf076f3/corelations 200 18ms
+[2018-11-09] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-09] APP-INFO: --> GET / 200 52ms
+[2018-11-09] APP-INFO: --> GET /app/auth/login 200 33ms
+[2018-11-09] APP-INFO: --> POST /app/auth/login 200 177ms
+[2018-11-09] APP-INFO: --> GET /app 200 59ms
+[2018-11-09] APP-INFO: --> GET / 200 6ms
+[2018-11-09] APP-INFO: --> GET /app/auth/login 200 5ms
+[2018-11-09] APP-INFO: --> POST /app/auth/login 200 4ms
+[2018-11-09] APP-INFO: --> GET /app/auth/login 200 4ms
+[2018-11-09] APP-INFO: --> POST /app/auth/login 200 5ms
+[2018-11-09] APP-INFO: --> GET /app 200 16ms
+[2018-11-09] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-09] APP-INFO: --> GET /app 200 66ms
+[2018-11-09] APP-INFO: --> GET / 200 7ms
+[2018-11-09] APP-INFO: --> GET / 200 5ms
+[2018-11-09] APP-INFO: --> GET / 200 4ms
+[2018-11-09] APP-INFO: --> GET / 200 3ms
+[2018-11-09] APP-INFO: --> GET / 200 7ms
+[2018-11-09] APP-INFO: --> GET / 200 3ms
+[2018-11-09] APP-INFO: --> GET / 200 4ms
+[2018-11-09] APP-INFO: --> GET /app/auth/login 200 6ms
+[2018-11-09] APP-INFO: --> GET /app 200 11ms
+[2018-11-09] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-09] APP-INFO: --> POST /app/auth/login 200 31ms
+[2018-11-09] APP-INFO: --> GET /app 200 57ms
+[2018-11-09] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-09] APP-INFO: --> GET / 200 31ms
+[2018-11-09] APP-INFO: --> GET / 200 7ms
+[2018-11-09] APP-INFO: --> GET / 200 3ms
+[2018-11-09] APP-INFO: --> GET / 200 3ms
+[2018-11-09] APP-INFO: --> GET /app/auth/login 200 7ms
+[2018-11-09] APP-INFO: --> GET /app/auth/login?email=ashok%40impulsiveweb.com&password=myp%40ssw0rd 200 6ms
+[2018-11-09] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-09] APP-INFO: --> GET /app/auth/login?email=ashok%40impulsiveweb.com&password=myp%40ssw0rd 200 38ms
+[2018-11-09] APP-INFO: --> GET /app/auth/login?email=ashok%40impulsiveweb.com&password=myp%40ssw0rd 200 5ms
+[2018-11-09] APP-INFO: --> GET /app/auth/login?email=ashok%40impulsiveweb.com&password=myp%40ssw0rd 200 3ms
+[2018-11-09] APP-INFO: --> GET / 200 6ms
+[2018-11-09] APP-INFO: --> GET /app/auth/login 200 3ms
+[2018-11-09] APP-INFO: --> GET /app/auth/login?email=ashok%40impulsiveweb.com&password=myp%40ssw0rd 200 4ms
+[2018-11-09] APP-INFO: Server started at http://0.0.0.0:4000/
+[2018-11-09] APP-INFO: --> GET / 200 40ms
+[2018-11-09] APP-INFO: --> GET / 200 5ms
+[2018-11-09] APP-INFO: --> GET / 200 5ms
+[2018-11-09] APP-INFO: --> GET / 200 4ms
+[2018-11-09] APP-INFO: --> GET / 200 4ms
+[2018-11-09] APP-INFO: --> GET / 200 3ms
+[2018-11-09] APP-INFO: --> GET / 200 5ms
+[2018-11-09] APP-INFO: --> GET / 200 4ms
+[2018-11-09] APP-INFO: --> GET / 200 6ms
+[2018-11-09] APP-INFO: --> GET / 200 4ms
+[2018-11-09] APP-INFO: --> GET / 200 3ms
+[2018-11-09] APP-INFO: --> GET / 200 4ms
+[2018-11-09] APP-INFO: --> GET / 200 4ms
+[2018-11-09] APP-INFO: --> GET / 200 4ms
+[2018-11-09] APP-INFO: --> GET / 200 2ms
+[2018-11-09] APP-INFO: --> GET / 200 3ms

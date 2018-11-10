@@ -7,16 +7,18 @@ class AuthController{
     return {
       login: this.login.bind(this),
       register: this.register.bind(this),
-      logout: this.logout.bind(this)
+      logout: this.logout.bind(this),
+      getlogin: this.getlogin.bind(this)
     }
   }
 
-  async login(ctx){
+  async getlogin(ctx){
     if(ctx.session.user) return ctx.redirect('/app');
+    ctx.body = template.render('app.auth.login', {global: {header: false, footer: false}});
+  }
 
-    if (ctx.request.method.toLowerCase() === 'post'){
+  async login(ctx){
       const user = await User.findOne({email: ctx.request.body.email, password: encrypt(ctx.request.body.password)});
-
       if (user) {
         delete user.password;
         ctx.session.user = user;
@@ -25,9 +27,6 @@ class AuthController{
         ctx.body = JSON.stringify({type: 'error', message: 'Invalid Login details'});
       }
       return;
-    }
-
-    ctx.body = template.render('app.auth.login', {global: {header: false, footer: false}});
   }
 
   async register(ctx){

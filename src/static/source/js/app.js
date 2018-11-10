@@ -126,9 +126,9 @@
         this.registerFrom = new Util.Validator("register");
       },
       login: function(e){
-        if(!this.loginForm.checkDirty()) this.loginForm.validate();
+        // if(!this.loginForm.checkDirty()) this.loginForm.validate();
 
-        if(!this.loginForm.valid()) return false;
+        // if(!this.loginForm.valid()) return false;
         var data = this.loginForm.data();
         Util.request.post(URL.AUTH.LOGIN, JSON.stringify(data)).then(function(res){
           Util.alert.show(res);
