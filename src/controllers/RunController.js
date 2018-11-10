@@ -51,7 +51,6 @@ class RunController{
     job.done(async (res) => {
       if(res.comparissions.length > 0){
         var differences = await Difference.insertMany(res["comparissions"]);
-        console.log("differns", differences)
         await this._updateComparision(differences);
       }
       if(res.comparissions.length > 0){
@@ -60,7 +59,7 @@ class RunController{
 
       await Compare.findByIdAndUpdate(res.compare._id, {status: "done"});
       if(differences.length > 0){
-        await this.backtrack(differences[0].scenario)
+        await this.backtrack(differences[0].scenario, differences[0].first.run)
       }
       
     });
@@ -71,26 +70,13 @@ class RunController{
     });
   }
 
-  async backtrack(scenario){
-    console.log("called here")
-    const runs = await Run.find({scenario:scenario});
-
-    const backtrack = await Backtrack.create({
-        title:"Backtrack"+ scenario,
-        run: [runs[0]._id, runs[1]._id],
-        scenario: runs[0].scenario,
-        status:"new"
-    })
-      const job = new Cron('backtrack', backtrack);
-    job.done( async (res)=>{
+  async backtrack(scenario,run1){
+      const job = new Cron('backtrack', scenario);
+      job.done( async (res)=>{
       if(res.correlations.length > 0){
-        var corellations = await Correlation.insertMany(res['backtracks']);
+          await Correlation.insertMany(res['correlations']);
       }
-      await Backtrack.create(res.backtrack._id, {status:"done"});
-      if(corellations.length > 0){
-        await this.generateJmx(run[0], scenario);
-      }
-      
+      await this.generateJmx(run1, scenario);
     })
   }
 

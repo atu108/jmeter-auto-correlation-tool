@@ -1,7 +1,7 @@
 import env from '../utility/env';
 
 const storage = {
-  path: '/home/lalit/webroot/testingtool/jmx/',
+  path: '/Users/atul/webroot/testingtool/jmx/',
   temp: env("TEMP_PATH", "")
 };
 

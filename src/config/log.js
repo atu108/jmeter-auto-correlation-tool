@@ -1,7 +1,7 @@
 import env from '../utility/env';
 
 const log = {
-  path: env('LOG_PATH', '/home/lalit/webroot/testingtool/log/')
+  path: env('LOG_PATH', '/Users/atul/webroot/testingtool/log/')
 }
 
 export default log;

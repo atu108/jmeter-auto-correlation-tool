@@ -12,7 +12,7 @@ import RunController from '../controllers/RunController';
 const cheerio = require("cheerio");
 
 
-class backtrack {
+class Backtrack {
 
     constructor(params) {
         this.params = params;
@@ -30,7 +30,8 @@ class backtrack {
     }
 
     async start() {
-        const diffs = await Difference.find({scenario:this.params.scenario}).populate('first.request',['sequence']).populate('second.request',['sequence']).populate('session');
+        const diffs = await Difference.find({scenario:this.params}).populate('first.request',['sequence']).populate('second.request',['sequence']).populate('session');
+        console.log("inside backtrack", diffs);
         const loopTimes = diffs.length;
         for(let i = 0; i < loopTimes; i++){
             console.log(i);
@@ -39,6 +40,7 @@ class backtrack {
             }
             let correlation = await this.searchInBodyNew(diffs[i]);
             if(correlation){
+                console.log("found one",correlation);
                 this.correlations.push(correlation);
             }
         }
@@ -356,9 +358,9 @@ class backtrack {
             if(body === undefined || !body || body == ''){
                continue;
             }
-            if(diff.location === 'url'){
-                return this._findAchorTag(body,key,value,allRequests[i]);
-            }
+            // if(diff.location === 'url'){
+            //     return this._findAchorTag(body,key,value,allRequests[i]);
+            // }
             
             let tags = {}
             tags.value = this.findInput(body, key, value1);
@@ -556,10 +558,7 @@ class backtrack {
     // }
 }
 
-
-// process.on('message', async (params) => {
-//     const compare = new Compare(params);
-//     await compare.start();
-// });
-
-export default new backtrack();
+process.on('message', async (params) => {
+    const backtrack = new Backtrack(params);
+    await backtrack.start();
+});

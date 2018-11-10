@@ -74,6 +74,7 @@
     "gulp-sass": "^4.0.1",
     "gulp-uglify": "^1.5.4",
     "gulp-watch": "^4.3.9",
+    "kexec": "^3.0.0",
     "nodemon": "^1.17.5"
   }
 }
