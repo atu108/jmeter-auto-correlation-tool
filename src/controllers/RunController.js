@@ -49,8 +49,9 @@ class RunController{
     const job = new Cron('compare', compare);
 
     job.done(async (res) => {
+      let differences = [];
       if(res.comparissions.length > 0){
-        var differences = await Difference.insertMany(res["comparissions"]);
+        differences = await Difference.insertMany(res["comparissions"]);
         await this._updateComparision(differences);
       }
       if(res.comparissions.length > 0){
