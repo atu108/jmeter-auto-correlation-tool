@@ -36,14 +36,14 @@ class Compare {
     const filteredRequets1 = firstRequests.filter((req) => {
       const url = req.url;
       const extension = url.split(/\#|\?/)[0].split('.').pop().trim();
-      return ignoredExt.indexOf(extension) === -1
+      return ignoredExt.indexOf(extension) === -1 || ignoredUrls.indexOf(url) === -1
     });
     // console.log(firstRequests.length,filteredRequets1.length)
 
     let filteredRequets2 = secondRequests.filter((req) => {
       const url = req.url;
       const extension = url.split(/\#|\?/)[0].split('.').pop().trim();
-      return ignoredExt.indexOf(extension) === -1
+      return ignoredExt.indexOf(extension) === -1 || ignoredUrls.indexOf(url) === -1
     });
         for(let i = 0; i < filteredRequets1.length; i++) {
           // console.log("count", i ,"request2 length" ,filteredRequets2.length );

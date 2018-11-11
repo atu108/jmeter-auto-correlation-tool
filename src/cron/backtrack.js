@@ -464,7 +464,7 @@ class Backtrack {
     findInput(body, key, value){
         try{
             let $ = cheerio.load(body.replace((/\\/g, "")));
-            let inputs = $('input[name='+ key +'][value="'+ value +'"]').toArray();
+            let inputs = $('input[name="'+ key +'"][value="'+ value +'"]').toArray();
         // console.log("inputs check", typeof inputs, "all inouts", inputs[0]);
         if(inputs.length > 0){
             return inputs;
@@ -481,7 +481,7 @@ class Backtrack {
 
     findSelect(body, key, value){
         let $ = cheerio.load(body.replace((/\\/g, "")));
-        let selects = $('select[name='+ key +'] option[value="' + value + '"]').toArray;
+        let selects = $('select[name="'+ key +'"] option[value="' + value + '"]').toArray;
         if(selects.length > 0){
             return selects;
         }else{
