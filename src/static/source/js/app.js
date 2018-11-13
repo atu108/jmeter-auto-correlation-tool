@@ -331,6 +331,7 @@
         if(!App.run.form.valid()) return false;
 
         var data = App.run.form.data();
+        console.log("data" ,data)
         Util.request.post(URL.PROJECT.SAVE, JSON.stringify(data)).then(function(res){
           Util.alert.show(res);
           if(res.reload) Util.redirect(location.href, true);

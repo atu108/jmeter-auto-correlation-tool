@@ -3,8 +3,6 @@ import config from '../config';
 import logger from '../utility/logger';
 
 import Request from '../models/Request';
-import CompareModel from '../models/Compare';
-import Difference from '../models/Difference';
 
 const ignoredExt = ['css', 'jpeg', 'jpg', 'png', 'js', 'woff2', 'gif', 'PNG', 'JPG', 'JPEG', 'GIF', 'JS', 'GIF', 'woff', 'svg'];
 const ignoredUrls = ['www.google-analytics.com', 'www.facebook.com', 'www.fb.com', 'www.youtube.com', 'maps.google.com'];

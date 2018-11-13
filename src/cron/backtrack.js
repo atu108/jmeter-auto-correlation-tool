@@ -491,6 +491,9 @@ class Backtrack {
 
     _getRegName(final,matched,value,key){
     let resultArr = matched.match(new RegExp(final+">"))
+    if(resultArr.length === 2){
+        return key+"_COR"
+    }
     for(let i = 1; i < resultArr.length; i++){
         if(resultArr[i].replace(/"/g, '').replace(/'/g,'') === value){
             return key+"_COR_g"+i;
