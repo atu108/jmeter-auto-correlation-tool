@@ -43,22 +43,36 @@ class Compare {
       const extension = url.split(/\#|\?/)[0].split('.').pop().trim();
       return ignoredExt.indexOf(extension) === -1 || ignoredUrls.indexOf(url) === -1
     });
+    let mismatchUrls2 = [];
+    let mismatchUrls1 = [];
+    // checking mismatch urls in run 2 requests 
+    for(let i = 0; i < filteredRequets2.length; i++){
+      const urlIndex = filteredRequets1.findIndex(req => (req.url === filteredRequets2[i].url && req.session_sequence.toString() === filteredRequets2[i].session_sequence.toString()));
+            if (urlIndex === -1) {
+                // check referer in header of this url
+                mismatchUrls2.push(filteredRequets2[i])
+
+          } 
+      }
         for(let i = 0; i < filteredRequets1.length; i++) {
           // console.log("count", i ,"request2 length" ,filteredRequets2.length );
             const urlIndex = filteredRequets2.findIndex(req => (req.url === filteredRequets1[i].url && req.session_sequence.toString() === filteredRequets1[i].session_sequence.toString()));
             if (urlIndex === -1) {
-                this.mismatchedUrls.push({
-                    session_sequence: filteredRequets1[i].session_sequence,
-                    request: filteredRequets1[i]._id,
-                    url: filteredRequets1[i].request.url,
-                    runs: this.params.runs,
-                });
+              mismatchUrls1.push(filteredRequets1[i])
             } else {
-                const diff = this._diff(filteredRequets1[i], filteredRequets2[urlIndex]);
-                if (diff) this.comparissions.push(...diff);
+                // const diff = this._diff(filteredRequets1[i], filteredRequets2[urlIndex]);
+                // if (diff) this.comparissions.push(...diff);
                 filteredRequets2.splice(urlIndex, 1);
             }
 
+        }
+        //console.log(mismatchUrls1.map(obj=>obj.url) , mismatchUrls2.map(obj=>obj.url))
+        const mismatchData = this._handleMisMatch(mismatchUrls1, mismatchUrls2);
+        for(let i = 0; i < mismatchData.one.length; i++){
+          //console.log("inside loop")
+          const diff = this._diff(mismatchData.one[i], mismatchData.two[i]);
+                if (diff) this.comparissions.push(...diff);
+                // console.log("found diff", diff[0].key)
         }
         process.send({
             mismatchUrls:this.mismatchedUrls,
@@ -169,6 +183,62 @@ class Compare {
     });
     return parsed;
   }
+  _handleMisMatch(mismatchUrls1, mismatchUrls2){
+    let toBeCompared1 = []
+    let toBeCompared2 = []
+    let comparedParents = [];
+    for(let i = 0; i< mismatchUrls1.length; i++){
+      const index = mismatchUrls2.findIndex(req => (req.session_sequence.toString() === mismatchUrls1[i].session_sequence.toString()));
+      if(index !== -1){
+        //console.log("urls to be found",mismatchUrls1[i].request.url, mismatchUrls2[index].request.url)
+        const referersMatched = this._findReferersCon1(mismatchUrls1[i], mismatchUrls2[index]);
+        if(referersMatched){
+        comparedParents.push({first:mismatchUrls1[i].url, second:mismatchUrls2[index].url})
+        toBeCompared1.push(mismatchUrls1[i]);
+        toBeCompared2.push(mismatchUrls2[index]);
+       }else{
+         console.log("sending urls to match ")
+          for(let k = 0; k < comparedParents.length; k++){
+            const referersMatched2 = this.__findReferersCon2(comparedParents,mismatchUrls1[i], mismatchUrls2[index])
+            if(referersMatched2){
+              console.log("which ones", mismatchUrls1[i].request.url, mismatchUrls1[index].request.url);
+              comparedParents.push({first:mismatchUrls1[i].url, second:mismatchUrls2[index].url})
+              toBeCompared1.push(mismatchUrls1[i]);
+              toBeCompared2.push(mismatchUrls2[index]);
+            }
+          }
+       }
+        
+      }
+    }
+    return {one:toBeCompared1, two:toBeCompared2};
+  }
+  _findReferersCon1( mismatchUrls1, mismatchUrls2 ){
+    const one = mismatchUrls1.request.headers.filter( obj => (Object.keys(obj)[0] === 'Referer' || Object.keys(obj)[0] === 'referer'));
+    const two = mismatchUrls2.request.headers.filter( obj => (Object.keys(obj)[0] === 'Referer' || Object.keys(obj)[0] === 'referer'));
+    // console.log("inside condition one", one, two);
+    if(one.length > 0 && two.length > 0){
+      return one[0]['Referer'] === two[0]['Referer']
+    }else{
+      return false;
+    }
+  }
+__findReferersCon2(parentObjs, mismatchUrls1, mismatchUrls2 ){
+  console.log("checking condition2")
+  const one = mismatchUrls1.request.headers.filter( obj => (Object.keys(obj)[0] === 'Referer' || Object.keys(obj)[0] === 'referer'));
+  const two = mismatchUrls2.request.headers.filter( obj => (Object.keys(obj)[0] === 'Referer' || Object.keys(obj)[0] === 'referer'));
+  console.log("refererrs in two", one[0]['Referer'], two[0]['Referer'])
+  //console.log("inside condition two", one, two)
+  if(one.length > 0 && two.length > 0){
+    const parentIndex = parentObjs.findIndex( parentObj => ( parentObj.first === one[0]['Referer'] &&  parentObj.second === two[0]['Referer']) )
+    console.log("found what was to be found")
+    return parentIndex !== -1;
+  }else{
+    return false;
+  }
+  
+  
+}
 }
 
 process.on('message', async (params) => {
