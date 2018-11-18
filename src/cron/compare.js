@@ -227,7 +227,8 @@ __findReferersCon2(parentObjs, mismatchUrls1, mismatchUrls2 ){
   console.log("checking condition2")
   const one = mismatchUrls1.request.headers.filter( obj => (Object.keys(obj)[0] === 'Referer' || Object.keys(obj)[0] === 'referer'));
   const two = mismatchUrls2.request.headers.filter( obj => (Object.keys(obj)[0] === 'Referer' || Object.keys(obj)[0] === 'referer'));
-  console.log("refererrs in two", one[0]['Referer'], two[0]['Referer'])
+ 
+  // console.log("refererrs in two", one[0]['Referer'], two[0]['Referer'])
   //console.log("inside condition two", one, two)
   if(one.length > 0 && two.length > 0){
     const parentIndex = parentObjs.findIndex( parentObj => ( parentObj.first === one[0]['Referer'] &&  parentObj.second === two[0]['Referer']) )

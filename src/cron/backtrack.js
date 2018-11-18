@@ -358,9 +358,12 @@ class Backtrack {
             if(body === undefined || !body || body == ''){
                continue;
             }
-            // if(diff.location === 'url'){
-            //     return this._findAchorTag(body,key,value,allRequests[i]);
-            // }
+
+            // for searching the differences in url
+
+            if(diff.location === 'url'){
+                return this._findAchorTag(body,key,value,allRequests[i]);
+            }
             
             let tags = {}
             tags.value = this.findInput(body, key, value1);
@@ -504,61 +507,61 @@ class Backtrack {
     
     }
 
-    // _findAchorTag(body,value1,value2, request){
-    //     try{
-    //         let $ = cheerio.load(body.replace((/\\/g, "")));
-    //         let anchor1 = $('a[href="'+value1+'"]').toArray();
-    //     // console.log("inputs check", typeof inputs, "all inouts", inputs[0]);
-    //     if(anchor1.length > 0){
-    //         let anchor2 = $('a[href="'+value2+'"]').toArray();
-    //         if(anchor2.length > 0){
-    //             let forFinalReg = this.checkExactMatch(anchor1, anchor2)
-    //             if(!forFinalReg){
-    //                 forFinalReg = this.checkLooseMatch(anchor1, anchor2);
-    //             }
-    //             if(forFinalReg){
-    //                 finalReg = this._fixBoundary(cheerio.html(forFinalReg[0]), cheerio.html(forFinalReg[1]), [value1, value2]);
-    //                 //const reg_name = this._getRegName(finalReg,cheerio.html(forFinalReg[0]),value1)
-    //                 const reg_name = "pending"
-    //                 return {
-    //                     key: key,
-    //                     priority: 1,
-    //                     compared_url: diff.url,
-    //                     location: diff.location,
-    //                     reg_count: this._countReg(finalReg+'>'),
-    //                     reg_name: reg_name,
-    //                     final_regex: finalReg+'>',
-    //                     first: {
-    //                         url: request.url,
-    //                         matched: cheerio.html(forFinalReg[0]),
-    //                         session_title: request.session.title,
-    //                         session_sequence:  request.session.sequence,
-    //                         request:request._id,
-    //                         run: request.run
+    _findAchorTag(body,value1,value2, request){
+        try{
+            let $ = cheerio.load(body.replace((/\\/g, "")));
+            let anchor1 = $('a[href="'+value1+'"]').toArray();
+        // console.log("inputs check", typeof inputs, "all inouts", inputs[0]);
+        if(anchor1.length > 0){
+            let anchor2 = $('a[href="'+value2+'"]').toArray();
+            if(anchor2.length > 0){
+                let forFinalReg = this.checkExactMatch(anchor1, anchor2)
+                if(!forFinalReg){
+                    forFinalReg = this.checkLooseMatch(anchor1, anchor2);
+                }
+                if(forFinalReg){
+                    finalReg = this._fixBoundary(cheerio.html(forFinalReg[0]), cheerio.html(forFinalReg[1]), [value1, value2]);
+                    //const reg_name = this._getRegName(finalReg,cheerio.html(forFinalReg[0]),value1)
+                    const reg_name = "pending"
+                    return {
+                        key: key,
+                        priority: 1,
+                        compared_url: diff.url,
+                        location: diff.location,
+                        reg_count: this._countReg(finalReg+'>'),
+                        reg_name: reg_name,
+                        final_regex: finalReg+'>',
+                        first: {
+                            url: request.url,
+                            matched: cheerio.html(forFinalReg[0]),
+                            session_title: request.session.title,
+                            session_sequence:  request.session.sequence,
+                            request:request._id,
+                            run: request.run
             
-    //                     },
-    //                     second: {
-    //                         url: second[0].url,
-    //                         matched: cheerio.html(forFinalReg[1]),
-    //                         session_title: second[0].session.title,
-    //                         session_sequence:  second[0].session.sequence,
-    //                         request: second[0]._id,
-    //                         run: second[0].run
+                        },
+                        second: {
+                            url: second[0].url,
+                            matched: cheerio.html(forFinalReg[1]),
+                            session_title: second[0].session.title,
+                            session_sequence:  second[0].session.sequence,
+                            request: second[0]._id,
+                            run: second[0].run
             
-    //                     },
-    //                     scenario:diff.scenario,
-    //                     difference:diff._id
-    //                 }
-    //             }
-    //         }
+                        },
+                        scenario:diff.scenario,
+                        difference:diff._id
+                    }
+                }
+            }
           
-    //     }else{
-    //         return false;
-    //     }
-    //     }catch(e){
-    //         console.log(e);
-    //     }
-    // }
+        }else{
+            return false;
+        }
+        }catch(e){
+            console.log(e);
+        }
+    }
 }
 
 process.on('message', async (params) => {
