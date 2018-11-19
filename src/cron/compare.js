@@ -212,7 +212,6 @@ class Compare {
         toBeCompared2.push(mismatchUrls2[index]);
        }else{
          //console.log("sending urls to match ")
-         console.log("")
           for(let k = 0; k < comparedParents.length; k++){
             const referersMatched2 = this.__findReferersCon2(comparedParents,mismatchUrls1[i], mismatchUrls2[index])
             if(referersMatched2){
@@ -220,7 +219,6 @@ class Compare {
               comparedParents.push({first: mismatchUrls1[i].url, second: mismatchUrls2[index].url})
               toBeCompared1.push(mismatchUrls1[i]);
               toBeCompared2.push(mismatchUrls2[index]);
-              break;
             }
           }
        }
