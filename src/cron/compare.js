@@ -73,8 +73,8 @@ class Compare {
             if (urlIndex === -1) {
               mismatchUrls1.push(filteredRequets1[i])
             } else {
-                // const diff = this._diff(filteredRequets1[i], filteredRequets2[urlIndex]);
-                // if (diff) this.comparissions.push(...diff);
+                const diff = this._diff(filteredRequets1[i], filteredRequets2[urlIndex]);
+                if (diff) this.comparissions.push(...diff);
                 filteredRequets2.splice(urlIndex, 1);
             }
 
@@ -219,6 +219,7 @@ class Compare {
               comparedParents.push({first: mismatchUrls1[i].url, second: mismatchUrls2[index].url})
               toBeCompared1.push(mismatchUrls1[i]);
               toBeCompared2.push(mismatchUrls2[index]);
+              break;
             }
           }
        }

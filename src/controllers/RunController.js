@@ -59,9 +59,9 @@ class RunController{
       }
 
       await Compare.findByIdAndUpdate(res.compare._id, {status: "done"});
-      // if(differences.length > 0){
-      //   await this.backtrack(differences[0].scenario, differences[0].first.run)
-      // }
+      if(differences.length > 0){
+        await this.backtrack(differences[0].scenario, differences[0].first.run)
+      }
       
     });
 
