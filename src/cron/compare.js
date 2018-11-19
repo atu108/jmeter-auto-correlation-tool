@@ -31,18 +31,31 @@ class Compare {
     let firstRequests = await Request.find({run: this.params.runs[0]}).sort({sequence: 1});
     let secondRequests = await Request.find({run: this.params.runs[1]}).sort({sequence: 1});
     //filtering urls
-    const filteredRequets1 = firstRequests.filter((req) => {
+    let filteredRequets1 = firstRequests.filter((req) => {
       const url = req.url;
       const extension = url.split(/\#|\?/)[0].split('.').pop().trim();
-      return ignoredExt.indexOf(extension) === -1 || ignoredUrls.indexOf(url) === -1
+      // console.log(extension)
+      return ignoredExt.indexOf(extension) === -1;
     });
     // console.log(firstRequests.length,filteredRequets1.length)
 
     let filteredRequets2 = secondRequests.filter((req) => {
       const url = req.url;
       const extension = url.split(/\#|\?/)[0].split('.').pop().trim();
-      return ignoredExt.indexOf(extension) === -1 || ignoredUrls.indexOf(url) === -1
+      return ignoredExt.indexOf(extension) === -1;
     });
+    // for urls
+    filteredRequets1 = filteredRequets1.filter((req) => {
+      const url = req.url;
+      return ignoredUrls.indexOf( url.split('?')[0]) === -1;
+    });
+
+    // for urls
+    filteredRequets2 = filteredRequets2.filter((req) => {
+      const url = req.url;
+      return ignoredUrls.indexOf( url.split('?')[0]) === -1;
+    });
+
     let mismatchUrls2 = [];
     let mismatchUrls1 = [];
     // checking mismatch urls in run 2 requests 
@@ -184,6 +197,7 @@ class Compare {
     return parsed;
   }
   _handleMisMatch(mismatchUrls1, mismatchUrls2){
+    console.log("Lengths", mismatchUrls1.length, mismatchUrls2.length)
     let toBeCompared1 = []
     let toBeCompared2 = []
     let comparedParents = [];
@@ -197,14 +211,16 @@ class Compare {
         toBeCompared1.push(mismatchUrls1[i]);
         toBeCompared2.push(mismatchUrls2[index]);
        }else{
-         console.log("sending urls to match ")
+         //console.log("sending urls to match ")
+         console.log("")
           for(let k = 0; k < comparedParents.length; k++){
             const referersMatched2 = this.__findReferersCon2(comparedParents,mismatchUrls1[i], mismatchUrls2[index])
             if(referersMatched2){
-              console.log("which ones", mismatchUrls1[i].request.url, mismatchUrls1[index].request.url);
-              comparedParents.push({first:mismatchUrls1[i].url, second:mismatchUrls2[index].url})
+              //console.log("which ones", mismatchUrls1[i].request.url, mismatchUrls1[index].request.url);
+              comparedParents.push({first: mismatchUrls1[i].url, second: mismatchUrls2[index].url})
               toBeCompared1.push(mismatchUrls1[i]);
               toBeCompared2.push(mismatchUrls2[index]);
+              break;
             }
           }
        }
@@ -228,11 +244,11 @@ __findReferersCon2(parentObjs, mismatchUrls1, mismatchUrls2 ){
   const one = mismatchUrls1.request.headers.filter( obj => (Object.keys(obj)[0] === 'Referer' || Object.keys(obj)[0] === 'referer'));
   const two = mismatchUrls2.request.headers.filter( obj => (Object.keys(obj)[0] === 'Referer' || Object.keys(obj)[0] === 'referer'));
  
-  // console.log("refererrs in two", one[0]['Referer'], two[0]['Referer'])
+  //console.log("refererrs in two", one[0]['Referer'], two[0]['Referer'])
   //console.log("inside condition two", one, two)
   if(one.length > 0 && two.length > 0){
     const parentIndex = parentObjs.findIndex( parentObj => ( parentObj.first === one[0]['Referer'] &&  parentObj.second === two[0]['Referer']) )
-    console.log("found what was to be found")
+    console.log(parentIndex !== -1);
     return parentIndex !== -1;
   }else{
     return false;
