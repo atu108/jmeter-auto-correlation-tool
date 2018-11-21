@@ -362,7 +362,7 @@ class Backtrack {
             // for searching the differences in url
 
             if(diff.location === 'url'){
-                return this._findAchorTag(body,key,value,allRequests[i]);
+                return this._findAchorTag(body, value1, value2, allRequests[i], diff);
             }
             
             let tags = {}
@@ -507,24 +507,26 @@ class Backtrack {
     
     }
 
-    _findAchorTag(body,value1,value2, request){
+    _findAchorTag(body, value1, value2, request, diff){
         try{
             let $ = cheerio.load(body.replace((/\\/g, "")));
             let anchor1 = $('a[href="'+value1+'"]').toArray();
+            anchor1.length > 0 ? anchor1 : $('a[href=\''+value1+'\']').toArray();
         // console.log("inputs check", typeof inputs, "all inouts", inputs[0]);
         if(anchor1.length > 0){
             let anchor2 = $('a[href="'+value2+'"]').toArray();
+            anchor2.length > 0 ? anchor2 : $('a[href=\''+value2+'\']').toArray();
             if(anchor2.length > 0){
                 let forFinalReg = this.checkExactMatch(anchor1, anchor2)
                 if(!forFinalReg){
                     forFinalReg = this.checkLooseMatch(anchor1, anchor2);
                 }
                 if(forFinalReg){
-                    finalReg = this._fixBoundary(cheerio.html(forFinalReg[0]), cheerio.html(forFinalReg[1]), [value1, value2]);
+                    let finalReg = this._fixBoundary(cheerio.html(forFinalReg[0]), cheerio.html(forFinalReg[1]), [value1, value2]);
                     //const reg_name = this._getRegName(finalReg,cheerio.html(forFinalReg[0]),value1)
                     const reg_name = "pending"
                     return {
-                        key: key,
+                        key: "url",
                         priority: 1,
                         compared_url: diff.url,
                         location: diff.location,
