@@ -362,7 +362,7 @@ class Backtrack {
             // for searching the differences in url
 
             if(diff.location === 'url'){
-                return this._findAchorTag(body, value1, value2, allRequests[i], diff);
+                return this._findAchorTag(body, value1, value2, allRequests[i], diff, runs);
             }
             
             let tags = {}
@@ -507,13 +507,15 @@ class Backtrack {
     
     }
 
-    _findAchorTag(body, value1, value2, request, diff){
+    async _findAchorTag(body, value1, value2, request, diff, runs){
         try{
             let $ = cheerio.load(body.replace((/\\/g, "")));
             let anchor1 = $('a[href="'+value1+'"]').toArray();
             anchor1.length > 0 ? anchor1 : $('a[href=\''+value1+'\']').toArray();
         // console.log("inputs check", typeof inputs, "all inouts", inputs[0]);
         if(anchor1.length > 0){
+            let second = await Request.find({run:runs[1],url:request.url, session_sequence:request.session_sequence, 'request.method':request.request.method});
+            $ = cheerio.load(second[0].response.body.replace((/\\/g, "")))
             let anchor2 = $('a[href="'+value2+'"]').toArray();
             anchor2.length > 0 ? anchor2 : $('a[href=\''+value2+'\']').toArray();
             if(anchor2.length > 0){
