@@ -301,6 +301,8 @@ class Backtrack {
     }
 // this to comapre urls and fix their param values
     _compareUrl(url1,url2){
+        //to do:- handle whole url rather than only params
+        console.log("reached inside url match", url1, "url 2", url2)
         const loc1 = new URL(url1);
         const loc2 = new URL(url2);
         let params1 = loc1.searchParams;
@@ -485,7 +487,7 @@ class Backtrack {
     findSelect(body, key, value){
         let $ = cheerio.load(body.replace((/\\/g, "")));
         let selects = $('select[name="'+ key +'"] option[value="' + value + '"]').toArray;
-        if(selects.length > 0){
+        if( selects.length > 0){
             return selects;
         }else{
             return false;
@@ -506,7 +508,7 @@ class Backtrack {
     }
     
     }
-
+    
     async _findAchorTag(body, value1, value2, request, diff, runs){
         try{
             let $ = cheerio.load(body.replace((/\\/g, "")));
