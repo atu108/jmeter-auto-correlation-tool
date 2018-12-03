@@ -228,10 +228,15 @@ class Backtrack {
         return false;
     }
 
-    _fixBoundary(str1,str2,values){
+    _fixBoundary(str1, str2, values,){
+        console.log("checking sts", str1, str2);
         let temp = [str1.replace(values[0],'(*?)'),str2.replace(values[1],'(*?)')]
-        if(temp[0] === temp[1])
-        return temp[0];
+        //for cheching its anchor tag
+        if(str1.substring(0,3) !== '<a '){
+            if(temp[0] === temp[1])
+                return temp[0];
+        }
+       
         // console.log("strings ", str1, str2)
         const arr1 = temp[0].split(' ');
         const arr2 = temp[1].split(' ');
@@ -302,11 +307,25 @@ class Backtrack {
 // this to comapre urls and fix their param values
     _compareUrl(url1,url2){
         //to do:- handle whole url rather than only params
+
         console.log("reached inside url match", url1, "url 2", url2)
         const loc1 = new URL(url1);
         const loc2 = new URL(url2);
         let params1 = loc1.searchParams;
         let params2 = loc2.searchParams;
+        let host1 = loc1.hostname;
+        let host2 = loc2.hostname;
+        let pathNames1 = loc1.pathname.split('/');
+        let pathNames2 = loc2.pathname.split('/');
+        if(host1 !== host2){
+            loc1.hostname = '(.*?)';
+        }
+        for(let i  = 0; i < pathNames1.length; i++){
+            if(pathNames1[i] !== pathNames2[i]){
+                pathNames1[i] = '(.*?)';
+            }
+        }
+        loc1.pathname = pathNames1.join('/');
         for (const [name, value] of params1) {
             if(params2.has(name)){
                 if(params2.get(name) !== value){
@@ -389,6 +408,7 @@ class Backtrack {
                     if(!forFinalReg){
                         forFinalReg = this.checkLooseMatch(tags.value, sencondTags);
                     }
+
                     if(forFinalReg){
                         //removed empty space with + in cheerio returned object
                         forFinalReg[0].attribs.value = forFinalReg[0].attribs.value.replace(" ", '+');
@@ -409,7 +429,8 @@ class Backtrack {
                                 session_title: allRequests[i].session.title,
                                 session_sequence:  allRequests[i].session.sequence,
                                 request:allRequests[i]._id,
-                                run: allRequests[i].run
+                                run: allRequests[i].run,
+                                atPos:'Not Required'
                 
                             },
                             second: {
@@ -418,7 +439,8 @@ class Backtrack {
                                 session_title: second[0].session.title,
                                 session_sequence:  second[0].session.sequence,
                                 request: second[0]._id,
-                                run: second[0].run
+                                run: second[0].run,
+                                atPos:'Not Required'
                 
                             },
                             scenario:diff.scenario,
@@ -526,38 +548,47 @@ class Backtrack {
                     forFinalReg = this.checkLooseMatch(anchor1, anchor2);
                 }
                 if(forFinalReg){
-                    let finalReg = this._fixBoundary(cheerio.html(forFinalReg[0]), cheerio.html(forFinalReg[1]), [value1, value2]);
-                    //const reg_name = this._getRegName(finalReg,cheerio.html(forFinalReg[0]),value1)
-                    const reg_name = "pending"
-                    return {
-                        key: "url",
-                        priority: 1,
-                        compared_url: diff.url,
-                        location: diff.location,
-                        reg_count: this._countReg(finalReg+'>'),
-                        reg_name: reg_name,
-                        final_regex: finalReg+'>',
-                        first: {
-                            url: request.url,
-                            matched: cheerio.html(forFinalReg[0]),
-                            session_title: request.session.title,
-                            session_sequence:  request.session.sequence,
-                            request:request._id,
-                            run: request.run
+                    console.log(forFinalReg[0], forFinalReg[1]);
+                    const result = this.matchAnchorTags(forFinalReg[0], forFinalReg[1]);
+                    console.log("final result after match", result);
+                    // forFinalReg = [cheerio.html(forFinalReg[0]),cheerio.html(forFinalReg[1])]
+                    // forFinalReg = [ forFinalReg[0].substring(0, forFinalReg[0].indexOf('>')+1), forFinalReg[1].substring(0, forFinalReg[1].indexOf('>')+1) ]
+                    // // let finalReg = this._fixBoundary(forFinalReg[0],forFinalReg[1], [value1, value2]);
+                    // console.log("reached here final reg",finalReg)
+                    // //const reg_name = this._getRegName( finalReg, cheerio.html(forFinalReg[0]), value1 )
+                    // const reg_name = "pending"
+                    // return {
+                    //     key: "url",
+                    //     priority: 1,
+                    //     compared_url: diff.url,
+                    //     location: diff.location,
+                    //     reg_count: this._countReg(finalReg),
+                    //     reg_name: reg_name,
+                    //     final_regex: finalReg+'>',
+                    //     first: {
+                    //         url: request.url,
+                    //         matched: forFinalReg[0],
+                    //         session_title: request.session.title,
+                    //         session_sequence:  request.session.sequence,
+                    //         request:request._id,
+                    //         run: request.run,
+                    //         atPos: 0
             
-                        },
-                        second: {
-                            url: second[0].url,
-                            matched: cheerio.html(forFinalReg[1]),
-                            session_title: second[0].session.title,
-                            session_sequence:  second[0].session.sequence,
-                            request: second[0]._id,
-                            run: second[0].run
+                    //     },
+                    //     second: {
+
+                    //         url: second[0].url,
+                    //         matched: forFinalReg[1],
+                    //         session_title: second[0].session.title,
+                    //         session_sequence:  second[0].session.sequence,
+                    //         request: second[0]._id,
+                    //         run: second[0].run,
+                    //         atPos: 0
             
-                        },
-                        scenario:diff.scenario,
-                        difference:diff._id
-                    }
+                    //     },
+                    //     scenario:diff.scenario,
+                    //     difference:diff._id
+                    // }
                 }
             }
           
@@ -566,6 +597,48 @@ class Backtrack {
         }
         }catch(e){
             console.log(e);
+        }
+    }
+    matchAnchorTags(obj1, obj2){
+     let anchor1props = obj1.attribs;
+     let anchor2props = obj2.attribs;
+    console.log("reached till props", anchor1props)
+     let allKeys1 = Object.keys(anchor1props);
+        console.log("keys all",allKeys1)
+    let forCreating = {} 
+     for(let i = 0; i < allKeys1.length; i++){
+       if(anchor1props[allKeys1[i]] === anchor2props[allKeys1[i]]){
+           
+           forCreating[allKeys1[i]] =  anchor1props[i]
+           console.log("reached inside tag", forCreating);
+       }else if (allKeys1[i] === 'href'){
+           const comparedUrls = this._compareUrl(anchor1props[allKeys1[i]],anchor2props[allKeys1[i]]);
+           forCreating[allKeys1[i]] = comparedUrls; 
+           console.log("compared urls", comparedUrls);
+           console.log("for creating inside urk compare", forCreating);
+       }else{
+        forCreating[allKeys1[i]] = '(.*?)'; 
+        console.log("inside else part", forCreating)
+       }
+      }
+    }
+    verifyAnchorTag(fReg, matchedStrings, body1, body2){
+        let reg = fReg ;
+        let Reg = new RegExp(reg, 'ig')
+        let matched1 = matchedStrings[0];
+        let matched2 = matchedStrings[1];
+        
+        let values1 = matched1.match(reg);
+        let values2 = matched2.match(reg);
+        const totalMatches1 = body1.match(Reg)
+        const totalMatches2 = body2.match(Reg)
+        
+        for(let i = 0; i < totalMatches1.length; i++){
+            console.log(totalMatches1[i].match(reg))
+        }
+        
+        for(let i = 0; i < totalMatches2.length; i++){
+            console.log(totalMatches2[i].match(reg))
         }
     }
 }

@@ -26,7 +26,8 @@ const CorrelationSchema = new Schema({
         run: {
             type: Schema.Types.ObjectId,
             ref: "Run"
-        }
+        },
+        atPos: Number
 
     },
     second: {
@@ -47,7 +48,8 @@ const CorrelationSchema = new Schema({
         run: {
             type: Schema.Types.ObjectId,
             ref: "Run"
-        }
+        },
+        atPos: Number
     },
     scenario:{
         type: Schema.Types.ObjectId,

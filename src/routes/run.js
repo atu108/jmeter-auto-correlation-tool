@@ -13,4 +13,5 @@ router.post('/record', auth, RunController.record)
   .post('/compare', auth, RunController.compare)
   .post('/delete', auth, RunController.delete)
 
+
 export default router;
