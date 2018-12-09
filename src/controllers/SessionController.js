@@ -103,14 +103,17 @@ class SessionController{
         let test = {};
         let name = obj['name'].indexOf('.') !== -1 ? obj['name'].split(".").join("U+FF0E") : obj['name'];
         let value = obj['value'];
-        if(isEncoded){
-          value = decodeURIComponent(value);
-          name = decodeURIComponent(name);
-          test[name] = value;
-          temp.push(test);
-        }else{
-          test[name] = value;
-          temp.push(test);
+        // key name Cookie in header is being ignored
+        if(name !== 'Cookie'){
+          if(isEncoded){
+            value = decodeURIComponent(value);
+            name = decodeURIComponent(name);
+            test[name] = value;
+            temp.push(test);
+          }else{
+            test[name] = value;
+            temp.push(test);
+          }
         }
       });
       return temp;
