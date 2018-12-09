@@ -327,7 +327,7 @@ class RunController{
               <stringProp name="RegexExtractor.regex">${this._encodeHtml(hasReg.final_regex)}</stringProp>
               <stringProp name="RegexExtractor.template">${hasReg.regCount}</stringProp>
               <stringProp name="RegexExtractor.default">${hasReg.key}_Not_Found</stringProp>
-              <stringProp name="RegexExtractor.match_number">1</stringProp>
+              <stringProp name="RegexExtractor.match_number">${hasReg.first.atPos}</stringProp>
             </RegexExtractor>
             <hashTree/>`).join('')}
             </hashTree>`
