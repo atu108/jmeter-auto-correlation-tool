@@ -560,7 +560,7 @@ class Backtrack {
                     // forFinalReg = [ forFinalReg[0].substring(0, forFinalReg[0].indexOf('>')+1), forFinalReg[1].substring(0, forFinalReg[1].indexOf('>')+1) ]
                     // // let finalReg = this._fixBoundary(forFinalReg[0],forFinalReg[1], [value1, value2]);
                     // console.log("reached here final reg",finalReg)
-                    const reg_name = this._getRegName( finalReg, cheerio.html(forFinalReg[0]), value1 )
+                    // const reg_name = this._getRegName( finalReg, cheerio.html(forFinalReg[0]), value1 )
                     const reg_name = "pending"
                     return {
                         key: "url",
