@@ -66,10 +66,10 @@ class SessionController{
         console.log("error", e);
       }
     }
-    const session = await Session.create(ctx.request.body.fields);
+    const session = await Session.create( ctx.request.body.fields );
     let finalData = [];
-    console.log(run_id, readStream.log.entries.length);
-    readStream.log.entries.forEach((entry, index) => {
+    console.log(run_id, readStream.log.entries.length );
+    readStream.log.entries.forEach( (entry, index) => {
       let data = {request: {}, response: {}};
       data.url = entry.request.url.split('?')[0];
       data.request.method = entry.request.method;
@@ -102,9 +102,11 @@ class SessionController{
       arr.forEach((obj)=>{
         let test = {};
         let name = obj['name'].indexOf('.') !== -1 ? obj['name'].split(".").join("U+FF0E") : obj['name'];
+       
         let value = obj['value'];
         // key name Cookie in header is being ignored
-        if(name !== 'Cookie'){
+        if(name != 'Cookie'){
+          console.log("checking names", name);
           if(isEncoded){
             value = decodeURIComponent(value);
             name = decodeURIComponent(name);
