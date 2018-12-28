@@ -18,6 +18,9 @@ import Correlation from '../models/Correlation';
 import Session from '../models/Session';
 import {URL} from 'url';
 import { resolveArray } from '../utility/jmxConstants';
+const ignoredExt = ['css', 'jpeg', 'jpg', 'png', 'js', 'woff2', 'gif', 'PNG', 'JPG', 'JPEG', 'GIF', 'JS', 'GIF', 'woff', 'svg'];
+const ignoredUrls = ['www.google-analytics.com', 'www.facebook.com', 'www.fb.com', 'www.youtube.com', 'maps.google.com', 'www.google.com',
+'www.google.co.in','googleads.g.doubleclick.net', 'accounts.google.com', 'www.googletagmanager.com', 'stats.g.doubleclick.net','apis.google.com'];
 class RunController{
   constructor(){
     return {
@@ -284,6 +287,10 @@ class RunController{
           <boolProp name="TransactionController.parent">false</boolProp>
         </TransactionController><hashTree>`;
           for(let j = 0; j < requests.length; j++){
+            const filterUrl = requests[j].url;
+            const loc = new URL(filterUrl)
+            const host = loc.host
+            if(ignoredExt.indexOf(filterUrl.split(/\#|\?/)[0].split('.').pop().trim()) === -1 || ignoredUrls.indexOf(host) === -1) continue;
               let hasReg = await Correlation.find({"first.request":requests[j]._id,final_regex:{$ne:'false'}});
               // console.log("data to read", moreDynamic);
               //let hasDiff = await Difference.find({"first.request":requests[j]._id});

@@ -5,7 +5,8 @@ import logger from '../utility/logger';
 import Request from '../models/Request';
 
 const ignoredExt = ['css', 'jpeg', 'jpg', 'png', 'js', 'woff2', 'gif', 'PNG', 'JPG', 'JPEG', 'GIF', 'JS', 'GIF', 'woff', 'svg'];
-const ignoredUrls = ['www.google-analytics.com', 'www.facebook.com', 'www.fb.com', 'www.youtube.com', 'maps.google.com'];
+const ignoredUrls = ['www.google-analytics.com', 'www.facebook.com', 'www.fb.com', 'www.youtube.com', 'maps.google.com', 'www.google.com',
+'www.google.co.in','googleads.g.doubleclick.net', 'accounts.google.com', 'www.googletagmanager.com', 'stats.g.doubleclick.net','apis.google.com'];
 
 class Compare {
 
@@ -47,13 +48,17 @@ class Compare {
     // for urls
     filteredRequets1 = filteredRequets1.filter((req) => {
       const url = req.url;
-      return ignoredUrls.indexOf( url.split('?')[0]) === -1;
+      const loc = new URL(url)
+      const host = loc.host
+      return ignoredUrls.indexOf(host) === -1;
     });
 
     // for urls
     filteredRequets2 = filteredRequets2.filter((req) => {
       const url = req.url;
-      return ignoredUrls.indexOf( url.split('?')[0]) === -1;
+      const loc = new URL(url)
+      const host = loc.host
+      return ignoredUrls.indexOf( host ) === -1;
     });
 
     let mismatchUrls2 = [];
