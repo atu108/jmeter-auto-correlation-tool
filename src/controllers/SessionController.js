@@ -63,7 +63,10 @@ class SessionController{
       readStream = JSON.parse(fs.readFileSync(ctx.request.body.files.file.path));
     } catch (e) {
       if (e) {
-        console.log("error", e);
+        return ctx.body = {
+          type: "success",
+          message: "Invalid Har File",
+      };
       }
     }
     const session = await Session.create( ctx.request.body.fields );

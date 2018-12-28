@@ -51,5 +51,5 @@ const RequestSchema = new Schema({
 
 RequestSchema.plugin(MongooseError);
 RequestSchema.plugin(findOrCreate);
-
+RequestSchema.index({ run: 1, sequence: 1}, { unique: true });
 export default mongoose.model('Request', RequestSchema);

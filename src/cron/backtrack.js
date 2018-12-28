@@ -309,32 +309,37 @@ class Backtrack {
         //to do:- handle whole url rather than only params
 
         console.log("reached inside url match", url1, "url 2", url2)
-        const loc1 = new URL(url1);
-        const loc2 = new URL(url2);
-        let params1 = loc1.searchParams;
-        let params2 = loc2.searchParams;
-        let host1 = loc1.hostname;
-        let host2 = loc2.hostname;
-        let pathNames1 = loc1.pathname.split('/');
-        let pathNames2 = loc2.pathname.split('/');
-        if(host1 !== host2){
-            loc1.hostname = '(.*?)';
-        }
-        for(let i  = 0; i < pathNames1.length; i++){
-            if(pathNames1[i] !== pathNames2[i]){
-                pathNames1[i] = '(.*?)';
+        try{
+            const loc1 = new URL(url1);
+            const loc2 = new URL(url2);
+            let params1 = loc1.searchParams;
+            let params2 = loc2.searchParams;
+            let host1 = loc1.hostname;
+            let host2 = loc2.hostname;
+            let pathNames1 = loc1.pathname.split('/');
+            let pathNames2 = loc2.pathname.split('/');
+            if(host1 !== host2){
+                loc1.hostname = '(.*?)';
             }
-        }
-        loc1.pathname = pathNames1.join('/');
-        for (const [name, value] of params1) {
-            if(params2.has(name)){
-                if(params2.get(name) !== value){
-                    loc1.searchParams.set(name, '(.*?)')
+            for(let i  = 0; i < pathNames1.length; i++){
+                if(pathNames1[i] !== pathNames2[i]){
+                    pathNames1[i] = '(.*?)';
                 }
             }
-
+            loc1.pathname = pathNames1.join('/');
+            for (const [name, value] of params1) {
+                if(params2.has(name)){
+                    if(params2.get(name) !== value){
+                        loc1.searchParams.set(name, '(.*?)')
+                    }
+                }
+    
+            }
+            return decodeURIComponent(loc1.href);
+        }catch(e){
+            return '(.*?)'
         }
-        return decodeURIComponent(loc1.href);
+        
     }
 // check if a string url
     _isURL(str) {
@@ -462,10 +467,10 @@ class Backtrack {
                     tag[i].name === tg.name &&
                     tag[i].parent.type === tg.parent.type &&
                     tag[i].parent.name === tg.parent.name &&
-                    ((tag[i].next.type === tg.next.type && tag[i].next.type === 'tag' && tag[i].next.name === tg.next.name) 
-                    || (tag[i].next.type === tg.next.type && tag[i].next.type === 'text' && tag[i].next.body === tg.next.body)) &&
-                    ((tag[i].prev.type === tg.prev.type && tag[i].prev.type === 'tag' && tag[i].prev.name === tg.prev.name) 
-                    || (tag[i].prev.type === tg.prev.type && tag[i].prev.type === 'text' && tag[i].prev.body === tg.prev.body))
+                    ((tag[i].next && tag[i].next.type === tg.next.type && tag[i].next.type === 'tag' && tag[i].next.name === tg.next.name) 
+                    || (tag[i].next && tag[i].next.type === tg.next.type && tag[i].next.type === 'text' && tag[i].next.body === tg.next.body)) &&
+                    ((tag[i].prev && tag[i].prev.type === tg.prev.type && tag[i].prev.type === 'tag' && tag[i].prev.name === tg.prev.name) 
+                    || (tag[i].prev && tag[i].prev.type === tg.prev.type && tag[i].prev.type === 'text' && tag[i].prev.body === tg.prev.body))
                 ) 
             if(index !== -1){
                 return [tag[i], tag2[index]];
@@ -535,13 +540,17 @@ class Backtrack {
         try{
             let $ = cheerio.load(body.replace((/\\/g, "")));
             let anchor1 = $('a[href="'+value1+'"]').toArray();
-            anchor1.length > 0 ? anchor1 : $('a[href=\''+value1+'\']').toArray();
+            anchor1 = anchor1.length > 0 ? anchor1 : $('a[href=\''+value1+'\']').toArray();
+            // done for finding relative urls in achor tag
+            // anchor1 = anchor1.length > 0 ? anchor1 : $('a[href="'+value1.split('.com')[1]+'"]').toArray();
         // console.log("inputs check", typeof inputs, "all inouts", inputs[0]);
         if(anchor1.length > 0){
             let second = await Request.find({run:runs[1],url:request.url, session_sequence:request.session_sequence, 'request.method':request.request.method});
             $ = cheerio.load(second[0].response.body.replace((/\\/g, "")))
             let anchor2 = $('a[href="'+value2+'"]').toArray();
-            anchor2.length > 0 ? anchor2 : $('a[href=\''+value2+'\']').toArray();
+            anchor2 = anchor2.length > 0 ? anchor2 : $('a[href=\''+value2+'\']').toArray();
+            // anchor2 = anchor2.length > 0 ? anchor2 : $('a[href="'+value2.split('.com')[1]+'"]').toArray();
+            console.log("chechink all macthed anchores",anchor2)
             if(anchor2.length > 0){
                 let forFinalReg = this.checkExactMatch(anchor1, anchor2)
                 if(!forFinalReg){
@@ -549,7 +558,7 @@ class Backtrack {
                 }
                 if(forFinalReg){
                     const finalReg = this.matchAnchorTags(forFinalReg[0], forFinalReg[1]);
-                    // console.log("final",finalReg);
+                     console.log("final",finalReg);
                     const counts = this.verifyAnchorTag(
                         finalReg,
                         [cheerio.html(forFinalReg[0]),cheerio.html(forFinalReg[1])],
@@ -641,12 +650,14 @@ class Backtrack {
         // console.log("hello world", Reg);
         let matched1 = matchedStrings[0];
         let matched2 = matchedStrings[1];
+        console.log("matched", matched1, matched2);
         let values1 = matched1.match(reg);
         let values2 = matched2.match(reg);
+        console.log("values",values2, values1)
         const totalMatches1 = body1.match(Reg)
         const totalMatches2 = body2.match(Reg)
-        console.log("hello new 1", totalMatches1.length)
-        console.log("hello new 2", totalMatches2.length)
+        // console.log("hello new 1", totalMatches1.length)
+        // console.log("hello new 2", totalMatches2.length)
             const first = this.compareRegValues(totalMatches1, values1,reg);
             //  console.log("first count", first);
             const second = this.compareRegValues(totalMatches2, values2,reg);
