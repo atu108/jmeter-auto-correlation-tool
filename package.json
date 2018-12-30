@@ -19,6 +19,7 @@
   "dependencies": {
     "async-busboy": "^0.6.2",
     "aws-sdk": "^2.253.1",
+    "babel-plugin-transform-regenerator": "^6.26.0",
     "babel-polyfill": "^6.5.0",
     "cheerio": "^1.0.0-rc.2",
     "chromedriver": "^2.40.0",
