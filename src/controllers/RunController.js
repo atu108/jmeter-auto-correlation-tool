@@ -290,7 +290,7 @@ class RunController{
             const filterUrl = requests[j].url;
             const loc = new URL(filterUrl)
             const host = loc.host
-            if(ignoredExt.indexOf(filterUrl.split(/\#|\?/)[0].split('.').pop().trim()) === -1 || ignoredUrls.indexOf(host) === -1) continue;
+            if(ignoredExt.indexOf(filterUrl.split(/\#|\?/)[0].split('.').pop().trim()) !== -1 || ignoredUrls.indexOf(host) !== -1) continue;
               let hasReg = await Correlation.find({"first.request":requests[j]._id,final_regex:{$ne:'false'}});
               // console.log("data to read", moreDynamic);
               //let hasDiff = await Difference.find({"first.request":requests[j]._id});

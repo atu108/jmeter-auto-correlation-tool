@@ -33,8 +33,13 @@ class AuthController{
     if(ctx.session.user) return ctx.redirect('/app');
 
     if (ctx.request.method.toLowerCase() === 'post'){
-      // let {first_name, last_name, email, password }
-      // await User.create({ctx.request.})
+      let {first_name, last_name, email, password,company_name } = ctx.request.body;
+      const existingUser = await User.findOne({email: ctx.request.body.email});
+      if(existingUser){
+        return ctx.body = JSON.stringify({type: 'success', message: 'Email already exists'});
+      }
+      await User.create({first_name, last_name, email, password:encrypt(password), company_name})
+      return ctx.body = JSON.stringify({type: 'success', message: 'Registration success, redirecting...', redirect: '/app/auth/login'});
     }
 
     ctx.body = template.render('app.auth.register', {global: {header: false, footer: false}});

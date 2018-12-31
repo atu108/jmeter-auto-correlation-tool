@@ -13,6 +13,10 @@ const UserSchema = new Schema({
     unique: true,
     required: true
   },
+  company_name:{
+    type: String,
+    required: true
+  },
   password: String,
   added_on: {
     type: Date,

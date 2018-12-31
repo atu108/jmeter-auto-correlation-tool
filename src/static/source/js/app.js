@@ -7,7 +7,8 @@
 
   var URL = {
     AUTH: {
-      LOGIN: '/app/auth/login'
+      LOGIN: '/app/auth/login',
+      REGISTER: '/app/auth/register'
     },
     SCENARIO: {
       SAVE: '/app/scenario/save',
@@ -137,9 +138,9 @@
         return false;
       },
       register: function(e){
-        if(!this.registerFrom.checkDirty()) this.registerFrom.validate();
+        // if(!this.registerFrom.checkDirty()) this.registerFrom.validate();
 
-        if(!this.registerFrom.valid()) return false;
+        // if(!this.registerFrom.valid()) return false;
         var data = this.registerFrom.data();
         Util.request.post(URL.AUTH.REGISTER, JSON.stringify(data)).then(function(res){
           Util.alert.show(res);
