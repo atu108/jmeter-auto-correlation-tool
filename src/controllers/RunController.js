@@ -270,7 +270,7 @@ class RunController{
           '              <connectTime>true</connectTime>\n' +
           '            </value>\n' +
           '          </objProp>\n' +
-          '          <stringProp name="filename">C:/ddffd/shdkjd/sfsfs.jtl</stringProp>\n' +
+          '          <stringProp name="filename"></stringProp>\n' +
           '        </ResultCollector>\n' +
           '        <hashTree/>\n' +
           '      </hashTree>\n' +
