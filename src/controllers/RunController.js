@@ -82,11 +82,6 @@ class RunController{
       }
       await this.generateJmx(run1, scenario);
     })
-    ctx.body = JSON.stringify({
-      type: "success",
-      message: "Congrats JMX has been created, Please download",
-      reload: true
-    });
   }
 
   async save(ctx){
@@ -221,7 +216,7 @@ class RunController{
           // '        <boolProp name="stopThread">false</boolProp>\n' +
           // '        <stringProp name="variableNames">Username</stringProp>\n' +
           // '      </CSVDataSet>\n' +
-          '      <hashTree/>\n' +
+          // '      <hashTree/>\n' +
           '      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="true">\n' +
           '        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>\n' +
           '        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">\n' +
