@@ -124,7 +124,7 @@
     session_data.append('description', session_des);
     session_data.append('title', session_title);
     session_data.append('scenario',session_scenario);
-
+    Util.alert.show({type:"success", message:"Relax ! we are processing your file"});
 
     fetch('/app/session/save', {
       method: 'POST',
