@@ -82,6 +82,11 @@ class RunController{
       }
       await this.generateJmx(run1, scenario);
     })
+    ctx.body = JSON.stringify({
+      type: "success",
+      message: "Congrats JMX has been created, Please download",
+      reload: true
+    });
   }
 
   async save(ctx){
