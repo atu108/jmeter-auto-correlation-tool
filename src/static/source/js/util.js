@@ -24,7 +24,10 @@
     function show(params){
         console.log("inside show",params);
       $continer.addClass('show ' + params.type).find('.message').text(params.message);
-      hide(true);
+      if(!hide){
+        hide(true);
+      }
+     
     }
 
     return {

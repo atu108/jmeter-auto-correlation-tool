@@ -125,7 +125,8 @@
     session_data.append('title', session_title);
     session_data.append('scenario',session_scenario);
     document.getElementById("btnfile").disabled = true;
-    Util.alert.show({type:"success", message:"Relax ! we are processing your file"});
+    document.getElementById("alert").addClass
+    Util.alert.show({type:"success", message:"Relax ! we are processing your file", hide:false});
 
     fetch('/app/session/save', {
       method: 'POST',
