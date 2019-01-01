@@ -106,7 +106,7 @@
                 <button class="btn btn-blank" onclick="Util.modal.close();"><i class="icon-times"></i> Cancel</button>
               </div>
             </form>
-             <button onClick="javascript:submitFile();" class="btn btn-blue"><i class="icon-check"></i> Save Session</button>
+             <button onClick="javascript:submitFile();" class="btn btn-blue" id="btnfile"><i class="icon-check"></i> Save Session</button>
     </div>
 </script>
 <script type="text/javascript">
@@ -124,6 +124,7 @@
     session_data.append('description', session_des);
     session_data.append('title', session_title);
     session_data.append('scenario',session_scenario);
+    document.getElementById("btnfile").disabled = true;
     Util.alert.show({type:"success", message:"Relax ! we are processing your file"});
 
     fetch('/app/session/save', {
