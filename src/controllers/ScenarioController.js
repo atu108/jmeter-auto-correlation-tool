@@ -9,6 +9,12 @@ import Run from '../models/Run';
 import RunValue from '../models/RunValue';
 import Difference from '../models/Difference';
 import Correlation from '../models/Correlation';
+import Request from '../models/Request';
+import ParamSetting from '../models/ParamSetting';
+const ignoredExt = ['css', 'jpeg', 'jpg', 'png', 'js', 'woff2', 'gif', 'PNG', 'JPG', 'JPEG', 'GIF', 'JS', 'GIF', 'woff', 'svg'];
+const ignoredUrls = ['www.google-analytics.com', 'www.facebook.com', 'www.fb.com', 'www.youtube.com', 'maps.google.com', 'www.google.com',
+'www.google.co.in','googleads.g.doubleclick.net', 'accounts.google.com', 'www.googletagmanager.com', 'stats.g.doubleclick.net','apis.google.com'];
+
 import config from '../config';
 
 const _tabs = [{
@@ -37,7 +43,8 @@ class ScenarioController{
       runs: this.runs.bind(this),
         differences : this.differences.bind(this),
         correlations: this.correlations.bind(this),
-        save: this.save.bind(this)
+        save: this.save.bind(this),
+        saveParamSettings: this.saveParamSettings.bind(this)
     }
   }
 
@@ -48,6 +55,7 @@ class ScenarioController{
     await RunValue.deleteMany({scenario: {$in: ctx.request.body}});
     await Scenario.deleteMany({_id: {$in: ctx.request.body}});
 
+
     ctx.body = JSON.stringify({
       type: "success",
       message: "Deleted successfully, reloading...",
@@ -56,9 +64,38 @@ class ScenarioController{
   }
 
   async steps(ctx){
-    const scenario = await Scenario.findById(ctx.params._id);
-    const steps = await Step.find({scenario: ctx.params._id});
-    ctx.body = template.render('app.scenario.steps', {steps, scenario, global: {title: scenario.name, tabs: _tabs, _id: ctx.params._id, current: "steps", sub: "Steps", back: `/app/project/${scenario.project}/scenarios`}});
+    try{
+      const scenario = await Scenario.findById(ctx.params._id);
+      const run = await Run.find({scenario: ctx.params._id});
+      let requests = await Request.find({scenario: ctx.params._id, run:run[0]._id, $or:[ {'request.params.1': {$exists: true}}, {"request.post_data.1":{$exists: true}}]});
+      requests = requests.filter((req) => {
+        const url = req.url;
+        const extension = url.split(/\#|\?/)[0].split('.').pop().trim();
+        // console.log(extension)
+        return ignoredExt.indexOf(extension) === -1;
+      });
+      requests = requests.filter((req) => {
+        const url = req.url;
+        const loc = new URL(url)
+        const host = loc.host
+        return ignoredUrls.indexOf(host) === -1;
+      });
+      ctx.body = template.render('app.scenario.steps', {requests, scenario, global: {title: scenario.name, tabs: _tabs, _id: ctx.params._id, current: "steps", sub: "Steps", back: `/app/project/${scenario.project}/scenarios`}});
+    }catch(e){
+      console.log(e);
+    }
+  }
+  async saveParamSettings(ctx){
+    try{
+        await ParamSetting.insertMany(ctx.request.body.paramValues);
+        ctx.body = JSON.stringify({
+          type: "success",
+          message: "Settings Saved",
+          reload: true
+        });
+    }catch(e){
+      console.log(e);
+    }
   }
 
   async save(ctx){

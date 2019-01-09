@@ -93,7 +93,7 @@ class SessionController{
       finalData.push(data);
     });
     await Request.create(finalData);
-      return ctx.body ={
+      return ctx.body = {
           type: "success",
           message: "Session saved, reloading...",
           reload: true

@@ -22,34 +22,66 @@
     <div class="row">
       <div class="col-md-12">
         <div class="list-container">
-          @each(step in steps)
-          <div class="list-item" id="_{{step._id}}">
+          @each(request in requests)
+          <div class="list-item" id="_{{request._id}}">
             <div class="inner">
               <div class="row">
-                <div class="sn weight400 trigger" data-event="click" data-model="common" data-callback="select" data-app-model="step" data-bulk-id="#StepBulkAction" data-id="{{step._id}}">{{pad(step.sequence + 1, 2)}}</div>
-                <div class="check trigger" data-event="click" data-model="common" data-callback="select" data-app-model="step" data-bulk-id="#StepBulkAction" data-id="{{step._id}}"><i class="icon-check"></i></div>
+                <div class="sn weight400 trigger" data-event="click" data-model="common" data-callback="select" data-app-model="step" data-bulk-id="#StepBulkAction" data-id="{{request._id}}">{{pad(request.sequence + 1, 2)}}</div>
+                <div class="check trigger" data-event="click" data-model="common" data-callback="select" data-app-model="step" data-bulk-id="#StepBulkAction" data-id="{{request._id}}"><i class="icon-check"></i></div>
                 <div class="col-md-11">
                   <div class="info">
-                    @if(step.command === "click")
-                    <p class="px16 weight400 black-color"><i class="icon-navigate"></i> Click on <span class="tag">{{step.target}}</span></p>
-                    @elseif(step.command === "assign")
-                    <p class="px16 weight400 black-color"><i class="icon-edit"></i> Assign <span class="tag">{{step.value}}</span> into <span class="tag">{{step.target}}</span></p>
-                    @endif
-                    <p class="px12 grey-color">{{date(step.added_on, 'DD MMM, YYYY')}}</p>
+                    <p class="px16 weight400 black-color"><i class="icon-navigate"></i> URL <span class="tag">{{request.url}}</span></p>
+                    <form id="testId">
+                    @each(pdata in request.request.post_data)
+                    <p class="px16 weight400 black-color"></i><span class="tag">{{Object.keys(pdata)[0]}}</span> :<span class="tag">{{pdata}}</span></p>
+                    @endeach
+                     @each(pdata in request.request.params)
+                    @each((value, name) in pdata)
+                    <p class="px16 weight400 black-color"><input type="checkbox" name="paramValues[]" value="{{$parent.$parent.request._id + ":" + name + ":" + value + ":" + scenario._id}}"/></i><span class="tag">
+                    {{name}}</span> :<span class="tag">{{value}}</span></p> 
+                    @endeach
+                    @endeach
+                    </form>
                   </div>
                 </div>
                 <div class="action">
                   <a href="" title="Move"><i class="icon-move"></i></a>
                   <a href="" title="Edit"><i class="icon-edit"></i></a>
-                  <a href="javascript:void(0);" class="trigger" title="Delete" data-event="click" data-model="scenario" data-callback="delete" data-id="{{step._id}}"><i class="icon-trash"></i></a>
+                  <a href="javascript:void(0);" class="trigger" title="Delete" data-event="click" data-model="scenario" data-callback="delete" data-id="{{request._id}}"><i class="icon-trash"></i></a>
                 </div>
               </div>
             </div>
           </div>
           @endeach
+          <button onClick="javascript:submitParams();" class="btn btn-blue" ><i class="icon-check"></i> Save Settings</button>
         </div>
       </div>
     </div>
   </div>
 </section>
+<script type="text/javascript">
+    function submitParams(){
+      var arr = [];
+      document.querySelectorAll("input:checked").forEach((val)=>{
+        let valuearr = val.value.split(":");
+        arr.push({request:valuearr[0], key:valuearr[1], value:valuearr[2], scenario:valuearr[3] })
+      });
+    fetch('/app/scenario/paramsSettings', {
+      method: 'POST',
+      headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+      body:JSON.stringify({paramValues:arr})
+    }).then(function(res){
+        res.json().then(function(res){
+            Util.alert.show(res);
+            if(res.reload) Util.redirect(location.href, true);
+        });
+    }).catch(function(err){
+       console.log(err)
+    })
+    }
+
+</script>
 @endsection

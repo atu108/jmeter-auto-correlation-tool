@@ -14,10 +14,11 @@ import Cron from '../cron';
 import Difference from '../models/Difference';
 import MisMatchUrl from '../models/MisMatchUrl';
 import Backtrack from '../models/Backtrack';
+import ParamSetting from '../models/ParamSetting';
 import Correlation from '../models/Correlation';
 import Session from '../models/Session';
 import {URL} from 'url';
-import { resolveArray } from '../utility/jmxConstants';
+import { resolveArray, parseParams } from '../utility/jmxConstants';
 const ignoredExt = ['css', 'jpeg', 'jpg', 'png', 'js', 'woff2', 'gif', 'PNG', 'JPG', 'JPEG', 'GIF', 'JS', 'GIF', 'woff', 'svg'];
 const ignoredUrls = ['www.google-analytics.com', 'www.facebook.com', 'www.fb.com', 'www.youtube.com', 'maps.google.com', 'www.google.com',
 'www.google.co.in','googleads.g.doubleclick.net', 'accounts.google.com', 'www.googletagmanager.com', 'stats.g.doubleclick.net','apis.google.com'];
@@ -180,7 +181,9 @@ class RunController{
   // }
 
   async generateJmx(run, scenario){
-
+      const paramsSettingData = await ParamSetting.find({
+        scenario
+      })
       // run will be paseed to this function
       const startXml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
           '<jmeterTestPlan version="1.2" properties="3.2" jmeter="3.3 r1808647">\n' +
@@ -205,18 +208,18 @@ class RunController{
           '        <boolProp name="CookieManager.clearEachIteration">true</boolProp>\n' +
           '      </CookieManager>\n' +
           '      <hashTree/>\n' +
-          // '      <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="UserCredential" enabled="true">\n' +
-          // '        <stringProp name="delimiter">,</stringProp>\n' +
-          // '        <stringProp name="fileEncoding"></stringProp>\n' +
-          // '        <stringProp name="filename">E:\\Cemex\\Cemex\\TestScripts\\Prod7_8_newWF\\TestData_P8\\TestDataCredential_v1.csv</stringProp>\n' +
-          // '        <boolProp name="ignoreFirstLine">false</boolProp>\n' +
-          // '        <boolProp name="quotedData">false</boolProp>\n' +
-          // '        <boolProp name="recycle">true</boolProp>\n' +
-          // '        <stringProp name="shareMode">shareMode.all</stringProp>\n' +
-          // '        <boolProp name="stopThread">false</boolProp>\n' +
-          // '        <stringProp name="variableNames">Username</stringProp>\n' +
-          // '      </CSVDataSet>\n' +
-          // '      <hashTree/>\n' +
+          paramsSettingData.map((data)=>`<CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="${data.key}_par" enabled="true">
+                <stringProp name="delimiter">,</stringProp>
+                 <stringProp name="fileEncoding"></stringProp>
+                 <stringProp name="filename">E:\\testdata\/${data.key}_par.csv</stringProp>
+                   <boolProp name="ignoreFirstLine">false</boolProp>
+                 <boolProp name="quotedData">false</boolProp>
+                  <boolProp name="recycle">true</boolProp>
+                   <stringProp name="shareMode">shareMode.all</stringProp>
+                  <boolProp name="stopThread">false</boolProp>
+               <stringProp name="variableNames">${data.key}_par</stringProp>
+                 </CSVDataSet>
+                <hashTree/>`).join('') +
           '      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="true">\n' +
           '        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>\n' +
           '        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">\n' +
@@ -294,7 +297,7 @@ class RunController{
               let hasReg = await Correlation.find({"first.request":requests[j]._id,final_regex:{$ne:'false'}});
               // console.log("data to read", moreDynamic);
               //let hasDiff = await Difference.find({"first.request":requests[j]._id});
-              let myURL = new URL(requests[j].url);
+              let myURL = new URL(requests[j].request.url);
               dynamicData += `<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="${myURL.pathname}" enabled="true">
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             ${requests[j].request.post_data.length === 0?
@@ -306,7 +309,7 @@ class RunController{
             <stringProp name="HTTPSampler.port">${myURL.port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${myURL.protocol.slice(0,-1)}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-            <stringProp name="HTTPSampler.path">${myURL.pathname}</stringProp>
+            <stringProp name="HTTPSampler.path">${myURL.pathname}${await parseParams(requests[j])?await parseParams(requests[j]):'' }</stringProp>
             <stringProp name="HTTPSampler.method">${requests[j].request.method}</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -327,6 +330,12 @@ class RunController{
             </elementProp>`).join('')}
             </collectionProp>
             </HeaderManager>
+            ${i !== 0 ? j !== 0 ? `<hashTree/>
+              <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer" enabled="true">
+                <stringProp name="ConstantTimer.delay">5000</stringProp>
+                <stringProp name="RandomTimer.range">3000</stringProp>
+              </GaussianRandomTimer>
+              <hashTree/>`:'':''}
             <hashTree/>
             ${hasReg.map((hasReg)=>`<RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="client_id_REX" enabled="true">
               <stringProp name="RegexExtractor.useHeaders">false</stringProp>
