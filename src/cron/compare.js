@@ -6,7 +6,10 @@ import Request from '../models/Request';
 
 const ignoredExt = ['css', 'jpeg', 'jpg', 'png', 'js', 'woff2', 'gif', 'PNG', 'JPG', 'JPEG', 'GIF', 'JS', 'GIF', 'woff', 'svg'];
 const ignoredUrls = ['www.google-analytics.com', 'www.facebook.com', 'www.fb.com', 'www.youtube.com', 'maps.google.com', 'www.google.com',
-'www.google.co.in','googleads.g.doubleclick.net', 'accounts.google.com', 'www.googletagmanager.com', 'stats.g.doubleclick.net','apis.google.com'];
+'www.google.co.in','googleads.g.doubleclick.net', 'accounts.google.com', 'www.googletagmanager.com', 'stats.g.doubleclick.net','apis.google.com',
+"static.licdn.com",
+"www.linkedin.com",
+"platform.linkedin.com"];
 
 class Compare {
 
@@ -124,8 +127,8 @@ class Compare {
   }
   _diff(r1, r2){
     let temp = []
-    const headers = this._parse([r1.request.headers, r2.request.headers]);
-    const cookies = this._parse([r1.request.cookies, r2.request.cookies]);
+    // const headers = this._parse([r1.request.headers, r2.request.headers]);
+    // const cookies = this._parse([r1.request.cookies, r2.request.cookies]);
     const postParams = this._parse([r1.request.post_data, r2.request.post_data]);
     const queryParams = this._parse([r1.request.params, r2.request.params]);
     let obj = {
@@ -147,12 +150,12 @@ class Compare {
         session_sequence:r1.session_sequence,
         session:r1.session
     }
-    if(headers[0] && headers[1]){
-      temp.push(...this._getDiff(headers[0],headers[1],"header",obj))
-    }
-    if(cookies[0] && cookies[1]){
-      temp.push(...this._getDiff(cookies[0],cookies[1],"cookie",obj))
-    }
+    // if(headers[0] && headers[1]){
+    //   temp.push(...this._getDiff(headers[0],headers[1],"header",obj))
+    // }
+    // if(cookies[0] && cookies[1]){
+    //   temp.push(...this._getDiff(cookies[0],cookies[1],"cookie",obj))
+    // }
     if(postParams[0] && postParams[1]){
       temp.push(...this._getDiff(postParams[0],postParams[1],"post_data",obj))
     }
