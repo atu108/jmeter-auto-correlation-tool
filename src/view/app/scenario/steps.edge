@@ -39,8 +39,8 @@
                     <b>{{name}}</b></span> :<span style="margin-left:10px">{{value}}</span></p> 
                     @endeach
                     @endeach
-                     @each(pdata in request.request.params)
-                    @each((value, name) in pdata)
+                     @each(pqdata in request.request.params)
+                    @each((value, name) in pqdata)
                     <p class="px16 weight400 black-color"><input type="checkbox" name="paramValues[]" value="{{$parent.$parent.request._id + ":" + name + ":" + value + ":" + scenario._id}}"/></i><span class="weight400">
                     <b>{{name}}</b></span> :<span style="margin-left:10px">{{value}}</span></p> 
                     @endeach
