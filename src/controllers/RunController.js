@@ -16,6 +16,7 @@ import MisMatchUrl from '../models/MisMatchUrl';
 import Backtrack from '../models/Backtrack';
 import ParamSetting from '../models/ParamSetting';
 import Correlation from '../models/Correlation';
+import Scenario from '../models/Scenario';
 import Session from '../models/Session';
 import {URL} from 'url';
 import { resolveArray, parseParams } from '../utility/jmxConstants';
@@ -326,17 +327,16 @@ class RunController{
               ${requests[j].request.headers.map((header)=>`
                   <elementProp name="${Object.keys(header)[0]}" elementType="Header">
                   <stringProp name="Header.name">${Object.keys(header)[0]}</stringProp>
-                  <stringProp name="Header.value">${header[Object.keys(header)[0]]}</stringProp>
+                  <stringProp name="Header.value">${header[Object.keys(header)[0]].replace('&', '&amp;')}</stringProp>
             </elementProp>`).join('')}
             </collectionProp>
             </HeaderManager>
-            ${i !== 0 ? j !== 0 ? `<hashTree/>
+            ${i !== 0 && j === 0 ? `<hashTree/>
               <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer" enabled="true">
                 <stringProp name="ConstantTimer.delay">5000</stringProp>
                 <stringProp name="RandomTimer.range">3000</stringProp>
-              </GaussianRandomTimer>
-              <hashTree/>`:'':''}
-            <hashTree/>
+              </GaussianRandomTimer>`:''}
+              <hashTree/>
             ${hasReg.map((hasReg)=>`<RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="client_id_REX" enabled="true">
               <stringProp name="RegexExtractor.useHeaders">false</stringProp>
               <stringProp name="RegexExtractor.refname">${hasReg.key + "_COR"}</stringProp>
@@ -352,8 +352,8 @@ class RunController{
       }
       // const  runDetails = await Run.findById(run).populate('scenario');
       // console.log("jmx to read",dynamicData);
-  
-      let file = fs.createWriteStream(`${config.storage.path}${scenario}.jmx`);
+      const scenarioDetails = await Scenario.find({_id:scenario});
+      let file = fs.createWriteStream(`${config.storage.path}${scenarioDetails[0].name}.jmx`);
       file.write(startXml+dynamicData+endXml);  
       file.close();
       return true;

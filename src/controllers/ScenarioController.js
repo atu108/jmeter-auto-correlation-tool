@@ -67,7 +67,7 @@ class ScenarioController{
     try{
       const scenario = await Scenario.findById(ctx.params._id);
       const run = await Run.find({scenario: ctx.params._id});
-      let requests = await Request.find({scenario: ctx.params._id, run:run[0]._id, $or:[ {'request.params.1': {$exists: true}}, {"request.post_data.1":{$exists: true}}]});
+      let requests = await Request.find({scenario: ctx.params._id, run:run[0]._id, $or:[ {'request.params.1': {$exists: true}}, {"request.post_data.1":{$exists: true}}]}).populate('session');
       requests = requests.filter((req) => {
         const url = req.url;
         const extension = url.split(/\#|\?/)[0].split('.').pop().trim();

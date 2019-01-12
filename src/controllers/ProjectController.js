@@ -33,6 +33,7 @@ class ProjectController{
   }
 
   async save(ctx){
+  console.log("called inside project");
   let {title,url, description } = ctx.request.body;
   let owner = ctx.session.user._id;
   let status = true;

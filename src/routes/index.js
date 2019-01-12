@@ -11,7 +11,6 @@ import session from './session';
 export default combineRouters([
   page,
   auth,
-  api,
   project,
   scenario,
   run,

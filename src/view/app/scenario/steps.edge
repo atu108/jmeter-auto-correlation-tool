@@ -30,15 +30,16 @@
                 <div class="check trigger" data-event="click" data-model="common" data-callback="select" data-app-model="step" data-bulk-id="#StepBulkAction" data-id="{{request._id}}"><i class="icon-check"></i></div>
                 <div class="col-md-11">
                   <div class="info">
-                    <p class="px16 weight400 black-color"><i class="icon-navigate"></i> URL <span class="tag">{{request.url}}</span></p>
+                    <p class="px16 weight400 black-color"><b>Transaction Name</b> <span class="tag px16 weight400"><b>{{request.session.title}}</b></span></p>
+                    <p class="px16 weight400 black-color"><b style="margin-right:10px">URL</b><span>{{request.url}}</span></p>
                     <form id="testId">
                     @each(pdata in request.request.post_data)
-                    <p class="px16 weight400 black-color"></i><span class="tag">{{Object.keys(pdata)[0]}}</span> :<span class="tag">{{pdata}}</span></p>
+                    <p class="px16 weight400 black-color"></i><span>{{Object.keys(pdata)[0]}}</span> :<span class="tag">{{pdata}}</span></p>
                     @endeach
                      @each(pdata in request.request.params)
                     @each((value, name) in pdata)
-                    <p class="px16 weight400 black-color"><input type="checkbox" name="paramValues[]" value="{{$parent.$parent.request._id + ":" + name + ":" + value + ":" + scenario._id}}"/></i><span class="tag">
-                    {{name}}</span> :<span class="tag">{{value}}</span></p> 
+                    <p class="px16 weight400 black-color"><input type="checkbox" name="paramValues[]" value="{{$parent.$parent.request._id + ":" + name + ":" + value + ":" + scenario._id}}"/></i><span class="weight400">
+                    <b>{{name}}</b></span> :<span style="margin-left:10px">{{value}}</span></p> 
                     @endeach
                     @endeach
                     </form>

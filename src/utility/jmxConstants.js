@@ -81,7 +81,7 @@ export const resolveArray = async (myArray, request_id) => {
 
 export const parseParams = async (request) =>{
     // myURL.search.replace(/&/gi,'&amp;')
-    console.log("checking request", request)
+    // console.log("checking request", request)
     const params = request.request.params;
     if(params.length === 0){
         return false;
@@ -90,7 +90,6 @@ export const parseParams = async (request) =>{
     let inSettings = await ParamSetting.find({
         request: request._id
     });
-   
     for(let i = 0; i < params.length; i++){
         let key = Object.keys(params[i])[0];
         let value = params[i][key];
@@ -106,7 +105,7 @@ export const parseParams = async (request) =>{
             if(i === 0 ){
                 query += `?${key}=\${${key}_par}`
             }else{
-                query += `&amp;${key}=${value}`
+                query += `&amp;${key}=\${${key}_par}`
             }
         }
     }
