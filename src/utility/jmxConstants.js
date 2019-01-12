@@ -51,7 +51,6 @@ export const resolveArray = async (myArray, request_id) => {
      let toSend = ''
     for(let i = 0; i < myArray.length; i++){
         let temp = await checkCorName(Object.keys(myArray[i])[0],myArray[Object.keys(myArray[i])[0]],request_id);
-        console.log("request", request_id, "keys", Object.keys(myArray[i])[0], "value", myArray[i][Object.keys(myArray[i])])
         let inSettings = await ParamSetting.find({
             request: request_id,
             key: Object.keys(myArray[i])[0],
@@ -62,7 +61,7 @@ export const resolveArray = async (myArray, request_id) => {
             toSend += `<elementProp name="key" elementType="HTTPArgument">
             <boolProp name="HTTPArgument.always_encode">false</boolProp>
             <stringProp name="Argument.name">${Object.keys(myArray[i])[0]}</stringProp>
-            <stringProp name="Argument.value">\${${Object.keys(myArray[i])[0]}_cor}</stringProp>
+            <stringProp name="Argument.value">\${${Object.keys(myArray[i])[0]}_par}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
             <boolProp name="HTTPArgument.use_equals">true</boolProp>
           </elementProp>`
