@@ -34,7 +34,10 @@
                     <p class="px16 weight400 black-color"><b style="margin-right:10px">URL</b><span>{{request.url}}</span></p>
                     <form id="testId">
                     @each(pdata in request.request.post_data)
-                    <p class="px16 weight400 black-color"></i><span>{{Object.keys(pdata)[0]}}</span> :<span class="tag">{{pdata}}</span></p>
+                    @each((value, name) in pdata)
+                    <p class="px16 weight400 black-color"><input type="checkbox" name="paramValues[]" value="{{$parent.$parent.request._id + ":" + name + ":" + value + ":" + scenario._id}}"/></i><span class="weight400">
+                    <b>{{name}}</b></span> :<span style="margin-left:10px">{{value}}</span></p> 
+                    @endeach
                     @endeach
                      @each(pdata in request.request.params)
                     @each((value, name) in pdata)
