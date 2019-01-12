@@ -51,12 +51,14 @@ export const resolveArray = async (myArray, request_id) => {
      let toSend = ''
     for(let i = 0; i < myArray.length; i++){
         let temp = await checkCorName(Object.keys(myArray[i])[0],myArray[Object.keys(myArray[i])[0]],request_id);
+        console.log("request", request_id, "keys", Object.keys(myArray[i])[0], "value", myArray[Object.keys(myArray[i])[0]])
         let inSettings = await ParamSetting.find({
             request: request_id,
             key: Object.keys(myArray[i])[0],
             value: myArray[Object.keys(myArray[i])[0]]
         })
-        if(inSettings.length === 1){
+
+        if(inSettings.length > 0){
             toSend += `<elementProp name="key" elementType="HTTPArgument">
             <boolProp name="HTTPArgument.always_encode">false</boolProp>
             <stringProp name="Argument.name">${Object.keys(myArray[i])[0]}</stringProp>
