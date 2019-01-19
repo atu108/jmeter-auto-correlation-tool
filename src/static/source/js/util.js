@@ -1,6 +1,6 @@
 (function(window, documemt, $){
 
-  var DEFAULT_TIMEOUT = 3000,
+  var DEFAULT_TIMEOUT = 10,
     TIMER = false;
 
   function Util(){
