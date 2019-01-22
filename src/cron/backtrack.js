@@ -572,22 +572,27 @@ class Backtrack {
     async _findAchorTag(body, value1, value2, request, diff, runs){
         try{
             console.log("values to find", value1, value2)
-            let $ = cheerio.load(body.replace((/\\/g, "")));
+            let newBody1 = body.replace((/\\/g, ""))
+            let $ = cheerio.load(newBody1);
             let anchor1 = $('a[href="'+value1+'"]').toArray();
+            console.log("anchor1 top", anchor1);
             anchor1 = anchor1.length > 0 ? anchor1 : $('a[href=\''+value1+'\']').toArray();
-            //console.log("achor1",anchor1);
+            console.log("achor1",anchor1);
             // done for finding relative urls in achor tag
-             anchor1 = anchor1.length > 0 ? anchor1 : $('a[href="+value1.split('.com/')[1]+"]').toArray();
-             //console.log("achor1 in next search", anchor1)
+             anchor1 = anchor1.length > 0 ? anchor1 : $('a[href="'+value1.split('.com/')[1]+'"]').toArray();
+             anchor1 = anchor1.length > 0 ? anchor1 : $('a[href=\''+value1.split('.com/')[1]+'\']').toArray();
+             console.log("achor1 in next search", anchor1)
         // console.log("inputs check", typeof inputs, "all inouts", inputs[0]);
         if(anchor1.length > 0){
             let second = await Request.find({run:runs[1],url:request.url, session_sequence:request.session_sequence, 'request.method':request.request.method});
-            $ = cheerio.load(second[0].response.body.replace((/\\/g, "")))
+            let newBody2 = second[0].response.body.replace((/\\/g, ""));
+            $ = cheerio.load(newBody2)
             let anchor2 = $('a[href="'+value2+'"]').toArray();
             anchor2 = anchor2.length > 0 ? anchor2 : $('a[href=\''+value2+'\']').toArray();
-            console.log("achor1",anchor2);
+            console.log("achor1", anchor2);
             anchor2 = anchor2.length > 0 ? anchor2 : $('a[href="'+value2.split('.com/')[1]+'"]').toArray();
-            //console.log("chechink all macthed anchores", anchor2)
+            anchor1 = anchor1.length > 0 ? anchor1 : $('a[href=\''+value2.split('.com/')[1]+'\']').toArray();
+            console.log("chechink all macthed anchores", anchor2)
             if(anchor2.length > 0){
                 //console.log("fund anchors", anchor1, anchor2);
                 let forFinalReg = this.checkExactMatch(anchor1, anchor2)
@@ -601,8 +606,8 @@ class Backtrack {
                     const counts = this.verifyAnchorTag(
                         finalReg,
                         [cheerio.html(forFinalReg[0]),cheerio.html(forFinalReg[1])],
-                        body,
-                        second[0].response.body
+                        newBody1,
+                        newBody2
                         )
                     // forFinalReg = [cheerio.html(forFinalReg[0]),cheerio.html(forFinalReg[1])]
                     // forFinalReg = [ forFinalReg[0].substring(0, forFinalReg[0].indexOf('>')+1), forFinalReg[1].substring(0, forFinalReg[1].indexOf('>')+1) ]
@@ -687,24 +692,27 @@ class Backtrack {
         // console.log(body1);
         // console.log("body-----------------------------------2--------------------------------------------------")
         // console.log(body2);
-        let Reg = new RegExp(reg, 'gi')
+        let Reg = new RegExp(reg.replace('&amp;', '&'), 'gi')
         // console.log("hello world", Reg);
         let matched1 = matchedStrings[0];
         let matched2 = matchedStrings[1];
-        console.log("matched", matched1, matched2);
+        // console.log("matched", matched1, matched2);
         let values1 = matched1.match(reg);
         let values2 = matched2.match(reg);
         console.log("values",values2, values1)
         const totalMatches1 = body1.match(Reg)
+        console.log("----------------------------total Matches1----------------------------")
+        console.log(totalMatches1)
         const totalMatches2 = body2.match(Reg)
-         console.log("hello new 1", totalMatches1.length)
-         console.log("hello new 2", totalMatches2.length)
-           if(totalMatches1.length === 0 ){
+        console.log("----------------------------total Matches2----------------------------")
+        console.log(totalMatches2)
+           if(!totalMatches1 || totalMatches1.length === 0 ){
                return [1, 1]
            } 
-            const first = this.compareRegValues(totalMatches1, values1,reg);
+           console.log("counting how many matched",totalMatches1.length, totalMatches2.length);
+            const first = this.compareRegValues(totalMatches1, values1,reg.replace('&amp;', '&'));
             console.log("first count", first);
-            const second = this.compareRegValues(totalMatches2, values2,reg);
+            const second = this.compareRegValues(totalMatches2, values2,reg.replace('&amp;', '&'));
             console.log("first count", second);
             return [first, second];
     }

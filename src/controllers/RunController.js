@@ -26,6 +26,9 @@ const ignoredUrls = ['www.google-analytics.com', 'www.facebook.com', 'www.fb.com
 "static.licdn.com",
 "www.linkedin.com",
 "platform.linkedin.com"];
+var dateFormat = require('dateformat');
+var now = new Date();
+var forFileName = dateFormat(now, "dd-mm-yyyy-h:MM:ssTT");
 class RunController{
   constructor(){
     return {
@@ -356,7 +359,7 @@ class RunController{
       // const  runDetails = await Run.findById(run).populate('scenario');
       // console.log("jmx to read",dynamicData);
       const scenarioDetails = await Scenario.find({_id:scenario});
-      let file = fs.createWriteStream(`${config.storage.path}${scenarioDetails[0].name}.jmx`);
+      let file = fs.createWriteStream(`${config.storage.path}${scenarioDetails[0].name}_${forFileName}.jmx`);
       file.write(startXml+dynamicData+endXml);  
       file.close();
       return true;
