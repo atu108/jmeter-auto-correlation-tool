@@ -347,7 +347,7 @@ class RunController{
               <stringProp name="RegexExtractor.useHeaders">false</stringProp>
               <stringProp name="RegexExtractor.refname">${hasReg.key + "_COR"}</stringProp>
               <stringProp name="RegexExtractor.regex">${this._encodeHtml(hasReg.final_regex)}</stringProp>
-              <stringProp name="RegexExtractor.template">${hasReg.regCount}</stringProp>
+              <stringProp name="RegexExtractor.template">${hasReg.reg_count}</stringProp>
               <stringProp name="RegexExtractor.default">${hasReg.key}_Not_Found</stringProp>
               <stringProp name="RegexExtractor.match_number">${hasReg.first.atPos}</stringProp>
             </RegexExtractor>
@@ -359,7 +359,9 @@ class RunController{
       // const  runDetails = await Run.findById(run).populate('scenario');
       // console.log("jmx to read",dynamicData);
       const scenarioDetails = await Scenario.find({_id:scenario});
-      let file = fs.createWriteStream(`${config.storage.path}${scenarioDetails[0].name}_${forFileName}.jmx`);
+      const fileName = `${scenarioDetails[0].name.split(' ').join('_')}_${forFileName}.jmx`;
+      await Scenario.findByIdAndUpdate(scenario,{jmx_file_name:fileName}) ;
+      let file = fs.createWriteStream(`${config.storage.path}${fileName}`);
       file.write(startXml+dynamicData+endXml);  
       file.close();
       return true;

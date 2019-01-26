@@ -408,11 +408,20 @@ class Backtrack {
         let value2 = diff.second.value.replace('+', ' ');
         let finalReg = '';
         let stepSeq = [diff.first.request.sequence, diff.second.request.sequence];
+        console.log("differnce sequence number", diff.first.request.sequence);
         // console.log("inside new serach", key, "--", value1, "--",value2);
-
+        console.log("step sequence",stepSeq[0])
         let runs = [diff.first.run, diff.second.run];
-        const allRequests = await Request.find({run:runs[0],sequence:{$lt:stepSeq[0]}}).sort({ step_sequence: -1 });
+        const allRequests = await Request.find({run:runs[0],sequence:{$lt:stepSeq[0]}}).sort({ sequence: -1 });
+        //const allRequests = await Request.find({_id:"5c4beb1ed5f904246e9a2103"});
         for(let i = 0; i < allRequests.length; i++){
+            // console.log("type of id and all ids", typeof allRequests[i]._id, allRequests[i]._id)
+            // if(allRequests[i]._id == '5c4beb1ed5f904246e9a2103'){
+            //     console.log("----------------------got desired request id-----------------------------------------------")
+            //     console.log("session", allRequests[i].session_sequence)
+            //     console.log("sequence", allRequests[i].sequence)
+            // }
+            //console.log("counting session",allRequests[i].session_sequence, allRequests[i].sequence)
             let body = allRequests[i].response.body;
             if(body === undefined || !body || body == ''){
                continue;
@@ -421,7 +430,11 @@ class Backtrack {
             // for searching the differences in url
 
             if(diff.location === 'url'){
-                return this._findAchorTag(body, value1, value2, allRequests[i], diff, runs);
+                let result = await this._findAchorTag(body, value1, value2, allRequests[i], diff, runs);
+                if(result){
+                    return result;
+                }
+
             }
             
             let tags = {}
@@ -571,28 +584,43 @@ class Backtrack {
     
     async _findAchorTag(body, value1, value2, request, diff, runs){
         try{
-            console.log("values to find", value1, value2)
-            let newBody1 = body.replace((/\\/g, ""))
-            let $ = cheerio.load(newBody1);
+            // console.log("values to find", value1, value2)
+            if(request._id === '5c4beb1ed5f904246e9a2103'){
+                console.log("----------------------what to serach-----------------------------------------------")
+                console.log(value1)
+                console.log("----------------body of this request-----------------------------------------------------")
+                console.log(request.body)
+            }
+            let newBody1 = body.replace(/\\/g, "")
+            let $ = cheerio.load(newBody1.toString());
             let anchor1 = $('a[href="'+value1+'"]').toArray();
-            console.log("anchor1 top", anchor1);
+            console.log("with double and domain", anchor1);
             anchor1 = anchor1.length > 0 ? anchor1 : $('a[href=\''+value1+'\']').toArray();
-            console.log("achor1",anchor1);
+            
+            //anchor1 = anchor1.length > 0 ? anchor1 : $('a[href='+value1+']').toArray();
+            console.log("with single and domain", anchor1);
             // done for finding relative urls in achor tag
              anchor1 = anchor1.length > 0 ? anchor1 : $('a[href="'+value1.split('.com/')[1]+'"]').toArray();
+             console.log("double quote no domain", anchor1, request.session_sequence);
              anchor1 = anchor1.length > 0 ? anchor1 : $('a[href=\''+value1.split('.com/')[1]+'\']').toArray();
-             console.log("achor1 in next search", anchor1)
+             console.log("single quote no domain", anchor1);
+            //  anchor1 = anchor1.length > 0 ? anchor1 : $('a[href='+value1.split('.com/')[1]+']').toArray();
+             //console.log("achor1 in next search", anchor1)
         // console.log("inputs check", typeof inputs, "all inouts", inputs[0]);
+        console.log("checking values", request.url, request.session_sequence )
         if(anchor1.length > 0){
             let second = await Request.find({run:runs[1],url:request.url, session_sequence:request.session_sequence, 'request.method':request.request.method});
+            console.log("second top section", second[0].response.body);
             let newBody2 = second[0].response.body.replace((/\\/g, ""));
             $ = cheerio.load(newBody2)
+
+            console.log($);
             let anchor2 = $('a[href="'+value2+'"]').toArray();
-            anchor2 = anchor2.length > 0 ? anchor2 : $('a[href=\''+value2+'\']').toArray();
-            console.log("achor1", anchor2);
+            console.log("with double and domain", anchor2);
             anchor2 = anchor2.length > 0 ? anchor2 : $('a[href="'+value2.split('.com/')[1]+'"]').toArray();
-            anchor1 = anchor1.length > 0 ? anchor1 : $('a[href=\''+value2.split('.com/')[1]+'\']').toArray();
-            console.log("chechink all macthed anchores", anchor2)
+            console.log("double quote no domain", anchor2);
+            anchor2 = anchor2.length > 0 ? anchor2 : $('a[href=\''+value2.split('.com/')[1]+'\']').toArray();
+            console.log("single quote no domain", anchor2);
             if(anchor2.length > 0){
                 //console.log("fund anchors", anchor1, anchor2);
                 let forFinalReg = this.checkExactMatch(anchor1, anchor2)
@@ -613,7 +641,8 @@ class Backtrack {
                     // forFinalReg = [ forFinalReg[0].substring(0, forFinalReg[0].indexOf('>')+1), forFinalReg[1].substring(0, forFinalReg[1].indexOf('>')+1) ]
                     // // let finalReg = this._fixBoundary(forFinalReg[0],forFinalReg[1], [value1, value2]);
                     // console.log("reached here final reg",finalReg)
-                    // const reg_name = this._getRegName( finalReg, cheerio.html(forFinalReg[0]), value1 )
+                    //const reg_name = this._getRegName( finalReg, cheerio.html(forFinalReg[0]), value1 )
+                    //console.log("regex name ",reg_name);
                     const reg_name = "pending"
                     return {
                         key: "url",
@@ -622,7 +651,7 @@ class Backtrack {
                         location: diff.location,
                         reg_count: this._countReg(finalReg),
                         reg_name: reg_name,
-                        final_regex: finalReg,
+                        final_regex: finalReg.replace('&amp;', '&'),
                         first: {
                             url: request.url,
                             matched: cheerio.html(forFinalReg[0]),
@@ -679,7 +708,7 @@ class Backtrack {
       let tag = '<a'
       for(let i = 0; i < allProps.length; i++){
         //   console.log("tag at step 1", i,"---", tag);
-        tag += ` ${allProps[i]}="${forCreating[allProps[i]]}"` 
+        tag += ` ${allProps[i]}=(.*?)${forCreating[allProps[i]]}(.*?)` 
       }
       tag += '>'
       return tag;

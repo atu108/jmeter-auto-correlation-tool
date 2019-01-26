@@ -9,6 +9,7 @@ const ScenarioSchema = new Schema({
   name: String,
   description: String,
   start_url: String,
+  jmx_file_name: String,
   project: {
     type: Schema.Types.ObjectId,
     ref: "Project"
