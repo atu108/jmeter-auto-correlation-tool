@@ -18,7 +18,7 @@ import ParamSetting from '../models/ParamSetting';
 import Correlation from '../models/Correlation';
 import Scenario from '../models/Scenario';
 import Session from '../models/Session';
-//import ExcludeUrl from '../models/ExcludeUrl';
+import ExcludeUrl from '../models/ExcludeUrl';
 import {URL} from 'url';
 import { resolveArray, parseParams } from '../utility/jmxConstants';
 const ignoredExt = config.app.ignoredExt;
