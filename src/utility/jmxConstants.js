@@ -80,9 +80,26 @@ export const resolveArray = async (myArray, request_id) => {
     return toSend;
 }
 
-export const parseParams = async (request) =>{
+export const parseParams = async (request, hasReg, urlPath, session) =>{
     // myURL.search.replace(/&/gi,'&amp;')
     // console.log("checking request", request)
+    
+    console.log("has reg", request._id, hasReg)
+    //find all the co realtions related to this request then form the same url using _COR
+    let pathName = urlPath; 
+    if(hasReg && hasReg.length > 0){
+        pathName = hasReg[0].compared_url.split('.com')[1];
+        console.log("reched inside reg", pathName);
+        const index = (hasReg[0].key === 'url');
+        if(index){
+            let regName = hasReg[0].reg_name;
+            console.log("inside jmx constants", regName);
+            for(let i = 0; i < regName.toReplace.length; i++){
+                pathName = pathName.replace(regName.toReplace[i], `\${${session}_${request.sequence}_${regName.withWhat[i]}}`);
+            }
+            console.log("path names", pathName);
+        }
+    }
     const params = request.request.params;
     if(params.length === 0){
         return false;
@@ -91,6 +108,7 @@ export const parseParams = async (request) =>{
     let inSettings = await ParamSetting.find({
         request: request._id
     });
+
     for(let i = 0; i < params.length; i++){
         let key = Object.keys(params[i])[0];
         let value = params[i][key];
@@ -110,8 +128,7 @@ export const parseParams = async (request) =>{
             }
         }
     }
-    return query;
-
+    return pathName + query;
 }
 
  

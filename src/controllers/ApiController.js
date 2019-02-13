@@ -8,6 +8,7 @@ import Recording from '../models/Recording';
 import Step from '../models/Step';
 import Run from '../models/Run';
 import RunValue from '../models/RunValue';
+import ExcludeUrl from '../models/ExcludeUrl';
 
 class ApiController{
   constructor(){
@@ -15,7 +16,8 @@ class ApiController{
       login: this.login.bind(this),
       projects: this.projects.bind(this),
       scenarios: this.scenarios.bind(this),
-      save: this.save.bind(this)
+      save: this.save.bind(this),
+      excludeUrls: this.excludeUrls.bind(this)
     }
   }
 
@@ -109,6 +111,21 @@ class ApiController{
     await RunValue.insertMany(values);
 
     return ctx.body = {type: 'success', id: sid};
+  }
+
+  async excludeUrls(ctx){
+    try{
+      await ExcludeUrl.insertMany(ctx.request.body.urls.map(url => { return {url:url}}), { ordered: false, silent: true });
+      return ctx.body = {type: 'success', message: 'Urls Saved'};
+    }catch(e){
+      if(e.code === 11000){
+        return ctx.body = {type: "success", message: "Urls are saved and Duplicate urls are ignored"}
+      }else{
+        return ctx.body = {type: "failed", message: "Something went wrong"}
+      }
+     
+    }
+   
   }
 }
 

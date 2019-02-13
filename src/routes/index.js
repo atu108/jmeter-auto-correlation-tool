@@ -14,5 +14,6 @@ export default combineRouters([
   project,
   scenario,
   run,
-    session
+  api,
+  session
 ]);

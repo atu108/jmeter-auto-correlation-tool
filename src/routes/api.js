@@ -10,6 +10,7 @@ const router = new Router({
 router.post('/login', ApiController.login)
   .get('/projects', auth, ApiController.projects)
   .get('/project/:_id/scenarios', ApiController.scenarios)
-  .post('/save', ApiController.save);
+  .post('/save', ApiController.save)
+  .post('/excludeurl', ApiController.excludeUrls);
 
 export default router;

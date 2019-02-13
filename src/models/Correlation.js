@@ -11,7 +11,10 @@ const CorrelationSchema = new Schema({
     compared_url:String,
     location: String,
     reg_count:String,
-    reg_name:String,
+    reg_name:{
+        toReplace: [String],
+        withWhat: [String]
+    },
     reg: String,
     final_regex:String,
     first: {

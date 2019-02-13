@@ -1,15 +1,9 @@
 import mongoose from 'mongoose';
 import config from '../config';
 import logger from '../utility/logger';
+import ExcludeUrl from '../models/ExcludeUrl'
 
 import Request from '../models/Request';
-
-const ignoredExt = ['css', 'jpeg', 'jpg', 'png', 'js', 'woff2', 'gif', 'PNG', 'JPG', 'JPEG', 'GIF', 'JS', 'GIF', 'woff', 'svg'];
-const ignoredUrls = ['www.google-analytics.com', 'www.facebook.com', 'www.fb.com', 'www.youtube.com', 'maps.google.com', 'www.google.com',
-'www.google.co.in','googleads.g.doubleclick.net', 'accounts.google.com', 'www.googletagmanager.com', 'stats.g.doubleclick.net','apis.google.com',
-"static.licdn.com",
-"www.linkedin.com",
-"platform.linkedin.com"];
 
 class Compare {
 
@@ -32,6 +26,9 @@ class Compare {
   }
 
   async start() {
+    const ignoredExt = config.app.ignoredExt;
+    let ignoredUrls = await ExcludeUrl.find({});
+    ignoredUrls = ignoredUrls.map(obj=>obj.url)
     let firstRequests = await Request.find({run: this.params.runs[0]}).sort({sequence: 1});
     let secondRequests = await Request.find({run: this.params.runs[1]}).sort({sequence: 1});
     //filtering urls
@@ -231,7 +228,14 @@ class Compare {
             }
           }
        }
-        
+       const matchedInThird = this._findReferersCon3(mismatchUrls1[i], mismatchUrls2[index]);
+       console.log("matched third", matchedInThird);
+       if(matchedInThird){
+        comparedParents.push({first:mismatchUrls1[i].url, second:mismatchUrls2[index].url})
+        toBeCompared1.push(mismatchUrls1[i]);
+        toBeCompared2.push(mismatchUrls2[index]);
+       }
+
       }
     }
     return {one:toBeCompared1, two:toBeCompared2};
@@ -241,7 +245,7 @@ class Compare {
     const two = mismatchUrls2.request.headers.filter( obj => (Object.keys(obj)[0] === 'Referer' || Object.keys(obj)[0] === 'referer'));
     // console.log("inside condition one", one, two);
     if(one.length > 0 && two.length > 0){
-      return one[0]['Referer'] === two[0]['Referer']
+      return one[0]['Referer'] === two[0]['Referer'] || one[0]['referer'] === two[0]['referer']
     }else{
       return false;
     }
@@ -254,14 +258,26 @@ __findReferersCon2(parentObjs, mismatchUrls1, mismatchUrls2 ){
   //console.log("refererrs in two", one[0]['Referer'], two[0]['Referer'])
   //console.log("inside condition two", one, two)
   if(one.length > 0 && two.length > 0){
-    const parentIndex = parentObjs.findIndex( parentObj => ( parentObj.first === one[0]['Referer'] &&  parentObj.second === two[0]['Referer']) )
+    const parentIndex = parentObjs.findIndex( parentObj => ( (parentObj.first === one[0]['Referer'] &&  parentObj.second === two[0]['Referer']) || (parentObj.first === one[0]['referer'] &&  parentObj.second === two[0]['referer']) ) )
     console.log(parentIndex !== -1);
     return parentIndex !== -1;
   }else{
     return false;
-  }
-  
-  
+  }   
+}
+
+_findReferersCon3(mismatchUrls1, mismatchUrls2){
+  const one = mismatchUrls1.request.headers.filter( obj => (Object.keys(obj)[0] === 'Referer' || Object.keys(obj)[0] === 'referer'));
+  const two = mismatchUrls2.request.headers.filter( obj => (Object.keys(obj)[0] === 'Referer' || Object.keys(obj)[0] === 'referer'));
+    // console.log("inside condition one", one, two);
+    if(one.length > 0 && two.length > 0){
+      let refKeyVal1 = one[0]['Referer'] ? one[0]['Referer'].replace(/=([A-z][a-z])\w+/g, '{{TEMP}}') : one[0]['referer'].replace(/=([A-z][a-z])\w+/g, '{{TEMP}}')
+      let refKeyVal2 = two[0]['Referer']? two[0]['Referer'].replace(/=([A-z][a-z])\w+/g, '{{TEMP}}') : two[0]['referer'].replace(/=([A-z][a-z])\w+/g, '{{TEMP}}')
+      console.log("values",refKeyVal1, refKeyVal2)
+      return refKeyVal1 === refKeyVal2
+    }else{
+      return false;
+    }
 }
 }
 

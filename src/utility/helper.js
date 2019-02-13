@@ -2,7 +2,7 @@ import crypto from 'crypto';
 import fetch from 'isomorphic-fetch';
 import rimraf from 'rimraf';
 import {readdirSync} from 'fs';
-
+const createCsvWriter = require('csv-writer').createArrayCsvWriter;
 import config from '../config';
 
 export function id(){
@@ -140,4 +140,15 @@ export const filesInDir = (path) => {
 
 export const removeDir = (dir, cb) => {
   return rimraf(dir, cb);
+}
+
+export const writeCSV = (header, arr) => {
+const csvWriter = createCsvWriter({
+  header: header,
+  path: config.storage.csvPath
+})
+csvWriter.writeRecords(arr)
+  .then(() => {
+      console.log('...Done');
+  });
 }

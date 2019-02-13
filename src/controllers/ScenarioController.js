@@ -1,5 +1,5 @@
 import template from '../utility/template';
-import {to} from '../utility/helper';
+import {to, writeCSV} from '../utility/helper';
 
 import Project from '../models/Project';
 import Scenario from '../models/Scenario';
@@ -11,14 +11,10 @@ import Difference from '../models/Difference';
 import Correlation from '../models/Correlation';
 import Request from '../models/Request';
 import ParamSetting from '../models/ParamSetting';
-const ignoredExt = ['css', 'jpeg', 'jpg', 'png', 'js', 'woff2', 'gif', 'PNG', 'JPG', 'JPEG', 'GIF', 'JS', 'GIF', 'woff', 'svg'];
-const ignoredUrls = ['www.google-analytics.com', 'www.facebook.com', 'www.fb.com', 'www.youtube.com', 'maps.google.com', 'www.google.com',
-'www.google.co.in','googleads.g.doubleclick.net', 'accounts.google.com', 'www.googletagmanager.com', 'stats.g.doubleclick.net','apis.google.com',
-"static.licdn.com",
-"www.linkedin.com",
-"platform.linkedin.com"];
-
-
+import ExcludeUrl from '../models/ExcludeUrl';
+var dateFormat = require('dateformat');
+var now = new Date();
+var forFileName = dateFormat(now, "dd-mm-yyyy-h:MM:ssTT");
 import config from '../config';
 
 const _tabs = [{
@@ -69,6 +65,9 @@ class ScenarioController{
 
   async steps(ctx){
     try{
+      const ignoredExt = config.app.ignoredExt;
+      let ignoredUrls = await ExcludeUrl.find({});
+      ignoredUrls = ignoredUrls.map(obj=>obj.url)
       const scenario = await Scenario.findById(ctx.params._id);
       const run = await Run.find({scenario: ctx.params._id});
       let requests = await Request.find({scenario: ctx.params._id, run:run[0]._id, $or:[ {'request.params.1': {$exists: true}}, {"request.post_data.1":{$exists: true}}]}).populate('session');
@@ -84,7 +83,13 @@ class ScenarioController{
         const host = loc.host
         return ignoredUrls.indexOf(host) === -1;
       });
-      ctx.body = template.render('app.scenario.steps', {requests, scenario, global: {title: scenario.name, tabs: _tabs, _id: ctx.params._id, current: "steps", sub: "Steps", back: `/app/project/${scenario.project}/scenarios`}});
+      // const fileName = `${scenario.name.split(' ').join('_')}_${forFileName}.jmx`;
+      // await Scenario.findByIdAndUpdate(scenario,{jmx_file_name:fileName}) ;
+      // let file = fs.createWriteStream(`${config.storage.path}${fileName}`);
+      // file.write(startXml+dynamicData+endXml);  
+      // file.close();
+      // writeCSV(['',''], [])
+      ctx.body = template.render('app.scenario.steps', {requests, scenario, global: {title: scenario.name, tabs: _tabs, _id: ctx.params._id, current: "steps", sub: "Steps", back: `/app/project/${scenario.project}/scenarios`, user:ctx.session.user}});
     }catch(e){
       console.log(e);
     }
@@ -116,19 +121,19 @@ class ScenarioController{
   async runs(ctx){
     const scenario = await Scenario.findById(ctx.params._id);
     const runs = await Run.find({scenario: ctx.params._id}).populate('sessions');
-    ctx.body = template.render('app.scenario.runs', {runs, scenario, global: {title: scenario.name, tabs: _tabs, _id: ctx.params._id, current: "runs", sub: "Runs", back: `/app/project/${scenario.project}/scenarios`}});
+    ctx.body = template.render('app.scenario.runs', {runs, scenario, global: {title: scenario.name, tabs: _tabs, _id: ctx.params._id, current: "runs", sub: "Runs", back: `/app/project/${scenario.project}/scenarios`, user:ctx.session.user}});
   }
 
   async differences(ctx){
     console.log("called here", ctx.params);
       const scenario = await Scenario.findById(ctx.params._id);
       const differences = await Difference.find({scenario:ctx.params._id});
-      ctx.body = template.render('app.scenario.differences',{differences,scenario,global:{title:scenario.name,tabs:_tabs,_id:ctx.params._id,current:"differnces",sub:"Differences", back: `/app/project/${scenario.project}/scenarios`}})
+      ctx.body = template.render('app.scenario.differences',{differences,scenario,global:{title:scenario.name,tabs:_tabs,_id:ctx.params._id,current:"differnces",sub:"Differences", back: `/app/project/${scenario.project}/scenarios`, user:ctx.session.user}})
   }
     async correlations(ctx){
         const scenario = await Scenario.findById(ctx.params._id);
         const correlations = await Correlation.find({scenario:ctx.params._id});
-        ctx.body = template.render('app.scenario.correlation',{correlations,scenario,global:{title:scenario.name,tabs:_tabs,_id:ctx.params._id,current:"correlations",sub:"Correlations", back: `/app/project/${scenario.project}/scenarios`}})
+        ctx.body = template.render('app.scenario.correlation',{correlations,scenario,global:{title:scenario.name,tabs:_tabs,_id:ctx.params._id,current:"correlations",sub:"Correlations", back: `/app/project/${scenario.project}/scenarios`, user:ctx.session.user}})
     }
 }
 

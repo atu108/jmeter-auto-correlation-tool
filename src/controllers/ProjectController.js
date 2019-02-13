@@ -48,7 +48,7 @@ class ProjectController{
   async scenarios(ctx){
     const project = await Project.findById(ctx.params._id);
     const scenarios = await Scenario.find({project: ctx.params._id});
-    ctx.body = template.render('app.project.scenarios', {scenarios, project, global: {title: project.title, tabs: _tabs, current: "scenarios", _id: ctx.params._id, sub: 'Scenarios', back:'/app/projects'}});
+    ctx.body = template.render('app.project.scenarios', {scenarios, project, global: {title: project.title, tabs: _tabs, current: "scenarios", _id: ctx.params._id, sub: 'Scenarios', back:'/app/projects', user:ctx.session.user}});
   }
 }
 

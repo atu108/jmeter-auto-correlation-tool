@@ -18,14 +18,10 @@ import ParamSetting from '../models/ParamSetting';
 import Correlation from '../models/Correlation';
 import Scenario from '../models/Scenario';
 import Session from '../models/Session';
+//import ExcludeUrl from '../models/ExcludeUrl';
 import {URL} from 'url';
 import { resolveArray, parseParams } from '../utility/jmxConstants';
-const ignoredExt = ['css', 'jpeg', 'jpg', 'png', 'js', 'woff2', 'gif', 'PNG', 'JPG', 'JPEG', 'GIF', 'JS', 'GIF', 'woff', 'svg'];
-const ignoredUrls = ['www.google-analytics.com', 'www.facebook.com', 'www.fb.com', 'www.youtube.com', 'maps.google.com', 'www.google.com',
-'www.google.co.in','googleads.g.doubleclick.net', 'accounts.google.com', 'www.googletagmanager.com', 'stats.g.doubleclick.net','apis.google.com',
-"static.licdn.com",
-"www.linkedin.com",
-"platform.linkedin.com"];
+const ignoredExt = config.app.ignoredExt;
 var dateFormat = require('dateformat');
 var now = new Date();
 var forFileName = dateFormat(now, "dd-mm-yyyy-h:MM:ssTT");
@@ -188,6 +184,8 @@ class RunController{
   // }
 
   async generateJmx(run, scenario){
+      let ignoredUrls = await ExcludeUrl.findAll({});
+      ignoredUrls = ignoredUrls.map(obj=>obj.url)
       const paramsSettingData = await ParamSetting.find({
         scenario
       })
@@ -286,10 +284,8 @@ class RunController{
           '    <hashTree/>\n' +
           '  </hashTree>\n' +
           '</jmeterTestPlan>';
-
-      let dynamicData ='';
+      let dynamicData = '';
       const sessions = await Session.find({run});
-
       for(let i = 0; i < sessions.length; i++){
           let requests = await Request.find({session:sessions[i]._id}).sort({sequence: 1});
           dynamicData += `<TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="${sessions[i].title}" enabled="true">
@@ -305,6 +301,7 @@ class RunController{
               // console.log("data to read", moreDynamic);
               //let hasDiff = await Difference.find({"first.request":requests[j]._id});
               let myURL = new URL(requests[j].request.url);
+              const urlWithCorAndPar = await parseParams(requests[j], hasReg, myURL.pathname, sessions[i].title)
               dynamicData += `<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="${myURL.pathname}" enabled="true">
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             ${requests[j].request.post_data.length === 0?
@@ -316,7 +313,7 @@ class RunController{
             <stringProp name="HTTPSampler.port">${myURL.port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${myURL.protocol.slice(0,-1)}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-            <stringProp name="HTTPSampler.path">${myURL.pathname}${await parseParams(requests[j])?await parseParams(requests[j]):'' }</stringProp>
+            <stringProp name="HTTPSampler.path">${urlWithCorAndPar}</stringProp>
             <stringProp name="HTTPSampler.method">${requests[j].request.method}</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -362,7 +359,7 @@ class RunController{
       const fileName = `${scenarioDetails[0].name.split(' ').join('_')}_${forFileName}.jmx`;
       await Scenario.findByIdAndUpdate(scenario,{jmx_file_name:fileName}) ;
       let file = fs.createWriteStream(`${config.storage.path}${fileName}`);
-      file.write(startXml+dynamicData+endXml);  
+      file.write(startXml+ dynamicData+ endXml);  
       file.close();
       return true;
   }

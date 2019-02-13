@@ -31,13 +31,15 @@ class Backtrack {
 
     async start() {
         const diffs = await Difference.find({scenario:this.params}).populate('first.request',['sequence']).populate('second.request',['sequence']).populate('session');
-        console.log("inside backtrack", diffs);
         const loopTimes = diffs.length;
         for(let i = 0; i < loopTimes; i++){
             console.log(i);
             if(diffs[i].duplicate !== ''){
                 continue;
             }
+            // if(diffs[i].url !== 'https://www.snapdeal.com/product/urbano-fashion-blue-slim-fit/669187938877'){
+            //     continue;
+            // }
             let correlation = await this.searchInBodyNew(diffs[i]);
             if(correlation){
                 console.log("found one",correlation);
@@ -350,12 +352,15 @@ class Backtrack {
         const pathsArrayUrl2 = splitWithQuestionUrl2[0].split('/').filter(p=> p.trim() !== '');
         let allKeyValue1 = {};
         let allKeyValue2 = {};
-        splitWithQuestionUrl1[1].split('&').forEach((str)=>{
-          allKeyValue1[str.split("=")[0]] = str.split("=")[1]
-        })
-       splitWithQuestionUrl2[1].split('&').forEach((str)=>{
-          allKeyValue2[str.split("=")[0]] = str.split("=")[1]
-        })
+        if(splitWithQuestionUrl1.length > 1){
+            splitWithQuestionUrl1[1].split('&').forEach((str)=>{
+                allKeyValue1[str.split("=")[0]] = str.split("=")[1]
+              })
+             splitWithQuestionUrl2[1].split('&').forEach((str)=>{
+                allKeyValue2[str.split("=")[0]] = str.split("=")[1]
+              })
+        }
+        
         let path = [];
         for(let i = 0; i < pathsArrayUrl1.length; i++){
           if(pathsArrayUrl1[i] === pathsArrayUrl2[i]){
@@ -372,7 +377,11 @@ class Backtrack {
              queryParams.push(key + "=" + "(.*?)")
           }
         }
-       return path.join('/') + "?" + queryParams.join("&amp;")
+        if(splitWithQuestionUrl1.length > 1){
+        return path.join('/') + "?" + queryParams.join("&amp;")
+        }else{
+            return path.join('/');
+        }
     }
 // check if a string url
     _isURL(str) {
@@ -408,9 +417,9 @@ class Backtrack {
         let value2 = diff.second.value.replace('+', ' ');
         let finalReg = '';
         let stepSeq = [diff.first.request.sequence, diff.second.request.sequence];
-        console.log("differnce sequence number", diff.first.request.sequence);
+        //console.log("differnce sequence number", diff.first.request.sequence);
         // console.log("inside new serach", key, "--", value1, "--",value2);
-        console.log("step sequence",stepSeq[0])
+        //console.log("step sequence",stepSeq[0])
         let runs = [diff.first.run, diff.second.run];
         const allRequests = await Request.find({run:runs[0],sequence:{$lt:stepSeq[0]}}).sort({ sequence: -1 });
         //const allRequests = await Request.find({_id:"5c4beb1ed5f904246e9a2103"});
@@ -581,55 +590,80 @@ class Backtrack {
     }
     
     }
+    _getAnchorRegName(final, matched, value){
+        let toReplace = [];
+        let withWhat = [];
+        value = value+'/'
+        // console.log(value)
+        let regHref = final.match(/<a\s+(?:[^>]*?\s+)?href="([^"]*)/)[1]
+        regHref = regHref+'/'
+        const valuesInHref = value.match(regHref)
+        // console.log(valuesInHref)
+        let resultArr = matched.match(new RegExp(final))
+        // console.log(resultArr)
+        if(resultArr.length === 2){
+            toReplace.push(resultArr[1])
+            withWhat.push("COR")
+        }
+        // key+"_COR_g"+i
+        for(let i = 1; i < valuesInHref.length; i++){
+            toReplace.push(valuesInHref[i]);
+            withWhat.push("COR_g" + resultArr.indexOf(valuesInHref[i]))
+        }  
+        return {
+            toReplace,
+            withWhat
+        }
+}
     
     async _findAchorTag(body, value1, value2, request, diff, runs){
         try{
-            // console.log("values to find", value1, value2)
-            if(request._id === '5c4beb1ed5f904246e9a2103'){
-                console.log("----------------------what to serach-----------------------------------------------")
-                console.log(value1)
-                console.log("----------------body of this request-----------------------------------------------------")
-                console.log(request.body)
-            }
+            console.log("values to find", value1, value2)
             let newBody1 = body.replace(/\\/g, "")
-            let $ = cheerio.load(newBody1.toString());
+            let $ = cheerio.load(newBody1.toString(), { xml: { decodeEntities: false, lowerCaseAttributeNames: false } });
             let anchor1 = $('a[href="'+value1+'"]').toArray();
-            console.log("with double and domain", anchor1);
+            // console.log("with double and domain", anchor1);
             anchor1 = anchor1.length > 0 ? anchor1 : $('a[href=\''+value1+'\']').toArray();
             
             //anchor1 = anchor1.length > 0 ? anchor1 : $('a[href='+value1+']').toArray();
             console.log("with single and domain", anchor1);
             // done for finding relative urls in achor tag
              anchor1 = anchor1.length > 0 ? anchor1 : $('a[href="'+value1.split('.com/')[1]+'"]').toArray();
-             console.log("double quote no domain", anchor1, request.session_sequence);
+             anchor1 = anchor1.length > 0 ? anchor1 : $('a[href="'+value1.split('.com')[1]+'"]').toArray();
+            //  console.log("double quote no domain", anchor1, request.session_sequence);
              anchor1 = anchor1.length > 0 ? anchor1 : $('a[href=\''+value1.split('.com/')[1]+'\']').toArray();
-             console.log("single quote no domain", anchor1);
+             anchor1 = anchor1.length > 0 ? anchor1 : $('a[href=\''+value1.split('.com')[1]+'\']').toArray();
+            //  console.log("single quote no domain", anchor1);
             //  anchor1 = anchor1.length > 0 ? anchor1 : $('a[href='+value1.split('.com/')[1]+']').toArray();
              //console.log("achor1 in next search", anchor1)
         // console.log("inputs check", typeof inputs, "all inouts", inputs[0]);
-        console.log("checking values", request.url, request.session_sequence )
+        //console.log("checking values", request.url, request.session_sequence )
         if(anchor1.length > 0){
             let second = await Request.find({run:runs[1],url:request.url, session_sequence:request.session_sequence, 'request.method':request.request.method});
-            console.log("second top section", second[0].response.body);
+            // console.log("second top section", second[0].response.body);
             let newBody2 = second[0].response.body.replace((/\\/g, ""));
-            $ = cheerio.load(newBody2)
+            $ = cheerio.load(newBody2, { xml: { decodeEntities: false, lowerCaseAttributeNames: false } })
 
-            console.log($);
+            // console.log($);
             let anchor2 = $('a[href="'+value2+'"]').toArray();
-            console.log("with double and domain", anchor2);
+            // console.log("with double and domain", anchor2);
             anchor2 = anchor2.length > 0 ? anchor2 : $('a[href="'+value2.split('.com/')[1]+'"]').toArray();
-            console.log("double quote no domain", anchor2);
+            anchor2 = anchor2.length > 0 ? anchor2 : $('a[href="'+value2.split('.com')[1]+'"]').toArray();
+            // console.log("double quote no domain", anchor2);
             anchor2 = anchor2.length > 0 ? anchor2 : $('a[href=\''+value2.split('.com/')[1]+'\']').toArray();
-            console.log("single quote no domain", anchor2);
+            anchor2 = anchor2.length > 0 ? anchor2 : $('a[href=\''+value2.split('.com')[1]+'\']').toArray();
+            // console.log("single quote no domain", anchor2);
             if(anchor2.length > 0){
                 //console.log("fund anchors", anchor1, anchor2);
                 let forFinalReg = this.checkExactMatch(anchor1, anchor2)
                 if(!forFinalReg){
                     forFinalReg = this.checkLooseMatch(anchor1, anchor2);
                 }
-                console.log("forFinal reg",forFinalReg);
+                // console.log("forFinal reg",forFinalReg);
                 if(forFinalReg){
-                    const finalReg = this.matchAnchorTags(forFinalReg[0], forFinalReg[1]);
+                    let finalReg = this.matchAnchorTags(forFinalReg[0], forFinalReg[1]);
+                    finalReg = finalReg.replace(/[^\*\?](\W\?)/g, '{{TEMP}}');
+                    finalReg = finalReg.replace(/\?/g,"\\?").replace(/{{TEMP}}/g, ".*?")
                     console.log("final",finalReg);
                     const counts = this.verifyAnchorTag(
                         finalReg,
@@ -637,13 +671,14 @@ class Backtrack {
                         newBody1,
                         newBody2
                         )
-                    // forFinalReg = [cheerio.html(forFinalReg[0]),cheerio.html(forFinalReg[1])]
-                    // forFinalReg = [ forFinalReg[0].substring(0, forFinalReg[0].indexOf('>')+1), forFinalReg[1].substring(0, forFinalReg[1].indexOf('>')+1) ]
-                    // // let finalReg = this._fixBoundary(forFinalReg[0],forFinalReg[1], [value1, value2]);
-                    // console.log("reached here final reg",finalReg)
-                    //const reg_name = this._getRegName( finalReg, cheerio.html(forFinalReg[0]), value1 )
+
+                    // need transaction name 
+                    // sequence of request
+
+                    const reg_name = this._getAnchorRegName( finalReg, cheerio.html(forFinalReg[0]), value1 )
                     //console.log("regex name ",reg_name);
-                    const reg_name = "pending"
+                    finalReg = finalReg.replace(/\?/g,"\?").replace(/{{TEMP}}/g, ".*?")
+                    console.log(finalReg)
                     return {
                         key: "url",
                         priority: 1,
@@ -687,16 +722,18 @@ class Backtrack {
         }
     }
     matchAnchorTags(obj1, obj2){
+    console.log("checking tag objects", obj1, obj2);
      let anchor1props = obj1.attribs;
      let anchor2props = obj2.attribs;
+     console.log("checking anchor props", anchor1props, anchor2props);
     //console.log("reached till props", anchor1props)
      let allKeys1 = Object.keys(anchor1props);
     let forCreating = {} 
      for(let i = 0; i < allKeys1.length; i++){
        if(anchor1props[allKeys1[i]] === anchor2props[allKeys1[i]]){
-           
-           forCreating[allKeys1[i]] =  anchor1props[i]
-       }else if (allKeys1[i] === 'href'){
+           console.log(forCreating[allKeys1[i]], "in side matched propres value",  anchor1props[allKeys1[i]])
+           forCreating[allKeys1[i]] =  anchor1props[allKeys1[i]]
+       }else if(allKeys1[i] === 'href'){
            const comparedUrls = this._compareUrl(anchor1props[allKeys1[i]],anchor2props[allKeys1[i]]);
            forCreating[allKeys1[i]] = comparedUrls; 
        }else{
@@ -708,15 +745,13 @@ class Backtrack {
       let tag = '<a'
       for(let i = 0; i < allProps.length; i++){
         //   console.log("tag at step 1", i,"---", tag);
-        tag += ` ${allProps[i]}=(.*?)${forCreating[allProps[i]]}(.*?)` 
+        tag += ` ${allProps[i]}="${forCreating[allProps[i]]}"` 
       }
       tag += '>'
       return tag;
     }
     verifyAnchorTag(fReg, matchedStrings, body1, body2){
         let reg = fReg;
-        reg = reg.replace(/[^\*\?](\W\?)/, '{{TEMP}}');
-        reg = reg.replace("?","\\?").replace("{{TEMP}}", ".*?")
         // console.log("body-----------------------------------1--------------------------------------------------")
         // console.log(body1);
         // console.log("body-----------------------------------2--------------------------------------------------")
@@ -725,7 +760,7 @@ class Backtrack {
         // console.log("hello world", Reg);
         let matched1 = matchedStrings[0];
         let matched2 = matchedStrings[1];
-        // console.log("matched", matched1, matched2);
+        console.log("matched", matched1, matched2);
         let values1 = matched1.match(reg);
         let values2 = matched2.match(reg);
         console.log("values",values2, values1)
@@ -738,7 +773,7 @@ class Backtrack {
            if(!totalMatches1 || totalMatches1.length === 0 ){
                return [1, 1]
            } 
-           console.log("counting how many matched",totalMatches1.length, totalMatches2.length);
+           console.log("counting how many matched", totalMatches1.length, totalMatches2.length);
             const first = this.compareRegValues(totalMatches1, values1,reg.replace('&amp;', '&'));
             console.log("first count", first);
             const second = this.compareRegValues(totalMatches2, values2,reg.replace('&amp;', '&'));
@@ -752,9 +787,9 @@ class Backtrack {
             let arrTemp = totalMatches[i].match(reg);
             let count = 0;
             for(let j = 1; j < arrTemp.length; j++){
-                console.log("get values of both arr",arrTemp[j], "--------------", values[j])
+                console.log("get values of both arr", arrTemp[j], "--------------", values[j])
                 if(arrTemp[j] === values[j]){
-                    console.log("get values of both arr",arrTemp[j], "--------------", values[j])
+                    console.log("get values of both arr", arrTemp[j], "--------------", values[j])
                     console.log("occorance",i)
                     count++;
                 }
