@@ -184,7 +184,7 @@ class RunController{
   // }
 
   async generateJmx(run, scenario){
-      let ignoredUrls = await ExcludeUrl.findAll({});
+      let ignoredUrls = await ExcludeUrl.find({});
       ignoredUrls = ignoredUrls.map(obj=>obj.url)
       const paramsSettingData = await ParamSetting.find({
         scenario
