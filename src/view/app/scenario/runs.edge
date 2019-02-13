@@ -103,10 +103,11 @@
                             <input type="file" id="SessionFile" name="file" class="input-control">
                             </div>
               <div class="form-row">
-                <button class="btn btn-blank" onclick="Util.modal.close();"><i class="icon-times"></i> Cancel</button>
+              <button onClick="javascript:submitFile();" class="btn btn-blue" id="btnfile"><i class="icon-check"></i> Save Session</button>
+              <button class="btn btn-blue" onclick="Util.modal.close();"><i class="icon-times"></i> Cancel</button>
               </div>
             </form>
-             <button onClick="javascript:submitFile();" class="btn btn-blue" id="btnfile"><i class="icon-check"></i> Save Session</button>
+             
     </div>
 </script>
 <script type="text/javascript">
