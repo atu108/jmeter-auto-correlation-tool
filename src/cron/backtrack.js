@@ -10,6 +10,7 @@ import Session from "../models/Session";
 import Correlation from "../models/Correlation";
 import RunController from '../controllers/RunController';
 const cheerio = require("cheerio");
+const parse = require('tld-extract')
 
 
 class Backtrack {
@@ -348,8 +349,8 @@ class Backtrack {
     _compareRelativeUrl(url1, url2){
         const splitWithQuestionUrl1 = url1.split('?');
         const splitWithQuestionUrl2 = url2.split('?');
-        const pathsArrayUrl1 = splitWithQuestionUrl1[0].split('/').filter(p => p.trim() !== '');
-        const pathsArrayUrl2 = splitWithQuestionUrl2[0].split('/').filter(p=> p.trim() !== '');
+        const pathsArrayUrl1 = splitWithQuestionUrl1[0].split('/').map(p => p.trim() === '' ? '{{TEMP}}':p);
+        const pathsArrayUrl2 = splitWithQuestionUrl2[0].split('/').map(p => p.trim() === '' ? '{{TEMP}}':p);
         let allKeyValue1 = {};
         let allKeyValue2 = {};
         if(splitWithQuestionUrl1.length > 1){
@@ -378,9 +379,9 @@ class Backtrack {
           }
         }
         if(splitWithQuestionUrl1.length > 1){
-        return path.join('/') + "?" + queryParams.join("&amp;")
+        return (path.join('/') + "?" + queryParams.join("&amp;")).replace('{{TEMP}}','')
         }else{
-            return path.join('/');
+            return path.join('/').replace('{{TEMP}}','');
         }
     }
 // check if a string url
@@ -590,16 +591,16 @@ class Backtrack {
     }
     
     }
-    _getAnchorRegName(final, matched, value, condition){
+    _getAnchorRegName(final, matched, value, condition, splitWith){
         let toReplace = [];
         let withWhat = [];
         console.log("checking cndition",condition);
         console.log("matched", matched)
         console.log("value", value)
         if(condition === 3 || condition === 5){
-            value = value.split('.com/')[1]
+            value = value.split(`.${splitWith}/`)[1]
         }else if(condition === 4 || condition === 6){
-            value = value.split('.com')[1]
+            value = value.split(`.${splitWith}`)[1]
         }
         value = value.replace(/&/g,"&amp;")+'/'
         // console.log(value)
@@ -615,10 +616,10 @@ class Backtrack {
         final = final.replace(/\?/g,"\\?").replace(/{{TEMP}}/g, ".*?")
         let resultArr = matched.match(final)
         // console.log(resultArr)
-        if(resultArr.length === 2){
+        if( resultArr && resultArr.length === 2){
             toReplace.push(resultArr[1])
             withWhat.push("COR")
-        }else{
+        }else if(resultArr){
             for(let i = 1; i < valuesInHref.length; i++){
                 toReplace.push(valuesInHref[i]);
                 withWhat.push("COR_g" + resultArr.indexOf(valuesInHref[i]))
@@ -646,7 +647,7 @@ class Backtrack {
              *  when reg is made then find the coreence of in respect runs using function verifyAnchorTag
              */
 
-
+            const splitWith = parse(value1).tld;
              /**
               * @todo
               *  Fix multiple condition checking with map object
@@ -661,14 +662,14 @@ class Backtrack {
             anchor1 = anchor1.length > 0 ? anchor1 : $('a[href=\''+value1+'\']').toArray();
             condition = anchor1.length > 0 && condition === 0 ? 2 : condition;
             // done for finding relative urls in achor tag
-             anchor1 = anchor1.length > 0 ? anchor1 : $('a[href="'+value1.split('.com/')[1]+'"]').toArray();
+             anchor1 = anchor1.length > 0 ? anchor1 : $('a[href="'+value1.split(`.${splitWith}/`)[1]+'"]').toArray();
              condition = anchor1.length > 0 && condition === 0 ? 3 : condition;
-             anchor1 = anchor1.length > 0 ? anchor1 : $('a[href="'+value1.split('.com')[1]+'"]').toArray();
+             anchor1 = anchor1.length > 0 ? anchor1 : $('a[href="'+value1.split(`.${splitWith}`)[1]+'"]').toArray();
              condition = anchor1.length > 0 && condition === 0 ? 4 : condition;
             //  console.log("double quote no domain", anchor1, request.session_sequence);
-             anchor1 = anchor1.length > 0 ? anchor1 : $('a[href=\''+value1.split('.com/')[1]+'\']').toArray();
+             anchor1 = anchor1.length > 0 ? anchor1 : $('a[href=\''+value1.split(`.${splitWith}/`)[1]+'\']').toArray();
              condition = anchor1.length > 0 && condition === 0 ? 5 : condition;
-             anchor1 = anchor1.length > 0 ? anchor1 : $('a[href=\''+value1.split('.com')[1]+'\']').toArray();
+             anchor1 = anchor1.length > 0 ? anchor1 : $('a[href=\''+value1.split(`.${splitWith}`)[1]+'\']').toArray();
              condition = anchor1.length > 0 && condition === 0 ? 6 : condition;
             //  console.log("single quote no domain", anchor1);
             //  anchor1 = anchor1.length > 0 ? anchor1 : $('a[href='+value1.split('.com/')[1]+']').toArray();
@@ -700,19 +701,19 @@ class Backtrack {
                     break;
                 }
                 case 3: {
-                    anchor2 = $('a[href="'+value2.split('.com/')[1]+'"]').toArray();
+                    anchor2 = $('a[href="'+value2.split(`.${splitWith}/`)[1]+'"]').toArray();
                     break;
                 }
                 case 4: {
-                    anchor2 = $('a[href="'+value2.split('.com')[1]+'"]').toArray();
+                    anchor2 = $('a[href="'+value2.split(`.${splitWith}`)[1]+'"]').toArray();
                     break;
                 }
                 case 5: {
-                    anchor2 = $('a[href=\''+value2.split('.com/')[1]+'\']').toArray();
+                    anchor2 = $('a[href=\''+value2.split(`.${splitWith}/`)[1]+'\']').toArray();
                     break;
                 }
                 case 6 : {
-                    anchor2 = $('a[href=\''+value2.split('.com')[1]+'\']').toArray();
+                    anchor2 = $('a[href=\''+value2.split(`.${splitWith}`)[1]+'\']').toArray();
                     break;
                 }
             }
@@ -738,7 +739,7 @@ class Backtrack {
                     // need transaction name 
                     // sequence of request
 
-                    const reg_name = this._getAnchorRegName( finalReg, cheerio.html(forFinalReg[0]), value1, condition )
+                    const reg_name = this._getAnchorRegName( finalReg, cheerio.html(forFinalReg[0]), value1, condition, splitWith )
                     //console.log("regex name ",reg_name);
                     finalReg = finalReg.replace(/\?/g,"\?").replace(/{{TEMP}}/g, ".*?")
                     console.log(finalReg)

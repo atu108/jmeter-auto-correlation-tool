@@ -4,6 +4,7 @@ import Correlation from '../models/Correlation';
 import ParamSetting from '../models/ParamSetting';
 import {URL} from 'url';
 import Request from '../models/Request';
+const parse = require('tld-extract')
 
 //  export async function checkCorName(key , value, request){
 //    const diff = await Difference.find({key,value,"first.request":request});
@@ -84,6 +85,7 @@ export const resolveArray = async (myArray, request_id) => {
 export const parseParams = async (request , urlPath) =>{
     // myURL.search.replace(/&/gi,'&amp;')
     // console.log("checking request", request)
+   
     const diff = await Difference.find({"first.request":request._id,key:'url'});
     let pathName = urlPath;
     console.log(pathName);
@@ -91,7 +93,8 @@ export const parseParams = async (request , urlPath) =>{
         const col = await Correlation.find({difference:diff[0]._id});
         if(col.length > 0){
             console.log("found col", col);
-            pathName = diff[0].first.value.split('.com')[1];
+            const splitWith = parse(diff[0].first.value).tld
+            pathName = diff[0].first.value.split(`.${splitWith}`)[1];
             console.log("checking path name", pathName);
             const index = (col[0].key === 'url');
             if(index){
@@ -100,7 +103,7 @@ export const parseParams = async (request , urlPath) =>{
                 for(let i = 0; i < regName.toReplace.length; i++){
                     pathName = pathName.replace(regName.toReplace[i], `\${${col[0].reg_final_name}_${regName.withWhat[i]}}`);
                 }
-                pathName = diff[0].first.value.split('.com')[0] + '.com' + pathName;
+                pathName = diff[0].first.value.split(`.${splitWith}`)[0] + `.${splitWith}` + pathName;
                 console.log("path names", pathName);
             }
         }
@@ -109,7 +112,8 @@ export const parseParams = async (request , urlPath) =>{
     let myURL = new URL(pathName);
     const params = request.request.params;
     if(params.length === 0){
-        return pathName.split('.com')[1].replace(/&/g,'&amp;');
+
+        return pathName.split(`.${parse(pathName).tld}`)[1].replace(/&/g,'&amp;');
     }
     let inSettings = await ParamSetting.find({
         request: request._id
@@ -123,7 +127,7 @@ export const parseParams = async (request , urlPath) =>{
             myURL.searchParams.set(key, `\${${key}_par}`);
         }
     }
-    return myURL.href.split('.com')[1].replace(/&/g,'&amp;');
+    return myURL.href.split(`.${parse(myURL.href).tld}`)[1].replace(/&/g,'&amp;');
 }
 
  

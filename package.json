@@ -57,6 +57,7 @@
     "redis": "^2.8.0",
     "rimraf": "^2.6.2",
     "sharp": "^0.20.1",
+    "tld-extract": "^1.0.1",
     "videoshow": "^0.1.11"
   },
   "devDependencies": {
