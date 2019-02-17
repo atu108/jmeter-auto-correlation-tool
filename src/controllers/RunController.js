@@ -301,7 +301,7 @@ class RunController{
               // console.log("data to read", moreDynamic);
               //let hasDiff = await Difference.find({"first.request":requests[j]._id});
               let myURL = new URL(requests[j].request.url);
-              const urlWithCorAndPar = await parseParams(requests[j], hasReg, myURL.pathname, sessions[i].title)
+              const urlWithCorAndPar = await parseParams(requests[j], requests[j].request.url, sessions[i].title);
               dynamicData += `<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="${myURL.pathname}" enabled="true">
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             ${requests[j].request.post_data.length === 0?
@@ -330,7 +330,7 @@ class RunController{
               ${requests[j].request.headers.map((header)=>`
                   <elementProp name="${Object.keys(header)[0]}" elementType="Header">
                   <stringProp name="Header.name">${Object.keys(header)[0]}</stringProp>
-                  <stringProp name="Header.value">${header[Object.keys(header)[0]].replace('&', '&amp;')}</stringProp>
+                  <stringProp name="Header.value">${header[Object.keys(header)[0]].replace(/&/g, '&amp;')}</stringProp>
             </elementProp>`).join('')}
             </collectionProp>
             </HeaderManager>
@@ -342,7 +342,7 @@ class RunController{
               <hashTree/>
             ${hasReg.map((hasReg)=>`<RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="client_id_REX" enabled="true">
               <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-              <stringProp name="RegexExtractor.refname">${hasReg.key + "_COR"}</stringProp>
+              <stringProp name="RegexExtractor.refname">${hasReg.reg_final_name}_COR</stringProp>
               <stringProp name="RegexExtractor.regex">${this._encodeHtml(hasReg.final_regex)}</stringProp>
               <stringProp name="RegexExtractor.template">${hasReg.reg_count}</stringProp>
               <stringProp name="RegexExtractor.default">${hasReg.key}_Not_Found</stringProp>

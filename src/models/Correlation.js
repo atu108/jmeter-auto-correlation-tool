@@ -15,7 +15,7 @@ const CorrelationSchema = new Schema({
         toReplace: [String],
         withWhat: [String]
     },
-    reg: String,
+    reg_final_name: String,
     final_regex:String,
     first: {
         url:String,

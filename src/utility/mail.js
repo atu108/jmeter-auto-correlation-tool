@@ -5,7 +5,6 @@ import config from '../config';
 import Queue from './/queue';
 import logger from './/logger';
 
-
 class Email{
   constructor(){
     return {

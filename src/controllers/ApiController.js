@@ -9,6 +9,9 @@ import Step from '../models/Step';
 import Run from '../models/Run';
 import RunValue from '../models/RunValue';
 import ExcludeUrl from '../models/ExcludeUrl';
+import Contact from '../models/Contact';
+import Email from '../utility/mail';
+import config from '../config'
 
 class ApiController{
   constructor(){
@@ -17,7 +20,9 @@ class ApiController{
       projects: this.projects.bind(this),
       scenarios: this.scenarios.bind(this),
       save: this.save.bind(this),
-      excludeUrls: this.excludeUrls.bind(this)
+      excludeUrls: this.excludeUrls.bind(this),
+      contactForm: this.contactForm.bind(this),
+      suggestionForm: this.suggestionForm.bind(this)
     }
   }
 
@@ -126,6 +131,66 @@ class ApiController{
      
     }
    
+  }
+
+  async contactForm(ctx){
+    console.log("called")
+    try{
+      const {
+        name,
+        email,
+        subject,
+        message
+      } = ctx.request.body
+      // await Contact.create({name, email, subject, message, type:"contact"});
+      let emailMessage = `<table><tr><td>Name:</td><td>${name}</td></tr><tr><td>Email:</td><td>${email}</td></tr><tr><td>Subject:</td><td>${subject}</td></tr><tr><td>Message:</td><td>${message}</td></tr>` ;
+        let emailData = {
+            from: config.mail.auth.user,
+            html: emailMessage,
+            subject: 'Contact Form',
+            to: 'garg.chiku@gmail.com'
+        }
+        Email.send(emailData)
+        ctx.set('Access-Control-Allow-Origin', '*')
+        return ctx.body = {type:"success", message: "Thank you for Contacting Us"}
+    }catch(e){
+      return ctx.body = {type:"failed", message:"We are very Sorry, Someting went wrong"}
+    }
+  }
+
+  async suggestionForm(ctx){
+    console.log("hello")
+    console.log("",ctx.request.body.files.file.path)
+    try{
+      const {
+        name,
+        email,
+        message,
+        product,
+        suggestion
+      } = ctx.request.body.fields;
+      // await Contact.create({name, email, subject, message, type:"contact"});
+      let emailMessage = `<table><tr><td>Name:</td><td>${name}</td></tr><tr><td>Email:</td><td>${email}</td><tr><td>Product:</td><td>${product}</td></tr><tr><td>Type:</td><td>${suggestion}</td></tr><tr><td>Message:</td><td>${message}</td></tr>` ;
+        let emailData = {
+            from: config.mail.auth.user,
+            html: emailMessage,
+            attachments: [
+              { // use URL as an attachment
+                filename: 'file.jpg',
+                path: ctx.request.body.files.file.path
+              }
+            ],
+            subject: 'Suggestion Form',
+            to: 'garg.chiku@gmail.com'
+        }
+        Email.send(emailData)
+        ctx.set('Access-Control-Allow-Origin', '*')
+        return ctx.body = {type:"success", message:"Thank you for support"}
+      
+    }catch(e){
+      ctx.set('Access-Control-Allow-Origin', '*')
+      return ctx.body = {type:"failed", message:"We are very Sorry, Someting went wrong"}
+    }
   }
 }
 

@@ -2,6 +2,7 @@ import Run from '../models/Run';
 import Difference from '../models/Difference';
 import Correlation from '../models/Correlation';
 import ParamSetting from '../models/ParamSetting';
+import {URL} from 'url';
 import Request from '../models/Request';
 
 //  export async function checkCorName(key , value, request){
@@ -80,31 +81,36 @@ export const resolveArray = async (myArray, request_id) => {
     return toSend;
 }
 
-export const parseParams = async (request, hasReg, urlPath, session) =>{
+export const parseParams = async (request , urlPath) =>{
     // myURL.search.replace(/&/gi,'&amp;')
     // console.log("checking request", request)
-    
-    console.log("has reg", request._id, hasReg)
-    //find all the co realtions related to this request then form the same url using _COR
-    let pathName = urlPath; 
-    if(hasReg && hasReg.length > 0){
-        pathName = hasReg[0].compared_url.split('.com')[1];
-        console.log("reched inside reg", pathName);
-        const index = (hasReg[0].key === 'url');
-        if(index){
-            let regName = hasReg[0].reg_name;
-            console.log("inside jmx constants", regName);
-            for(let i = 0; i < regName.toReplace.length; i++){
-                pathName = pathName.replace(regName.toReplace[i], `\${${session}_${request.sequence}_${regName.withWhat[i]}}`);
+    const diff = await Difference.find({"first.request":request._id,key:'url'});
+    let pathName = urlPath;
+    console.log(pathName);
+    if(diff.length > 0){
+        const col = await Correlation.find({difference:diff[0]._id});
+        if(col.length > 0){
+            console.log("found col", col);
+            pathName = diff[0].first.value.split('.com')[1];
+            console.log("checking path name", pathName);
+            const index = (col[0].key === 'url');
+            if(index){
+                let regName = col[0].reg_name;
+                console.log("inside jmx constants", regName);
+                for(let i = 0; i < regName.toReplace.length; i++){
+                    pathName = pathName.replace(regName.toReplace[i], `\${${col[0].reg_final_name}_${regName.withWhat[i]}}`);
+                }
+                pathName = diff[0].first.value.split('.com')[0] + '.com' + pathName;
+                console.log("path names", pathName);
             }
-            console.log("path names", pathName);
         }
     }
+    //find all the co realtions related to this request then form the same url using _COR
+    let myURL = new URL(pathName);
     const params = request.request.params;
     if(params.length === 0){
-        return false;
+        return pathName.split('.com')[1].replace(/&/g,'&amp;');
     }
-    let query = ''
     let inSettings = await ParamSetting.find({
         request: request._id
     });
@@ -113,22 +119,11 @@ export const parseParams = async (request, hasReg, urlPath, session) =>{
         let key = Object.keys(params[i])[0];
         let value = params[i][key];
         let exists = inSettings.findIndex((setting)=> setting.key === key);
-        if(exists === -1){
-            if(i === 0 ){
-                query += `?${key}=${value}`
-            }else{
-                query += `&amp;${key}=${value}`
-            }
-            
-        }else{
-            if(i === 0 ){
-                query += `?${key}=\${${key}_par}`
-            }else{
-                query += `&amp;${key}=\${${key}_par}`
-            }
+        if(exists !== -1){
+            myURL.searchParams.set(key, `\${${key}_par}`);
         }
     }
-    return pathName + query;
+    return myURL.href.split('.com')[1].replace(/&/g,'&amp;');
 }
 
  
