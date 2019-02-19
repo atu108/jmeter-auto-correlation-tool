@@ -96,6 +96,7 @@ class ScenarioController{
   }
   async saveParamSettings(ctx){
     try{
+        console.log(ctx.body)
         await ParamSetting.insertMany(ctx.request.body.paramValues);
         ctx.body = JSON.stringify({
           type: "success",
