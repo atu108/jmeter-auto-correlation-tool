@@ -517,22 +517,27 @@ class Backtrack {
 
 
     checkExactMatch(tag, tag2){
-        console.log("input check match", tag, tag2)
-        for(let i = 0; i < tag.length; i++){
-            const index = tag2.findIndex( tg => tag[i].type === tg.type &&
-                    tag[i].name === tg.name &&
-                    tag[i].parent.type === tg.parent.type &&
-                    tag[i].parent.name === tg.parent.name &&
-                    ((tag[i].next && tag[i].next.type === tg.next.type && tag[i].next.type === 'tag' && tag[i].next.name === tg.next.name) 
-                    || (tag[i].next && tag[i].next.type === tg.next.type && tag[i].next.type === 'text' && tag[i].next.body === tg.next.body)) &&
-                    ((tag[i].prev && tag[i].prev.type === tg.prev.type && tag[i].prev.type === 'tag' && tag[i].prev.name === tg.prev.name) 
-                    || (tag[i].prev && tag[i].prev.type === tg.prev.type && tag[i].prev.type === 'text' && tag[i].prev.body === tg.prev.body))
-                ) 
-            if(index !== -1){
-                return [tag[i], tag2[index]];
+        try{
+            for(let i = 0; i < tag.length; i++){
+                const index = tag2.findIndex( tg => tag[i].type === tg.type &&
+                        tag[i].name === tg.name &&
+                        tag[i].parent.type === tg.parent.type &&
+                        tag[i].parent.name === tg.parent.name &&
+                        ((tag[i].next && tag[i].next.type === tg.next.type && tag[i].next.type === 'tag' && tag[i].next.name === tg.next.name) 
+                        || (tag[i].next && tag[i].next.type === tg.next.type && tag[i].next.type === 'text' && tag[i].next.body === tg.next.body)) &&
+                        ((tag[i].prev && tag[i].prev.type === tg.prev.type && tag[i].prev.type === 'tag' && tag[i].prev.name === tg.prev.name) 
+                        || (tag[i].prev && tag[i].prev.type === tg.prev.type && tag[i].prev.type === 'text' && tag[i].prev.body === tg.prev.body))
+                    ) 
+                if(index !== -1){
+                    return [tag[i], tag2[index]];
+                }
             }
+            console.log("input check match", tag, tag2)
+         return false;
+        }catch(e){
+            return false
         }
-        return false;
+       
     }
 
     checkLooseMatch(tag, tag2){
@@ -741,7 +746,7 @@ class Backtrack {
 
                     const reg_name = this._getAnchorRegName( finalReg, cheerio.html(forFinalReg[0]), value1, condition, splitWith )
                     //console.log("regex name ",reg_name);
-                    finalReg = finalReg.replace(/\?/g,"\?").replace(/{{TEMP}}/g, ".*?")
+                    finalReg = counts[2].replace(/\?/g,"\?").replace(/{{TEMP}}/g, ".*?")
                     console.log(finalReg)
                     return {
                         key: "url",
@@ -829,21 +834,26 @@ class Backtrack {
         let values1 = matched1.match(reg);
         let values2 = matched2.match(reg);
         console.log("values",values2, values1)
-        const totalMatches1 = body1.match(Reg)
+        let totalMatches1 = body1.match(Reg)
+        if(!totalMatches1 || totalMatches1.length === 0 ){
+            reg = reg.replace(/href="([^"]+)"/g, "href=$1")
+            Reg = new RegExp(reg.replace('&amp;', '&'), 'gi')
+            console.log("test reg",Reg);
+            totalMatches1 = body1.match(Reg)
+        }
         console.log("----------------------------total Matches1----------------------------")
         console.log(totalMatches1)
-        const totalMatches2 = body2.match(Reg)
+        let totalMatches2 = body2.match(Reg)
         console.log("----------------------------total Matches2----------------------------")
         console.log(totalMatches2)
-           if(!totalMatches1 || totalMatches1.length === 0 ){
-               return [1, 1]
-           } 
            console.log("counting how many matched", totalMatches1.length, totalMatches2.length);
             const first = this.compareRegValues(totalMatches1, values1,reg.replace('&amp;', '&'));
             console.log("first count", first);
             const second = this.compareRegValues(totalMatches2, values2,reg.replace('&amp;', '&'));
             console.log("first count", second);
-            return [first, second];
+
+            // added 1 to compansate array indexing
+            return [+first+1, +second+1, reg];
     }
     compareRegValues(totalMatches, values,reg){
         console.log("values",values)

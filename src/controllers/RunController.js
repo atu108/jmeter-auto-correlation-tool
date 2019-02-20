@@ -302,6 +302,8 @@ class RunController{
               //let hasDiff = await Difference.find({"first.request":requests[j]._id});
               let myURL = new URL(requests[j].request.url);
               const urlWithCorAndPar = await parseParams(requests[j], requests[j].request.url, sessions[i].title);
+              //removing headers which have : in their name
+              requests[j].request.headers = requests[j].request.headers.filter(header => Object.keys(header)[0][0] !== ':')
               dynamicData += `<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="${myURL.pathname}" enabled="true">
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             ${requests[j].request.post_data.length === 0?

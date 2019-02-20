@@ -21,15 +21,15 @@ const _tabs = [{
   label: "Runs",
   action: "runs",
   controller: "scenario"
-}, {
+},{
   label: "Steps",
   action: "steps",
   controller: "scenario"
-}, {
+},{
   label: "Differences",
   action: "differnces",
   controller: "scenario"
-}, {
+},{
   label: "Corelations",
   action: "corelations",
   controller: "scenario"
@@ -70,7 +70,7 @@ class ScenarioController{
       ignoredUrls = ignoredUrls.map(obj=>obj.url)
       const scenario = await Scenario.findById(ctx.params._id);
       const run = await Run.find({scenario: ctx.params._id});
-      let requests = await Request.find({scenario: ctx.params._id, run:run[0]._id, $or:[ {'request.params.1': {$exists: true}}, {"request.post_data.1":{$exists: true}}]}).populate('session');
+      let requests = await Request.find({scenario: ctx.params._id, run:run[0]._id, $or:[ {'request.params': {$exists: true, $ne: []}}, {"request.post_data":{$exists: true, $ne: []}}]}).populate('session');
       requests = requests.filter((req) => {
         const url = req.url;
         const extension = url.split(/\#|\?/)[0].split('.').pop().trim();
