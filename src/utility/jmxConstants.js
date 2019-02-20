@@ -128,7 +128,7 @@ export const parseParams = async (request , urlPath) =>{
             myURL.searchParams.set(key, `\${${key}_par}`);
         }
     }
-    return myURL.href.split(`.${parse(myURL.href).tld}`)[1].replace(/&/g,'&amp;');
+    return decodeURIComponent(myURL.href.split(`.${parse(myURL.href).tld}`)[1].replace(/&/g,'&amp;'));
 }
 
  
