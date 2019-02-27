@@ -454,14 +454,27 @@ class Backtrack {
                tags.value = this.findSelect(body, key, value1);
                tags.type = 2
             }
-
+            console.log("tag found in first", tags.value, tags.type);
+            console.log("url to be found", allRequests[i].url);
+            console.log("request detail", allRequests[i].request.method, "session",allRequests[i].session_sequence, "id",allRequests[i].session);
             if(tags.value && tags.value.length > 0){
-                let second = await Request.find({run:runs[1],url:allRequests[i].url, session_sequence:allRequests[i].session_sequence, 'request.method':allRequests[i].request.method});
+                let second = await Request.find({run:runs[1], url:allRequests[i].url, session_sequence:allRequests[i].session_sequence, 'request.method':allRequests[i].request.method});
+                if(!second[0]){
+                    const findParent = await Difference.find({"first.value": allRequests[i].url});
+                    console.log(findParent);
+                    if(findParent[0]){
+                        second = await Request.find({run:runs[1], url: findParent[0].second.value, session_sequence:allRequests[i].session_sequence, 'request.method':allRequests[i].method});
+                    }
+
+                }
+                if(!second[0]){
+                    return false;
+                }
                 let sencondTags = [];
                     if(tags.type === 1){
-                        sencondTags = this.findInput(second[0].response.body, key , value2)
+                        sencondTags = this.findInput(second[0].response.body, key , value2);
                     }else{
-                        sencondTags = this.findSelect(second[0].response.body, key , value2)
+                        sencondTags = this.findSelect(second[0].response.body, key , value2);
                     }
                
                 if(sencondTags.length > 0){
@@ -469,7 +482,6 @@ class Backtrack {
                     if(!forFinalReg){
                         forFinalReg = this.checkLooseMatch(tags.value, sencondTags);
                     }
-
                     if(forFinalReg){
                         //removed empty space with + in cheerio returned object
                         forFinalReg[0].attribs.value = forFinalReg[0].attribs.value.replace(" ", '+');
