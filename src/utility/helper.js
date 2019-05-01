@@ -4,11 +4,43 @@ import rimraf from 'rimraf';
 import {readdirSync} from 'fs';
 const createCsvWriter = require('csv-writer').createArrayCsvWriter;
 import config from '../config';
+import Run from '../models/Run';
+import SeleniumStep from '../models/SeleniumStep';
+import Request from '../models/Request';
+import SeleniumStepValue from '../models/SeleniumStepValue';
+import Dropdown from '../models/Dropdown';
+import Application from '../models/Application';
+import Workflow from '../models/Workflow';
+import Transaction from '../models/Transaction';
+
+
 
 export function id(){
   return Math.random().toString(13).replace('0.', '')
 }
 
+export async function deleteAppOrWorkflow (id, level, type = 'temp'){
+  //according to type of dleteion eg permanent or change status
+  let workflow = null
+  if(level === 'application'){
+    await Application.remove({_id:id})
+    workflow = await Workflow.find({application: id})
+    workflow = workflow.map( w => w._id)
+  }else if(level === 'workflow'){
+    workflow = [id]
+  }
+  for(let i = 0; i < workflow.length; i++){
+    await Run.remove({workflow: workflow[i]})
+    await SeleniumStep.remove({workflow: workflow[i]})
+    await Request.remove({workflow: workflow[i]})
+    await SeleniumStepValue.remove({workflow: workflow[i]})
+    await Dropdown.remove({workflow: workflow[i]})
+    await Workflow.remove({_id: workflow[i]})
+    await Transaction.remove({workflow: workflow[i]})
+  }
+  
+  
+}
 
 export const responses = {
   200: {

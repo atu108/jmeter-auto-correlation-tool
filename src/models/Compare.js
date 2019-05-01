@@ -11,11 +11,11 @@ const CompareSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "Run"
   }],
-    scenario:{
+  workflow:{
       type:Schema.Types.ObjectId,
-        ref:"Scenario"
-    },
-    added_on: {
+        ref:"Workflow"
+  },
+  added_on: {
     type: Date,
     default: Date.now,
   },

@@ -65,7 +65,7 @@ class Compare {
     let mismatchUrls1 = [];
     // checking mismatch urls in run 2 requests 
     for(let i = 0; i < filteredRequets2.length; i++){
-      const urlIndex = filteredRequets1.findIndex(req => (req.url === filteredRequets2[i].url && req.session_sequence.toString() === filteredRequets2[i].session_sequence.toString()));
+      const urlIndex = filteredRequets1.findIndex(req => (req.url === filteredRequets2[i].url && req.txn_sequence.toString() === filteredRequets2[i].txn_sequence.toString()));
             if (urlIndex === -1) {
                 // check referer in header of this url
                 mismatchUrls2.push(filteredRequets2[i])
@@ -74,7 +74,7 @@ class Compare {
       }
         for(let i = 0; i < filteredRequets1.length; i++) {
           // console.log("count", i ,"request2 length" ,filteredRequets2.length );
-            const urlIndex = filteredRequets2.findIndex(req => (req.url === filteredRequets1[i].url && req.session_sequence.toString() === filteredRequets1[i].session_sequence.toString()));
+            const urlIndex = filteredRequets2.findIndex(req => (req.url === filteredRequets1[i].url && req.txn_sequence.toString() === filteredRequets1[i].txn_sequence.toString()));
             if (urlIndex === -1) {
               mismatchUrls1.push(filteredRequets1[i])
             } else {
@@ -143,9 +143,9 @@ class Compare {
         request: r2._id,
         run: r2.run,
       },
-      scenario:r1.scenario,
-        session_sequence:r1.session_sequence,
-        session:r1.session
+      workflow:r1.workflow,
+        txn_sequence:r1.txn_sequence,
+        transaction:r1.transaction
     }
     // if(headers[0] && headers[1]){
     //   temp.push(...this._getDiff(headers[0],headers[1],"header",obj))
@@ -176,9 +176,9 @@ class Compare {
               request: r2._id,
               run: r2.run,
             },
-            scenario:r1.scenario,
-              session_sequence:r1.session_sequence,
-              session:r1.session
+            workflow:r1.workflow,
+            txn_sequence:r1.txn_sequence,
+            txn_sequence:r1.txn_sequence
           });
         }
     return temp;
@@ -207,7 +207,7 @@ class Compare {
     let toBeCompared2 = []
     let comparedParents = [];
     for(let i = 0; i< mismatchUrls1.length; i++){
-      const index = mismatchUrls2.findIndex(req => (req.session_sequence.toString() === mismatchUrls1[i].session_sequence.toString()));
+      const index = mismatchUrls2.findIndex(req => (req.txn_sequence.toString() === mismatchUrls1[i].txn_sequence.toString()));
       if(index !== -1){
         //console.log("urls to be found",mismatchUrls1[i].request.url, mismatchUrls2[index].request.url)
         const referersMatched = this._findReferersCon1(mismatchUrls1[i], mismatchUrls2[index]);

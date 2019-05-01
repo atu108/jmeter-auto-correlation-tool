@@ -6,11 +6,11 @@ import MongooseError from '../utility/mongoose-error';
 const Schema = mongoose.Schema;
 
 const RunSchema = new Schema({
-  title: String,
+  sequence: Number,
   description: String,
-  scenario: {
+  workflow: {
     type: Schema.Types.ObjectId,
-    ref: "Scenario"
+    ref: "Workflow"
   },
   added_on: {
     type: Date,
@@ -30,15 +30,8 @@ const RunSchema = new Schema({
   }
 });
 
-RunSchema.virtual("values", {
-  ref: "RunValue",
-  localField: "_id",
-  foreignField: "run",
-  justOne: false
-});
-
-RunSchema.virtual("sessions",{
-  ref: "Session",
+RunSchema.virtual("transactions",{
+  ref: "Transaction",
     localField:"_id",
     foreignField:"run",
     justOne:false

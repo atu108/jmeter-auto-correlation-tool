@@ -16,9 +16,9 @@ const ParamSetting = new Schema({
     value:{
         type: Schema.Types.String
     },
-    scenario:{
+    workflow:{
         type:Schema.Types.ObjectId,
-        ref:"Scenario"
+        ref:"Workflow"
     },
     added_on: {
         type: Date,

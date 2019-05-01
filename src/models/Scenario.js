@@ -6,14 +6,21 @@ import MongooseError from '../utility/mongoose-error';
 const Schema = mongoose.Schema;
 
 const ScenarioSchema = new Schema({
-  name: String,
+  max_user_load: Number,
   description: String,
-  start_url: String,
-  jmx_file_name: String,
-  project: {
+  test_type: String,
+  application: {
     type: Schema.Types.ObjectId,
-    ref: "Project"
+    ref: "Application"
   },
+  workflows:[{
+    type: Schema.Types.ObjectId
+  }],
+  build_number: Number,
+  time_zone: String,
+  start_time: Date,
+  environment_availibility: Number,
+  test_duration: Number,
   added_on: {
     type: Date,
     default: Date.now,

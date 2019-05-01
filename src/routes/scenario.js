@@ -1,5 +1,5 @@
 import Router from 'koa-router';
-import {appAuth as auth} from '../middlewares/auth';
+import auth from '../middlewares/auth';
 
 import ScenarioController from "../controllers/ScenarioController";
 

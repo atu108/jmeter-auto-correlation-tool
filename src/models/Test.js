@@ -5,14 +5,15 @@ import MongooseError from '../utility/mongoose-error';
 
 const Schema = mongoose.Schema;
 
-const ProjectSchema = new Schema({
-  title: String,
-  description: String,
-  url: String,
-  screenshot: String,
-  owner: {
+const TestSchema = new Schema({
+  name: String,
+  application: {
     type: Schema.Types.ObjectId,
-    ref: "User"
+    ref: "Application"
+  },
+  schedual: {
+    type: Schema.Types.ObjectId,
+    ref: "Schedual"
   },
   added_on: {
     type: Date,
@@ -22,10 +23,10 @@ const ProjectSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  status: Boolean
+  status: String
 });
 
-ProjectSchema.plugin(MongooseError);
-ProjectSchema.plugin(findOrCreate);
+TestSchema.plugin(MongooseError);
+TestSchema.plugin(findOrCreate);
 
-export default mongoose.model('Project', ProjectSchema);
+export default mongoose.model('Test', TestSchema);

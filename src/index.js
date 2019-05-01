@@ -16,7 +16,6 @@ import queue from './utility/queue';
 import httpError from './utility/error';
 
 import response from './middlewares/response';
-
 mongoose.connect(config.database.uri, {
   useMongoClient: true
 });
@@ -24,6 +23,8 @@ mongoose.connection.on('error', logger.error);
 mongoose.Promise = global.Promise;
 
 const app = new Koa();
+const cors = require('@koa/cors');
+app.use(cors());
 
 app.keys = [config.app.secret, 'testingtool-app'];
 
@@ -51,6 +52,7 @@ app
   }))
   .use(response)
   .use(router)
+    .use(cors()) 
   .use(httpError);
 
 app.on('error', (err) => {

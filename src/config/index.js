@@ -5,6 +5,8 @@ import session from './session';
 import redis from './redis';
 import log from './log';
 import mail from './mail';
+import common from './common';
+import sql from './sql';
 
 const config = {
   app,
@@ -13,7 +15,9 @@ const config = {
   session,
   redis,
   log,
-  mail
+  mail,
+  common,
+  sql
 };
 
 export default config;

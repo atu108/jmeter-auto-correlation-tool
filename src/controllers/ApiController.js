@@ -2,7 +2,7 @@ import {encrypt} from '../utility/helper';
 import jwt from '../utility/jwt';
 
 import User from '../models/User';
-import Project from '../models/Project';
+import Project from '../models/Application';
 import Scenario from '../models/Scenario';
 import Recording from '../models/Recording';
 import Step from '../models/Step';
@@ -11,7 +11,7 @@ import RunValue from '../models/RunValue';
 import ExcludeUrl from '../models/ExcludeUrl';
 import Contact from '../models/Contact';
 import Email from '../utility/mail';
-import config from '../config'
+import config from '../config';
 
 class ApiController{
   constructor(){

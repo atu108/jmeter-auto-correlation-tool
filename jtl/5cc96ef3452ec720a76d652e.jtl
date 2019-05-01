@@ -1,0 +1,27 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1556705090267,408,/,200,OK,Thread Group 1-1,text,true,,8538,0,1,1,http://blazedemo.com/,406,0,0
+1556705090682,2279,/v1/country,200,OK,Thread Group 1-1,text,true,,274,0,1,1,https://location.services.mozilla.com/v1/country?key=7e40f68c-7938-4c5d-9f95-e61647c213eb,2278,0,0
+1556705092961,120,/6/Firefox/66.0.2/20190326175229/Darwin_x86_64-gcc3/en-GB/release/Darwin%2018.5.0/default/default/,200,OK,Thread Group 1-1,text,true,,14212,0,1,1,https://snippets.cdn.mozilla.net/us-west/bundles/bundle_97c23b3901cd9aed0d89638c795c24146f8140c5.json,85,0,0
+1556705092961,85,/6/Firefox/66.0.2/20190326175229/Darwin_x86_64-gcc3/en-GB/release/Darwin%2018.5.0/default/default/-0,302,Moved Temporarily,Thread Group 1-1,text,true,,821,0,1,1,https://snippets.cdn.mozilla.net/6/Firefox/66.0.2/20190326175229/Darwin_x86_64-gcc3/en-GB/release/Darwin%2018.5.0/default/default/,85,0,0
+1556705093048,33,/6/Firefox/66.0.2/20190326175229/Darwin_x86_64-gcc3/en-GB/release/Darwin%2018.5.0/default/default/-1,200,OK,Thread Group 1-1,text,true,,13391,0,1,1,https://snippets.cdn.mozilla.net/us-west/bundles/bundle_97c23b3901cd9aed0d89638c795c24146f8140c5.json,33,0,0
+1556705093082,25,/us-west/bundles/bundle_97c23b3901cd9aed0d89638c795c24146f8140c5.json,304,Not Modified,Thread Group 1-1,,true,,473,0,1,1,https://snippets.cdn.mozilla.net/us-west/bundles/bundle_97c23b3901cd9aed0d89638c795c24146f8140c5.json,25,0,0
+1556705093108,180,/favicon.ico,200,OK,Thread Group 1-1,bin,true,,211,0,1,1,http://blazedemo.com/favicon.ico,180,0,0
+1556705090247,3012,launch,200,"Number of samples in transaction : 5, number of failing samples : 0",Thread Group 1-1,,true,,23708,0,1,1,null,2974,30,0
+1556705093289,0,Step_3,200,"Number of samples in transaction : 0, number of failing samples : 0",,,true,,0,0,0,0,null,0,0,0
+1556705093289,0,Step_5,200,"Number of samples in transaction : 0, number of failing samples : 0",,,true,,0,0,0,0,null,0,0,0
+1556705097801,539,/reserve.php,200,OK,Thread Group 1-1,text,true,,11132,0,1,1,http://blazedemo.com/reserve.php,539,0,0
+1556705098340,2377,/except-flashallow-digest256/1490633678,200,OK,Thread Group 1-1,text,true,,503,0,1,1,https://tracking-protection.cdn.mozilla.net/except-flashallow-digest256/1490633678,2377,0,0
+1556705100722,1264,/1/firefox/66.0.2/release/en-GB/IN/default/default,200,OK,Thread Group 1-1,text,true,,151,0,1,1,https://search.services.mozilla.com/1/firefox/66.0.2/release/en-GB/IN/default/default,1264,0,0
+1556705101986,7,/allow-flashallow-digest256/1490633678,200,OK,Thread Group 1-1,text,true,,503,0,1,1,https://tracking-protection.cdn.mozilla.net/allow-flashallow-digest256/1490633678,7,0,0
+1556705093289,4187,Step_7,200,"Number of samples in transaction : 4, number of failing samples : 0",Thread Group 1-1,,true,,12289,0,1,1,null,4187,4518,0
+1556705109864,367,/purchase.php,200,OK,Thread Group 1-1,text,true,,10533,0,1,1,http://blazedemo.com/purchase.php,366,0,0
+1556705110231,80,/except-flash-digest256/1494877265,200,OK,Thread Group 1-1,text,true,,535,0,1,1,https://tracking-protection.cdn.mozilla.net/except-flash-digest256/1494877265,80,0,0
+1556705110312,226,/except-flashsubdoc-digest256/1517935265,200,OK,Thread Group 1-1,text,true,,568,0,1,1,https://tracking-protection.cdn.mozilla.net/except-flashsubdoc-digest256/1517935265,226,0,0
+1556705101994,673,Step_8,200,"Number of samples in transaction : 3, number of failing samples : 0",Thread Group 1-1,,true,,11636,0,1,1,null,672,7872,0
+1556705111744,79,/mozstd-trackwhite-digest256/1556295074,200,OK,Thread Group 1-1,text,true,,297183,0,1,1,https://tracking-protection.cdn.mozilla.net/mozstd-trackwhite-digest256/1556295074,21,0,0
+1556705110539,79,Step_9,200,"Number of samples in transaction : 1, number of failing samples : 0",Thread Group 1-1,,true,,297183,0,1,1,null,21,1206,0
+1556705111824,0,Step_15,200,"Number of samples in transaction : 0, number of failing samples : 0",,,true,,0,0,0,0,null,0,0,0
+1556705111824,0,Step_17,200,"Number of samples in transaction : 0, number of failing samples : 0",,,true,,0,0,0,0,null,0,0,0
+1556705111824,0,Step_19,200,"Number of samples in transaction : 0, number of failing samples : 0",,,true,,0,0,0,0,null,0,0,0
+1556705115848,1038,/confirmation.php,200,OK,Thread Group 1-1,text,true,,9574,0,1,1,http://blazedemo.com/confirmation.php,361,0,0
+1556705111824,1038,Step_21,200,"Number of samples in transaction : 1, number of failing samples : 0",Thread Group 1-1,,true,,9574,0,1,1,null,361,4028,0

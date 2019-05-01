@@ -6,7 +6,7 @@ import Compare from '../models/Compare';
 import Difference from '../models/Difference';
 import Request from '../models/Request';
 import Step from "../models/Step";
-import Session from "../models/Session";
+import Transaction from "../models/Transaction";
 import Correlation from "../models/Correlation";
 import RunController from '../controllers/RunController';
 const cheerio = require("cheerio");
@@ -31,7 +31,7 @@ class Backtrack {
     }
 
     async start() {
-        const diffs = await Difference.find({scenario:this.params}).populate('first.request',['sequence']).populate('second.request',['sequence']).populate('session');
+        const diffs = await Difference.find({workflow:this.params}).populate('first.request',['sequence']).populate('second.request',['sequence']).populate('transaction');
         const loopTimes = diffs.length;
         for(let i = 0; i < loopTimes; i++){
             console.log(i);
@@ -87,7 +87,7 @@ class Backtrack {
                 run: runs[0],
                 sequence: { $lt: stepSeq[0] },
                 'response.body': reg,
-            }).sort({ step_sequence: -1 }).populate('session');
+            }).sort({ step_sequence: -1 }).populate('transaction');
             //console.log(matched1);
             if (matched1.length < 1) continue;
 
@@ -95,9 +95,9 @@ class Backtrack {
             const matched2 = await Request.find({
                 run: runs[1],
                 url:matched1[0].url,
-                session_sequence: matched1[0].session_sequence,
+                txn_sequence: matched1[0].txn_sequence,
                 'response.body': reg1
-            }).sort({ step_sequence: -1 }).populate('session');
+            }).sort({ step_sequence: -1 }).populate('transaction');
             const matched = matched1[0].response.body.match(new RegExp(regArr[i].replace('<(.*?)', '(.[^<]*?)').replace('(.*?)>','(.*?)>{1}'), 'gi'));
             const matchedOtherRun = matched2.length > 0 ? matched2[0].response.body.match(new RegExp(regArr1[i].replace('<(.*?)', '(.[^<]*?)').replace('(.*?)>','(.*?)>{1}'), 'gi')) : 'NA';
 
@@ -122,8 +122,8 @@ class Backtrack {
                 first: {
                     url: matched1[0].url,
                     matched: finalReg.hasOwnProperty('pos1')?matched[finalReg['pos1']]:matched.join('||'),
-                    session_title: matched1[0].session.title,
-                    session_sequence:  matched1[0].session.sequence,
+                    txn_title: matched1[0].transaction.title,
+                    txn_sequence:  matched1[0].transaction.sequence,
                     request:matched1[0]._id,
                     run: matched1[0].run
 
@@ -131,13 +131,13 @@ class Backtrack {
                 second: {
                     url: matched2[0] ? matched2[0].url : 'NA',
                     matched: finalReg.hasOwnProperty('pos2')?matchedOtherRun[finalReg['pos2']]:matchedOtherRun !== 'NA'?matchedOtherRun.join('||'):'NA',
-                    session_title: matched2[0].session.title,
-                    session_sequence:  matched2[0].session.sequence,
+                    txn_title: matched2[0].transaction.title,
+                    txn_sequence:  matched2[0].transaction.sequence,
                     request:matched2[0]._id,
                     run: matched2[0].run
 
                 },
-                scenario:diff.scenario
+                workflow:diff.workflow
             }
 
         }
@@ -310,7 +310,6 @@ class Backtrack {
 // this to comapre urls and fix their param values
     _compareUrl(url1,url2){
         //to do:- handle whole url rather than only params
-
         console.log("reached inside url match", url1, "url 2", url2)
         try{
             const loc1 = new URL(url1);
@@ -405,10 +404,10 @@ class Backtrack {
                 sequence: 'Not Found',
             }
         }
-        const session = await Session.find({ _id: id });
+        const transaction = await Transaction.find({ _id: id });
         return {
-            file: session[0].title,
-            sequence: session[0].sequence,
+            file: transaction[0].title,
+            sequence: transaction[0].sequence,
         }
     }
 
@@ -456,14 +455,14 @@ class Backtrack {
             }
             console.log("tag found in first", tags.value, tags.type);
             console.log("url to be found", allRequests[i].url);
-            console.log("request detail", allRequests[i].request.method, "session",allRequests[i].session_sequence, "id",allRequests[i].session);
+            console.log("request detail", allRequests[i].request.method, "transaction",allRequests[i].txn_sequence, "id",allRequests[i].transaction);
             if(tags.value && tags.value.length > 0){
-                let second = await Request.find({run:runs[1], url:allRequests[i].url, session_sequence:allRequests[i].session_sequence, 'request.method':allRequests[i].request.method});
+                let second = await Request.find({run:runs[1], url:allRequests[i].url, txn_sequence:allRequests[i].transaction_sequence, 'request.method':allRequests[i].request.method});
                 if(!second[0]){
                     const findParent = await Difference.find({"first.value": allRequests[i].url});
                     console.log(findParent);
                     if(findParent[0]){
-                        second = await Request.find({run:runs[1], url: findParent[0].second.value, session_sequence:allRequests[i].session_sequence, 'request.method':allRequests[i].method});
+                        second = await Request.find({run:runs[1], url: findParent[0].second.value, txn_sequence:allRequests[i].txn_sequence, 'request.method':allRequests[i].method});
                     }
 
                 }
@@ -499,8 +498,8 @@ class Backtrack {
                             first: {
                                 url: allRequests[i].url,
                                 matched: cheerio.html(forFinalReg[0]),
-                                session_title: allRequests[i].session.title,
-                                session_sequence:  allRequests[i].session.sequence,
+                                txn_title: allRequests[i].transaction.title,
+                                txn_sequence:  allRequests[i].transaction.sequence,
                                 request:allRequests[i]._id,
                                 run: allRequests[i].run,
                                 atPos:'Not Required'
@@ -509,14 +508,14 @@ class Backtrack {
                             second: {
                                 url: second[0].url,
                                 matched: cheerio.html(forFinalReg[1]),
-                                session_title: second[0].session.title,
-                                session_sequence:  second[0].session.sequence,
+                                txn_title: second[0].transaction.title,
+                                txn_sequence:  second[0].transaction.sequence,
                                 request: second[0]._id,
                                 run: second[0].run,
                                 atPos:'Not Required'
                 
                             },
-                            scenario:diff.scenario,
+                            workflow:diff.workflow,
                             difference:diff._id
                         }
                     }
@@ -595,18 +594,17 @@ class Backtrack {
     }
 
     _getRegName(final,matched,value,key){
-    let resultArr = matched.match(new RegExp(final+">"))
-    if(resultArr.length === 2){
-        return key+"_COR"
-    }
-    for(let i = 1; i < resultArr.length; i++){
-        if(resultArr[i].replace(/"/g, '').replace(/'/g,'') === value){
-            return key+"_COR_g"+i;
-        }else{
-            console.log(resultArr[i].replace('"', '',g))
+        let resultArr = matched.match(new RegExp(final+">"))
+        if(resultArr.length === 2){
+            return key+"_COR"
         }
-    }
-    
+        for(let i = 1; i < resultArr.length; i++){
+            if(resultArr[i].replace(/"/g, '').replace(/'/g,'') === value){
+                return key+"_COR_g"+i;
+            }else{
+                console.log(resultArr[i].replace('"', '',g))
+            }
+        }
     }
     _getAnchorRegName(final, matched, value, condition, splitWith){
         let toReplace = [];
@@ -692,16 +690,16 @@ class Backtrack {
             //  anchor1 = anchor1.length > 0 ? anchor1 : $('a[href='+value1.split('.com/')[1]+']').toArray();
             //  console.log("achor1 in next search", anchor1)
             //  console.log("inputs check", typeof inputs, "all inouts", inputs[0]);
-        console.log("checking values", request.url, request.session_sequence );
+        console.log("checking values", request.url, request.txn_sequence );
         console.log("checkinf if found", anchor1);
         if(anchor1.length > 0){
             console.log("checking condition", condition)
-            let second = await Request.find({run:runs[1],url: request.url, session_sequence:request.session_sequence, 'request.method':request.request.method});
+            let second = await Request.find({run:runs[1],url: request.url, txn_sequence:request.txn_sequence, 'request.method':request.request.method});
             // console.log("second top section", second[0].response.body);
             if(!second[0]){
                 const findParent = await Difference.find({"first.value":request.url});
                 if(findParent[0]){
-                    second = await Request.find({run:runs[1],url: findParent[0].second.value, session_sequence:request.session_sequence, 'request.method':request.request.method});
+                    second = await Request.find({run:runs[1],url: findParent[0].second.value, txn_sequence:request.txn_sequence, 'request.method':request.request.method});
                 }
             }
             let newBody2 = second[0].response.body.replace((/\\/g, ""));
@@ -772,8 +770,8 @@ class Backtrack {
                         first: {
                             url: request.url,
                             matched: cheerio.html(forFinalReg[0]),
-                            session_title: request.session.title,
-                            session_sequence:  request.session.sequence,
+                            txn_title: request.transaction.title,
+                            txn_sequence:  request.transaction.sequence,
                             request:request._id,
                             run: request.run,
                             atPos: counts[0]?counts[0]:false
@@ -783,14 +781,14 @@ class Backtrack {
 
                             url: second[0].url,
                             matched: cheerio.html(forFinalReg[1]),
-                            session_title: second[0].session.title,
-                            session_sequence:  second[0].session.sequence,
+                            txn_title: second[0].transaction.title,
+                            txn_sequence:  second[0].transaction.sequence,
                             request: second[0]._id,
                             run: second[0].run,
                             atPos:counts[1]?counts[1]:false
             
                         },
-                        scenario:diff.scenario,
+                        workflow:diff.workflow,
                         difference:diff._id
                     }
                 }

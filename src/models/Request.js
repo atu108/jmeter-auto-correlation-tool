@@ -8,7 +8,7 @@ const Schema = mongoose.Schema;
 const RequestSchema = new Schema({
   url: String,
   sequence: Number,
-  session_sequence: Number,
+  txn_sequence: Number,
   request: {
     method: String,
     url: String,
@@ -31,14 +31,14 @@ const RequestSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "Step"
   },
-  session:{
+  transaction:{
     type:Schema.Types.ObjectId,
-    ref:"Session"
+    ref:"Transaction"
   },
-    scenario:{
+  workflow:{
         type:Schema.Types.ObjectId,
         ref:"Scenario"
-    },
+  },
   added_on: {
     type: Date,
     default: Date.now,

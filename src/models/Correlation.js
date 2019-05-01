@@ -20,8 +20,8 @@ const CorrelationSchema = new Schema({
     first: {
         url:String,
         matched:String,
-        session_title:String,
-        session_sequence: Number,
+        txn_title:String,
+        txn_sequence: Number,
         request: {
             type: Schema.Types.ObjectId,
             ref: "Request"
@@ -36,11 +36,11 @@ const CorrelationSchema = new Schema({
     second: {
         url:String,
         matched:String,
-        session_title:{
+        txn_title:{
             type:String,
             default:''
         },
-        session_sequence:{
+        txn_sequence:{
             type:Number,
             default:0
         },
@@ -54,9 +54,9 @@ const CorrelationSchema = new Schema({
         },
         atPos: Number
     },
-    scenario:{
+    workflow:{
         type: Schema.Types.ObjectId,
-        ref:"Scenario"
+        ref:"Workflow"
     },
     difference:{
         type: Schema.Types.ObjectId,

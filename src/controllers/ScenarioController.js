@@ -1,7 +1,5 @@
 import template from '../utility/template';
 import {to, writeCSV} from '../utility/helper';
-
-import Project from '../models/Project';
 import Scenario from '../models/Scenario';
 import Recording from '../models/Recording';
 import Step from '../models/Step';
@@ -16,24 +14,6 @@ var dateFormat = require('dateformat');
 var now = new Date();
 var forFileName = dateFormat(now, "dd-mm-yyyy-h:MM:ssTT");
 import config from '../config';
-
-const _tabs = [{
-  label: "Runs",
-  action: "runs",
-  controller: "scenario"
-},{
-  label: "Steps",
-  action: "steps",
-  controller: "scenario"
-},{
-  label: "Differences",
-  action: "differnces",
-  controller: "scenario"
-},{
-  label: "Corelations",
-  action: "corelations",
-  controller: "scenario"
-}];
 
 class ScenarioController{
   constructor(){

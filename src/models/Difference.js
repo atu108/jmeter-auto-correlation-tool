@@ -10,7 +10,7 @@ const DifferenceSchema = new Schema({
   sequence: Number,
   location: String,
   key: String,
-  session_sequence:Number,
+  txn_sequence:Number,
   first: {
     value: String,
     request: {
@@ -33,17 +33,13 @@ const DifferenceSchema = new Schema({
       ref: "Run"
     }
   },
-  step:{
-    type: Schema.Types.ObjectId,
-    ref: "Step"
-  },
-  session:{
+  transaction:{
     type:Schema.Types.ObjectId,
-    ref:"Session"
+    ref:"Transaction"
   },
-  scenario: {
+  workflow: {
     type: Schema.Types.ObjectId,
-    ref: "Scenario"
+    ref: "Workflow"
   },
 
   added_on: {

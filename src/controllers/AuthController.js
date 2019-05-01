@@ -1,5 +1,6 @@
 import User from '../models/User';
 import {encrypt} from '../utility/helper';
+import session from '../utility/session';
 import template from '../utility/template';
 
 class AuthController{
@@ -7,46 +8,64 @@ class AuthController{
     return {
       login: this.login.bind(this),
       register: this.register.bind(this),
-      logout: this.logout.bind(this),
-      getlogin: this.getlogin.bind(this)
+      logout: this.logout.bind(this)
     }
-  }
-
-  async getlogin(ctx){
-    if(ctx.session.user) return ctx.redirect('/app');
-    ctx.body = template.render('app.auth.login', {global: {header: false, footer: false}});
   }
 
   async login(ctx){
       const user = await User.findOne({email: ctx.request.body.email, password: encrypt(ctx.request.body.password)});
+      console.log(ctx.request.body);
       if (user) {
         delete user.password;
-        ctx.session.user = user;
-        ctx.body = JSON.stringify({type: 'success', message: 'Login success, redirecting...', redirect: '/app', _token:'ANJPP4070F', user});
+        const token = await session.set(user);
+        let data = {
+          first_name: user.first_name,
+          last_name: user.last_name,
+          email: user.email
+      };
+        ctx.body = {type:"success", message: "Login successfull", data, token};
       }else{
-        ctx.body = JSON.stringify({type: 'error', message: 'Invalid Login details'});
+        ctx.body = {type: 'error', message: 'Invalid Login details'};
       }
       return;
   }
 
   async register(ctx){
-    if(ctx.session.user) return ctx.redirect('/app');
-
-    if (ctx.request.method.toLowerCase() === 'post'){
-      let {first_name, last_name, email, password,company_name } = ctx.request.body;
+      let {first_name, last_name, email, password, company_name } = ctx.request.body;
       const existingUser = await User.findOne({email: ctx.request.body.email});
       if(existingUser){
-        return ctx.body = JSON.stringify({type: 'success', message: 'Email already exists'});
+        return ctx.body = {type: 'success', message: 'Email already exists'};
       }
       await User.create({first_name, last_name, email, password:encrypt(password), company_name})
-      return ctx.body = JSON.stringify({type: 'success', message: 'Registration success, redirecting...', redirect: '/app/auth/login'});
-    }
-
-    ctx.body = template.render('app.auth.register', {global: {header: false, footer: false}});
+      ctx.body = {type: 'success', message: 'Registration successfull'};
   }
 
+//   async sendresetlink(ctx, next) {
+//     const user = await User.findOne({where: {email: ctx.request.body.email}});
+//     if(!user){
+//         let code = getRandomString(10);
+//         await User.update({reset_code:code}, {where: {id: user._id}});
+//         let data = {
+//             to: user.email,
+//             subject: `Reset your password`,
+//             html: 'Click on following link to reset your password: <br>'+
+//             '<a href="">Reset Password<a>'
+//         };
+//         email.send(data);
+//         ctx.body = JSON.stringify({
+//             type: 'success',
+//             message: 'Password reset link has been sent to your email.'
+//         });
+//     }else{
+//         ctx.body = {
+//             type: 'failed',
+//             message: 'Email is not registered yet'
+//         };
+//     }
+// }
+
   async logout(ctx){
-    ctx.session = null;
+    ctx.session = null;``
     ctx.redirect('/');
   }
 }

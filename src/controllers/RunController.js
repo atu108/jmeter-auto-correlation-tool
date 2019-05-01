@@ -16,11 +16,12 @@ import MisMatchUrl from '../models/MisMatchUrl';
 import Backtrack from '../models/Backtrack';
 import ParamSetting from '../models/ParamSetting';
 import Correlation from '../models/Correlation';
-import Scenario from '../models/Scenario';
-import Session from '../models/Session';
+import Workflow from '../models/Workflow';
+import Transaction from '../models/Transaction';
 import ExcludeUrl from '../models/ExcludeUrl';
 import {URL} from 'url';
 import { resolveArray, parseParams } from '../utility/jmxConstants';
+import LoadRunner from '../controllers/LoadRunner';
 const ignoredExt = config.app.ignoredExt;
 var dateFormat = require('dateformat');
 var now = new Date();
@@ -28,28 +29,18 @@ var forFileName = dateFormat(now, "dd-mm-yyyy-h:MM:ssTT");
 class RunController{
   constructor(){
     return {
-      record: this.record.bind(this),
-      save: this.save.bind(this),
       compare: this.compare.bind(this),
       delete: this.delete.bind(this),
       generateJmx : this.generateJmx.bind(this)
     }
   }
 
-  async compare(ctx){
-
-    const exists = await Compare.find({runs: {$in: ctx.request.body.ids}});
-    if(exists && exists.length > 0) return ctx.body = JSON.stringify({
-      type: "error",
-      message: "Already compared."
-    });
-
-    const runs  = await Run.find({_id:ctx.request.body.ids[0]});
-
+  async compare(workflow){
+    const runs = await Run.find({workflow});
     const compare = await Compare.create({
-      title: "Compare Runs " + ctx.request.body.ids.join(", "),
-      runs: ctx.request.body.ids,
-        scenario:runs.scenario,
+      title: "Compare Runs " + runs[0]._id + ',' + runs[1]._id,
+      runs: [runs[0]._id,runs[1]._id],
+      workflow:runs[0].workflow,
       status: "new"
     });
 
@@ -64,43 +55,25 @@ class RunController{
       if(res.comparissions.length > 0){
         await MisMatchUrl.insertMany(res["mismatchedUrls"]);
       }
-
       await Compare.findByIdAndUpdate(res.compare._id, {status: "done"});
       if(differences.length > 0){
-        await this.backtrack(differences[0].scenario, differences[0].first.run)
+        await this.backtrack(differences[0].workflow, differences[0].first.run)
+      }else{
+        await this.generateJmx(runs[0], workflow);
       }
-      
-    });
-
-    ctx.body = JSON.stringify({
-      type: "success",
-      message: "Comparission added in qeueu to process"
     });
   }
 
-  async backtrack(scenario,run1){
-      const job = new Cron('backtrack', scenario);
+  async backtrack(workflow,run1){
+      const job = new Cron('backtrack', workflow);
       job.done( async (res)=>{
       if(res.correlations.length > 0){
           await Correlation.insertMany(res['correlations']);
       }
-      await this.generateJmx(run1, scenario);
+      await this.generateJmx(run1, workflow);
     })
   }
 
-  async save(ctx){
-    const run = await Run.create({
-      scenario: ctx.request.body.scenario,
-      title: ctx.request.body.title,
-      description: ctx.request.body.description,
-      status: "done"
-    });
-    ctx.body = JSON.stringify({
-      type: "success",
-      message: "Recording saved, reloading...",
-      reload: true
-    });
-  }
 
   async delete(ctx){
     await Request.deleteMany({run: {$in : ctx.request.body}});
@@ -114,50 +87,6 @@ class RunController{
     });
   }
 
-  async record(ctx){
-    const run = await Run.update({_id: ctx.request.body.id}, {status: "pending"});
-    ctx.body = JSON.stringify({
-      type: "success",
-      message: "Recording inititated, reloading...",
-      reload: true
-    });
-
-    // request(config.app.harGenerator, {
-    //   method: 'POST',
-    //   body: JSON.stringify({
-    //     chrome: config.app.chrome,
-    //     run_id: ctx.request.body.id,
-    //     temp: config.storage.temp
-    //   })
-    // }).then(res => {
-    //   if(res.status === 200) this._create_video(ctx.request.body.id);
-    // }).catch(err => console.log(err));
-
-
-  }
-
-  async _create_video(id){
-    const images = filesInDir(config.storage.temp + id);
-    const videoOptions = {
-      fps: 2,
-      transition: false,
-      videoBitrate: 1024,
-      videoCodec: 'libx264',
-      size: '1920x?',
-      audioBitrate: '128k',
-      audioChannels: 2,
-      format: 'mp4',
-      pixelFormat: 'yuv420p'
-    }
-
-    videoshow(images, videoOptions)
-      .save(config.storage.path + "videos/" + id + ".mp4")
-      .on("end", o => {
-        console.log("Video created in:", o);
-        removeDir(config.storage.temp + id, () => console.log("Temp files deleted"));
-      })
-      .on("error", (e, out, err) => console.log(e, err, out));
-  }
 
   async _updateComparision(object){
     let objectCopy = [...object];
@@ -172,22 +101,11 @@ class RunController{
     }
   }
 
-  // async generateJmx(ctx){
-  //   const startXML = '';
-  //   const endXML = '';
-  //
-  //   const dynamicXML = '';
-  //   const sessions = await Session.findAll({scenario:ctx.params.id});
-  //   for(let i = 0; i< sessions.length; i++){
-  //       const requests = await Request.findAll({});
-  //     }
-  // }
-
-  async generateJmx(run, scenario){
+  async generateJmx(run, workflow){
       let ignoredUrls = await ExcludeUrl.find({});
       ignoredUrls = ignoredUrls.map(obj=>obj.url)
       const paramsSettingData = await ParamSetting.find({
-        scenario
+        workflow
       })
       // run will be paseed to this function
       const startXml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
@@ -285,10 +203,10 @@ class RunController{
           '  </hashTree>\n' +
           '</jmeterTestPlan>';
       let dynamicData = '';
-      const sessions = await Session.find({run});
-      for(let i = 0; i < sessions.length; i++){
-          let requests = await Request.find({session:sessions[i]._id}).sort({sequence: 1});
-          dynamicData += `<TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="${sessions[i].title}" enabled="true">
+      const transactions = await Transaction.find({run}).sort({"sequence": 1});
+      for(let i = 0; i < transactions.length; i++){
+          let requests = await Request.find({transaction:transactions[i]._id}).sort({"sequence": 1});
+          dynamicData += `<TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="${transactions[i].title}" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
           <boolProp name="TransactionController.parent">false</boolProp>
         </TransactionController><hashTree>`;
@@ -301,7 +219,7 @@ class RunController{
               // console.log("data to read", moreDynamic);
               //let hasDiff = await Difference.find({"first.request":requests[j]._id});
               let myURL = new URL(requests[j].request.url);
-              const urlWithCorAndPar = await parseParams(requests[j], requests[j].request.url, sessions[i].title);
+              const urlWithCorAndPar = await parseParams(requests[j], requests[j].request.url, transactions[i].title);
               //removing headers which have : in their name
               requests[j].request.headers = requests[j].request.headers.filter(header => Object.keys(header)[0][0] !== ':')
               dynamicData += `<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="${myURL.pathname}" enabled="true">
@@ -355,14 +273,14 @@ class RunController{
           }
           dynamicData +='</hashTree>'
       }
-      // const  runDetails = await Run.findById(run).populate('scenario');
-      // console.log("jmx to read",dynamicData);
-      const scenarioDetails = await Scenario.find({_id:scenario});
-      const fileName = `${scenarioDetails[0].name.split(' ').join('_')}_${forFileName}.jmx`;
-      await Scenario.findByIdAndUpdate(scenario,{jmx_file_name:fileName}) ;
+      const workflowDetails = await Workflow.find({_id: workflow});
+      const fileName = `${workflowDetails[0].name.split(' ').join('_')}_${forFileName}.jmx`;
+      await Workflow.findByIdAndUpdate(workflow,{jmx_file_name:fileName}) ;
       let file = fs.createWriteStream(`${config.storage.path}${fileName}`);
       file.write(startXml+ dynamicData+ endXml);  
       file.close();
+      await Workflow.update({_id: workflow},{jmx: true})
+      await LoadRunner.exectuteJmeter(`${config.storage.path}${fileName}`, workflowDetails[0].application)
       return true;
   }
     _encodeHtml(str){

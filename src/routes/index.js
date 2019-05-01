@@ -3,17 +3,19 @@ import combineRouters from 'koa-combine-routers';
 import page from './page';
 import auth from './auth';
 import api from './api';
-import project from './project';
+import application from './application';
 import scenario from './scenario';
-import run from './run';
-import session from './session';
+import workflow from './workflow';
+import performance from './performance';
+import load from './load';
 
 export default combineRouters([
   page,
   auth,
-  project,
+  application,
   scenario,
-  run,
   api,
-  session
+  workflow,
+  performance,
+  load
 ]);

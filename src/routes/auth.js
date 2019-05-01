@@ -7,9 +7,7 @@ const router = new Router({
 });
 
 router.get('/logout', AuthController.logout)
-  .get('/login', AuthController.getlogin)
   .post('/login', AuthController.login)
-  .get('/register', AuthController.register)
   .post('/register', AuthController.register);
 
 export default router;
