@@ -121,7 +121,7 @@ class PerformanceController {
   async totalErrorPerSecond(ctx) {
     try {
       const { application_id , test_id } = ctx.request.body;
-      const q = `select round(ptr.timeStamp/1000) as timeStamp, count(ptr.responseMessage) as errorCount from performance_test_report ptr where ptr.responseMessage like '\"Number of samples in transaction%\' and ptr.application_id= '${application_id}' and ptr.test_id = '${test_id}' group by round(ptr.timeStamp/1000) order by round(ptr.timeStamp/1000)`;
+      const q = `select round(ptr.timeStamp/1000) as timeStamp, count(ptr.responseMessage) as errorCount from performance_test_report ptr where ptr.responseMessage like '\"Number of samples in transaction%\' and ptr.success = "false" and ptr.application_id= '${application_id}' and ptr.test_id = '${test_id}' group by round(ptr.timeStamp/1000) order by round(ptr.timeStamp/1000)`;
       const error = await pool.query(q);
       return ctx.body = {
         success: true,

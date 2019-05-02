@@ -5,9 +5,10 @@ import { CostExplorer } from 'aws-sdk';
 const util = require('util')
 import Application from '../models/Application';
 import PerformanceController from '../controllers/PerformanceController';
+import RunController from '../controllers/RunController';
 import Test from '../models/Test';
+import pool from '../middlewares/database';
 const fs_writeFile = util.promisify(fs.writeFile)
-
 class LoadRunner {
     constructor() {
         return {
@@ -15,18 +16,14 @@ class LoadRunner {
         }
     }
 
-async exectuteJmeter(jmxFilePath, applicationId) {
-        //give file path
-        // count of run 
-        // appliction id 
-        //execute jmeter with jmx file 
-        //when jtl created call jtl dumper
+async exectuteJmeter(jmxFilePath, applicationId, user_load) {
+        const today = new Date();
         const test = await Test.create({
-            name:"Test_" + applicationId,
+            name:`Test_${user_load}VU_${today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()}`,
             application: applicationId
         })
         const jtlPath = "/Users/atul/webroot/perfeasy/jtl/" + applicationId + ".jtl";
-        const child = spawn('jmeter', ['-n', '-t', jmxFilePath, '-l', jtlPath])
+        const child = spawn('jmeter', ['-n', '-Jthreads=5', "-Jduration=-1", "-Jloop=10",'-t', jmxFilePath, '-l', jtlPath])
         child.stdout.setEncoding('utf8');
         child.stdout.on('data', async (chunk) => {
             console.log("reached chunk")
@@ -42,8 +39,40 @@ async exectuteJmeter(jmxFilePath, applicationId) {
         // if(!child.connected){
         // }
     }
-   
-async dumper(jtlFilePath, applicationId, testId){
+    // a.	Use the script with default think time values
+    // b.	User load : 10% of maximum user load (distributed as per the %age distribution across thread groups)
+    // c.	Duration of test : 10 Minutes
+    // d.	Rampup: 5 minutes
+    // Run subsequent load test based on the analysis values given below (the values should vary between 5 users till max user load)
+    // Analyse: If Failure % age is 
+    // a)	0%: Increase the load by (mid value between last test and max load)
+    // b)	Less than 25%: Increase the load by (25% values between last test and max load)
+    // c)	greater than 25% to 39% : Increase the load by 10% of last test
+    // d)	greater than 40%: reduce the load by 30%
+    
+
+    // async processOnExit(){
+    //     const failPercent;
+    //     if(failPercent === 0){
+
+    //     }else if(failPercent <= 25){
+
+    //     } else if(failPercent > 25 && failPercent < 40){
+
+    //     }else{
+
+    //     }
+    // }
+
+    // async checkFailPercent(){
+
+    // }
+
+    // async calculateLoadValue(){
+
+    // }
+
+    async dumper(jtlFilePath, applicationId, testId){
     console.log("reached dumper")
     fs.readFile(jtlFilePath, 'utf-8', async function (err, data) {
         console.log("error in reading", err)

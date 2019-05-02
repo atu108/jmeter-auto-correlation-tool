@@ -54,7 +54,7 @@ class WorkflowController{
   }
 
   async save(ctx){
-    let {name, description, application, user_load} = ctx.request.body.fields;
+    let {name, description, application, user_load, duration, rampup_duration, loop_count} = ctx.request.body.fields;
     let readStream = null;
     try {
          readStream = JSON.parse(fs.readFileSync(ctx.request.body.files.file.path));
@@ -70,7 +70,7 @@ class WorkflowController{
         let allCommands = readStream['tests'][0]['commands'];
         console.log("allcommands",JSON.stringify(allCommands));
         let start_url = readStream['url'] + readStream['tests'][0]['commands'][0]['target']
-        const workflow = await Workflow.create({name, description, application, start_url, user_load, file: ctx.request.body.files.file.name});
+        const workflow = await Workflow.create({name, description, loop_count, application, start_url, user_load, duration, rampup_duration, file: ctx.request.body.files.file.name});
         const run = await Run.create({sequence:1, workflow: workflow._id})
         allCommands.map( (obj, index) => {
           delete obj.id

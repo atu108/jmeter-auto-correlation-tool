@@ -107,6 +107,8 @@ class RunController{
       const paramsSettingData = await ParamSetting.find({
         workflow
       })
+      const workflowDetails = await Workflow.find({_id: workflow});
+      // const {user_load, duration} = workflowDetails[0];
       // run will be paseed to this function
       const startXml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
           '<jmeterTestPlan version="1.2" properties="3.2" jmeter="3.3 r1808647">\n' +
@@ -143,18 +145,18 @@ class RunController{
                <stringProp name="variableNames">${data.key}_par</stringProp>
                  </CSVDataSet>
                 <hashTree/>`).join('') +
-          '      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="true">\n' +
+          '     <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="true">\n' +
           '        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>\n' +
           '        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">\n' +
-          '          <boolProp name="LoopController.continue_forever">false</boolProp>\n' +
-          '          <stringProp name="LoopController.loops">1</stringProp>\n' +
+          '          <boolProp name="LoopController.continue_forever">${__P(isLoop),}</boolProp>\n' +
+          '          <stringProp name="LoopController.loops">${__P(loop,)}</stringProp>\n' +
           '        </elementProp>\n' +
-          '        <stringProp name="ThreadGroup.num_threads">1</stringProp>\n' +
-          '        <stringProp name="ThreadGroup.ramp_time">1</stringProp>\n' +
+          '        <stringProp name="ThreadGroup.num_threads">${__P(threads,)}</stringProp>\n' +
+          '        <stringProp name="ThreadGroup.ramp_time">${__P(rampup,)}</stringProp>\n' +
           '        <longProp name="ThreadGroup.start_time">1511866023000</longProp>\n' +
           '        <longProp name="ThreadGroup.end_time">1511866023000</longProp>\n' +
-          '        <boolProp name="ThreadGroup.scheduler">false</boolProp>\n' +
-          '        <stringProp name="ThreadGroup.duration"></stringProp>\n' +
+          '        <boolProp name="ThreadGroup.scheduler">${__P(isDuration),}</boolProp>\n' +
+          '        <stringProp name="ThreadGroup.duration">${__P(duration,)}</stringProp>\n' +
           '        <stringProp name="ThreadGroup.delay"></stringProp>\n' +
           '      </ThreadGroup>\n' +
           '      <hashTree>';
@@ -273,14 +275,13 @@ class RunController{
           }
           dynamicData +='</hashTree>'
       }
-      const workflowDetails = await Workflow.find({_id: workflow});
       const fileName = `${workflowDetails[0].name.split(' ').join('_')}_${forFileName}.jmx`;
       await Workflow.findByIdAndUpdate(workflow,{jmx_file_name:fileName}) ;
       let file = fs.createWriteStream(`${config.storage.path}${fileName}`);
       file.write(startXml+ dynamicData+ endXml);  
       file.close();
       await Workflow.update({_id: workflow},{jmx: true})
-      await LoadRunner.exectuteJmeter(`${config.storage.path}${fileName}`, workflowDetails[0].application)
+      await LoadRunner.exectuteJmeter(`${config.storage.path}${fileName}`, workflowDetails[0].application, workflowDetails)
       return true;
   }
     _encodeHtml(str){
