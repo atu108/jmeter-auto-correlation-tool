@@ -31,7 +31,8 @@ class RunController{
     return {
       compare: this.compare.bind(this),
       delete: this.delete.bind(this),
-      generateJmx : this.generateJmx.bind(this)
+      generateJmx : this.generateJmx.bind(this),
+      recreate: this.recreate.bind(this)
     }
   }
 
@@ -102,6 +103,7 @@ class RunController{
   }
 
   async generateJmx(run, workflow){
+    console.log("for rerun using api ", run, "wokrflow", workflow )
       let ignoredUrls = await ExcludeUrl.find({});
       ignoredUrls = ignoredUrls.map(obj=>obj.url)
       const paramsSettingData = await ParamSetting.find({
@@ -276,13 +278,20 @@ class RunController{
           dynamicData +='</hashTree>'
       }
       const fileName = `${workflowDetails[0].name.split(' ').join('_')}_${forFileName}.jmx`;
+      console.log("jmeter", fileName)
       await Workflow.findByIdAndUpdate(workflow,{jmx_file_name:fileName}) ;
       let file = fs.createWriteStream(`${config.storage.path}${fileName}`);
       file.write(startXml+ dynamicData+ endXml);  
       file.close();
       await Workflow.update({_id: workflow},{jmx: true})
-      await LoadRunner.exectuteJmeter(`${config.storage.path}${fileName}`, workflowDetails[0].application, workflowDetails)
+     setTimeout( async ()=>{
+      await LoadRunner.prepareJmeter(`${config.storage.path}${fileName}`, workflowDetails[0])
+     }, 1*60*1000);
       return true;
+  }
+
+  async recreate(ctx){
+    await this.generateJmx(ctx.params.run, ctx.params.workflow);
   }
     _encodeHtml(str){
         const escapeChars = {

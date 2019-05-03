@@ -7,7 +7,7 @@ const router = new Router({
   prefix: '/app'
 });
 
-router.get('/runJmeter', LoadRunnerController.exectuteJmeter)
+// router.get('/runJmeter', LoadRunnerController.exectuteJmeter)
   
   
 export default router;

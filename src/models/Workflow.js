@@ -13,6 +13,8 @@ const WorkflowSchema = new Schema({
  jmx_file_name: String,
  user_load: Number,
  duration: Number,
+ rampup_duration: Number,
+ loop_count: Number,
  application: {
     type: Schema.Types.ObjectId,
     ref: "Application"

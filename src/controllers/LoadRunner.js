@@ -1,128 +1,194 @@
 import path from 'path';
 import { exec, spawn } from 'child_process';
 import fs from 'fs';
-import { CostExplorer } from 'aws-sdk';
 const util = require('util')
 import Application from '../models/Application';
 import PerformanceController from '../controllers/PerformanceController';
 import RunController from '../controllers/RunController';
 import Test from '../models/Test';
 import pool from '../middlewares/database';
-const fs_writeFile = util.promisify(fs.writeFile)
+import config from '../config';
 class LoadRunner {
     constructor() {
         return {
-            exectuteJmeter: this.exectuteJmeter.bind(this)
+            prepareJmeter: this.prepareJmeter.bind(this)
         }
     }
 
-async exectuteJmeter(jmxFilePath, applicationId, user_load) {
+    async exectuteJmeter(workflowDetails, jmxFilePath, jmeterCommand, lastUserLoad, previousUserLoads, jtlPath, lastAcceptedUserLoad) {
         const today = new Date();
         const test = await Test.create({
-            name:`Test_${user_load}VU_${today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()}`,
-            application: applicationId
+            name: `Test_${lastUserLoad}VU_${today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()}`,
+            application: workflowDetails.application
         })
-        const jtlPath = "/Users/atul/webroot/perfeasy/jtl/" + applicationId + ".jtl";
-        const child = spawn('jmeter', ['-n', '-Jthreads=5', "-Jduration=-1", "-Jloop=10",'-t', jmxFilePath, '-l', jtlPath])
+        const child = spawn('jmeter', jmeterCommand);
         child.stdout.setEncoding('utf8');
         child.stdout.on('data', async (chunk) => {
-            console.log("reached chunk")
+            console.log("reading chunk", chunk)
             if (chunk.indexOf("end of run") >= 0) {
                 console.log("condition runing")
-                await this.dumper(jtlPath, applicationId , test['_id']);
+                await this.dumper(jtlPath, workflowDetails.application, test['_id']);
+                await this.prepareJmeter(jmxFilePath, workflowDetails, test['_id'], lastUserLoad, previousUserLoads, lastAcceptedUserLoad)
             }
         });
         child.on('close', (code) => {
             console.log(`child process exited with code ${code}`);
         });
-        console.log(child.connected)
-        // if(!child.connected){
-        // }
     }
-    // a.	Use the script with default think time values
-    // b.	User load : 10% of maximum user load (distributed as per the %age distribution across thread groups)
-    // c.	Duration of test : 10 Minutes
-    // d.	Rampup: 5 minutes
-    // Run subsequent load test based on the analysis values given below (the values should vary between 5 users till max user load)
-    // Analyse: If Failure % age is 
-    // a)	0%: Increase the load by (mid value between last test and max load)
-    // b)	Less than 25%: Increase the load by (25% values between last test and max load)
-    // c)	greater than 25% to 39% : Increase the load by 10% of last test
-    // d)	greater than 40%: reduce the load by 30%
-    
 
-    // async processOnExit(){
-    //     const failPercent;
-    //     if(failPercent === 0){
+    //
+    async calculateUserLoad(failPercent, lastUserLoad, maxUserLoad, lastAcceptedUserLoad) {
+        if (failPercent === 0) {
+            return Math.round((lastUserLoad + Math.round((maxUserLoad - lastUserLoad) / 2)) / 10) * 10
+        } else if (failPercent <= 25) {
+            return Math.round((lastUserLoad + Math.round((maxUserLoad - lastUserLoad) * 0.25)) / 10) * 10
+        } else if (failPercent > 25 && failPercent < 40) {
+            return Math.round((lastUserLoad + Math.round((maxUserLoad - lastUserLoad) * 0.2)) / 10) * 10
+        } else {
+            return Math.round((lastUserLoad + lastAcceptedUserLoad)/2)
+        }
+    } 
 
-    //     }else if(failPercent <= 25){
 
-    //     } else if(failPercent > 25 && failPercent < 40){
 
-    //     }else{
+    async prepareJmeter(jmxFilePath, workflowDetails, testId = null, lastUserLoad = 0, previousUserLoads = [], lastAcceptedUserLoad = 0) {
+        let jtlPath = await this.getJtlPath(workflowDetails.application);
+        const { user_load, duration, rampup_duration, loop_count } = workflowDetails;
+        const testCount = await Test.count({ application: workflowDetails.application })
+        console.log("testCOunt", testCount)
+        const maxUserLoad = user_load;
+        let currentUserLoad = 0;
+        if (testCount === 0) {
+            previousUserLoads.push(maxUserLoad * 0.1);
+            lastUserLoad = maxUserLoad * 0.1;
+            currentUserLoad = maxUserLoad * 0.1;
+            jtlPath = jtlPath + currentUserLoad + '.jtl';
+            const jmeterCommand = await this.prepareJmeterCommand(currentUserLoad, duration, rampup_duration, loop_count, jmxFilePath, jtlPath);
+            console.log("jemtere command prepared", jmeterCommand)
+            this.exectuteJmeter(workflowDetails, jmxFilePath, jmeterCommand, lastUserLoad, previousUserLoads, jtlPath, lastAcceptedUserLoad);
+            console.log("called for first run with user", currentUserLoad);
+        } else {
+            console.log("called in else 2nd time");
+            const failPercent = await this.getFailurePercent(testId);
+            console.log("checking fail percent ", failPercent)
+            console.log("max and last", lastUserLoad, maxUserLoad)
+            if(failPercent <= 40){
+                lastAcceptedUserLoad = lastUserLoad;
+            }
+            currentUserLoad = await this.calculateUserLoad(failPercent, lastUserLoad, maxUserLoad, lastAcceptedUserLoad);
+            console.log("current user load", currentUserLoad)
+            if (previousUserLoads.indexOf(currentUserLoad) != -1 || currentUserLoad < 5 || currentUserLoad > maxUserLoad) {
+                console.log("runs finised")
+                return;
+            }
+            previousUserLoads.push(currentUserLoad);
+            lastUserLoad = currentUserLoad;
+            jtlPath = jtlPath + currentUserLoad + '.jtl';
+            const jmeterCommand = await this.prepareJmeterCommand(currentUserLoad, duration, rampup_duration, loop_count, jmxFilePath, jtlPath);
+            console.log("jemtere command prepared ", jmeterCommand)
+            this.exectuteJmeter(workflowDetails, jmxFilePath, jmeterCommand, lastUserLoad, previousUserLoads, jtlPath, lastAcceptedUserLoad);
+            console.log("exectuded another run with %s users", currentUserLoad)
+        }
+    }
 
-    //     }
-    // }
+    async getFailurePercent(test_id) {
+        const q = `select ((count(ptr.success) * 100) / (select count(*) from performance_test_report where test_id = '${test_id}' and responseMessage like '\"Number of samples in transaction%\')) as failPercent from performance_test_report ptr where ptr.success= 'false' and ptr.test_id = '${test_id}' and ptr.responseMessage like '\"Number of samples in transaction%\'`;
+        console.log("query", q)
+        const failPercent = await pool.query(q);
+        console.log("fail percent beofre parsing", typeof failPercent, failPercent)
+        return failPercent[0].failPercent ? failPercent[0].failPercent : 0;
+    }
 
-    // async checkFailPercent(){
+    async getJtlPath(name) {
+        console.log(config.storage.jtlPath + name + '/')
+        if (!fs.existsSync(config.storage.jtlPath + name + '/')) {
+            fs.mkdirSync(config.storage.jtlPath + name + '/');
+        }
+        console.log("path", config.storage.jtlPath + name + '/')
+        return config.storage.jtlPath + name + '/'
+    }
 
-    // }
+    async prepareJmeterCommand(userLoad, duration, rampup, loop_count, jmxPath, jtlPath) {
+        const commandObj = {
+            "isDuration": "-JisDuration=",
+            "isLoop": "-JisLoop=",
+            "duration": "-Jduration=",
+            "loop": "-Jloop=",
+            "rampup": "-Jrampup=",
+            "threads": "-Jthreads="
+        }
+        let commandArr = ['-n'];
+        const defautCommand = ['-t', jmxPath, '-l', jtlPath]
+        commandArr.push(commandObj.threads + userLoad)
+        commandArr.push(commandObj.rampup + rampup)
+        if (!duration) {
+            commandArr.push(commandObj.isDuration + "false")
+            commandArr.push(commandObj.duration + '')
+            commandArr.push(commandObj.isLoop + "false")
+            commandArr.push(commandObj.loop + loop_count)
+        } else {
+            commandArr.push(commandObj.isDuration + "true")
+            commandArr.push(commandObj.duration + duration)
+            commandArr.push(commandObj.isLoop + "false")
+            commandArr.push(commandObj.loop + '-1')
+        }
+        return [...commandArr, ...defautCommand];
+    }
 
-    // async calculateLoadValue(){
+    // agar duration nai aaya hai to isDuration false duration blank hoga isLoop bhi false Loopcout ki valuye hogi
+    // agar duration ki value hai isDuration true and duration mai duration ki value Isloop true loopCount blank rahega 
 
-    // }
-
-    async dumper(jtlFilePath, applicationId, testId){
-    console.log("reached dumper")
-    fs.readFile(jtlFilePath, 'utf-8', async function (err, data) {
-        console.log("error in reading", err)
-        console.log(data)
-        var headers = [
-            "timeStamp",
-            "elapsed",
-            "label",
-            "responseCode",
-            "responseMessage",
-            "threadName",
-            "dataType",
-            "success",
-            "failureMessage",
-            "bytes",
-            "sentBytes",
-            "grpThreads",
-            "allThreads",
-            "URL",
-            "Filename",
-            "Latency",
-            "Encoding",
-            "SampleCount",
-            "ErrorCount",
-            "IdleTime",
-            "Hostname",
-            "Connect"
-          ]
-        var lines = data.split("\n");
-        var schema = lines[0];
-        lines.splice(0, 1);
-        schema = schema.split(",");
-        var parsed = [];
-        lines.forEach(function(line) {
-          var valArr = line.split(/,(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)/);
-          var entry = {};
-          if(valArr){
-            headers.forEach( head => {
-              let val = valArr[schema.indexOf(head)] === ''? null : valArr[schema.indexOf(head)]
-              entry[head] = val;
-            })
-            entry.application_id = applicationId;
-            entry.test_id = testId
-            console.log(entry)
-            parsed.push(entry);
-          } 
-        });
-        await PerformanceController.save(parsed)
-        console.log("saved performcae data");
-      });
+    async dumper(jtlFilePath, applicationId, testId) {
+        return new Promise(async (resolve, reject) => {
+            fs.readFile(jtlFilePath, 'utf-8', async function (err, data) {
+                console.log("error in reading", err)
+                var headers = [
+                    "timeStamp",
+                    "elapsed",
+                    "label",
+                    "responseCode",
+                    "responseMessage",
+                    "threadName",
+                    "dataType",
+                    "success",
+                    "failureMessage",
+                    "bytes",
+                    "sentBytes",
+                    "grpThreads",
+                    "allThreads",
+                    "URL",
+                    "Filename",
+                    "Latency",
+                    "Encoding",
+                    "SampleCount",
+                    "ErrorCount",
+                    "IdleTime",
+                    "Hostname",
+                    "Connect"
+                ]
+                var lines = data.split("\n");
+                var schema = lines[0];
+                lines.splice(0, 1);
+                schema = schema.split(",");
+                var parsed = [];
+                lines.forEach(function (line) {
+                    var valArr = line.split(/,(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)/);
+                    var entry = {};
+                    if (valArr) {
+                        headers.forEach(head => {
+                            let val = valArr[schema.indexOf(head)] === '' ? null : valArr[schema.indexOf(head)]
+                            entry[head] = val;
+                        })
+                        entry.application_id = applicationId;
+                        entry.test_id = testId
+                        parsed.push(entry);
+                    }
+                });
+                await PerformanceController.save(parsed)
+                resolve()
+                console.log("saved performcae data");
+            });
+        })
     }
 }
 

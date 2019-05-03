@@ -320,7 +320,7 @@ class PerformanceController {
   async errorPerSecByDescVUser(ctx){
     try{
       const { application_id , test_id } = ctx.request.body;
-      const q = `select ptr.responseMessage, round(ptr.timeStamp/1000) as timeStamp, count(ptr.responseMessage) as countRes performance.performance_test_report ptr where ptr.responseMessage not like '\"Number of samples in transaction%' and ptr.success = 'false' and ptr.application_id= '${application_id}' and ptr.test_id = '${test_id}' group by round(ptr.timeStamp/1000), ptr.responseMessage order by round(ptr.timeStamp/1000)`;
+      const q = `select ptr.responseMessage, round(ptr.timeStamp/1000) as timeStamp, count(ptr.responseMessage) as countRes from performance.performance_test_report ptr where ptr.responseMessage not like '\"Number of samples in transaction%' and ptr.success = 'false' and ptr.application_id= '${application_id}' and ptr.test_id = '${test_id}' group by round(ptr.timeStamp/1000), ptr.responseMessage order by round(ptr.timeStamp/1000)`;
       const errorPerVuser = await pool.query(q);
       const q2 = `select round(ptr.timeStamp/1000) as timeStamp, max(ptr.allThreads) as user from performance_test_report ptr where application_id= '${application_id}' and test_id = '${test_id}' group by round(ptr.timeStamp/1000), ptr.hostname order by round(ptr.timeStamp/1000)`
       const vuser = await pool.query(q2);
