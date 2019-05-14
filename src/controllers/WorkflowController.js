@@ -6,6 +6,7 @@ import SeleniumStep from '../models/SeleniumStep';
 import Dropdown from '../models/Dropdown';
 import axios from 'axios';
 import Transaction from '../models/Transaction';
+import Application from '../models/Application';
 import Request from '../models/Request';
 import SeleniumStepValue from '../models/SeleniumStepValue';
 import RunController from '../controllers/RunController';
@@ -145,6 +146,7 @@ class WorkflowController{
       await SeleniumStepValue.create(dataToSave);
       await Workflow.update({_id:workflow},{run2_value:true})
       await Schedual.create({application , time})
+      await this.saveRun2(workflow)
     }catch(e){
       return ctx.body = {
         success: false,
@@ -157,8 +159,8 @@ class WorkflowController{
     }
   }
 
-  async saveRun2(ctx){
-    let workflow = await Workflow.findById(ctx.request.body.workflow);
+  async saveRun2(workflowId){
+    let workflow = await Workflow.findById(workflowId);
     let all_commands = await SeleniumStep.find({workflow : workflow._id}).sort({sequence:1}).populate('run2value')
    console.log(JSON.stringify(all_commands))
     const run = await Run.create({sequence:2, workflow: workflow._id})
@@ -169,7 +171,6 @@ class WorkflowController{
       delete c.run2value
       return c
     })
-    console.log("-chaching commanda after modification-")
     console.log(JSON.stringify(all_commands))
     axios({
       method: 'post',
@@ -186,6 +187,7 @@ class WorkflowController{
         console.log("har genearted")
         await this._saveRequests( res.data.hars, run._id, workflow._id )
         await Workflow.update({_id:workflow._id},{run2_request: true})
+        await Application.update({_id: workflow.application}, {status: "Generating jmx"})
         console.log("request saved")
         await RunController.compare(workflow._id)
       }else{

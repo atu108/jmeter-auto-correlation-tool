@@ -13,7 +13,7 @@ router.get('/workflows/:application', WorkflowController.get)
   .get('workflow/delete/:id', WorkflowController.delete)
   .get('/runvalues/:workflow', WorkflowController.getRunValues)
   .post('/run2values', WorkflowController.saveRunValues)
-  .post('/run2', WorkflowController.saveRun2)
+  // .post('/run2', WorkflowController.saveRun2)
   .get("/recreateJmx/:workflow/:run", RunController.recreate)
   
 export default router;

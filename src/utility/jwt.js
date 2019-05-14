@@ -38,7 +38,8 @@ class Jwt{
         email: user.email,
         first_name: user.first_name,
         last_name: user.last_name,
-        generated_at: Date.now()
+        generated_at: Date.now(),
+        type: user.type
       }
       const tokens = await this.jwt.sign(payload, config.app.secret);
       return tokens;

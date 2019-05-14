@@ -3,7 +3,6 @@ import logger from "../utility/logger";
 
 export default async (ctx, next) => {
   try{
-    console.log("auth middleware",ctx.user);
     if(!ctx.user) {
       return ctx.body = responses[401];
     }

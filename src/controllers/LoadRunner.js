@@ -8,18 +8,21 @@ import RunController from '../controllers/RunController';
 import Test from '../models/Test';
 import pool from '../middlewares/database';
 import config from '../config';
+import Workflow from '../models/Workflow';
+import User from '../models/User';
 class LoadRunner {
     constructor() {
         return {
-            prepareJmeter: this.prepareJmeter.bind(this)
+            prepareJmeter: this.prepareJmeter.bind(this),
+            runTest: this.runTest.bind(this)
         }
     }
 
     async exectuteJmeter(workflowDetails, jmxFilePath, jmeterCommand, lastUserLoad, previousUserLoads, jtlPath, lastAcceptedUserLoad) {
         const today = new Date();
         const test = await Test.create({
-            name: `Test_${lastUserLoad}VU_${today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()}`,
-            application: workflowDetails.application
+            name: `${workflowDetails.application.name}_${lastUserLoad}VU_${today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()}`,
+            application: workflowDetails.application._id
         })
         const child = spawn('jmeter', jmeterCommand);
         child.stdout.setEncoding('utf8');
@@ -27,7 +30,7 @@ class LoadRunner {
             console.log("reading chunk", chunk)
             if (chunk.indexOf("end of run") >= 0) {
                 console.log("condition runing")
-                await this.dumper(jtlPath, workflowDetails.application, test['_id']);
+                await this.dumper(jtlPath, workflowDetails.application._id, test['_id']);
                 await this.prepareJmeter(jmxFilePath, workflowDetails, test['_id'], lastUserLoad, previousUserLoads, lastAcceptedUserLoad)
             }
         });
@@ -45,49 +48,77 @@ class LoadRunner {
         } else if (failPercent > 25 && failPercent < 40) {
             return Math.round((lastUserLoad + Math.round((maxUserLoad - lastUserLoad) * 0.2)) / 10) * 10
         } else {
-            return Math.round((lastUserLoad + lastAcceptedUserLoad)/2)
+            return Math.round((lastUserLoad + lastAcceptedUserLoad) / 2)
         }
-    } 
+    }
 
-
+    async runTest(ctx) {
+        const user = await User.findOne({_id: ctx.user.id})
+        try {
+            if (user.type === "temp") {
+                return ctx.body = { success: false, message: "You dont have permissions" };
+            }
+            const { workflow } = ctx.params;
+            const workflowDetails = await Workflow.findOne({ _id: workflow }).populate('application');
+            console.log("cehcnijg workflow",workflowDetails);
+            this.prepareJmeter(`${config.storage.path}${workflowDetails.jmx_file_name}`, workflowDetails)
+                .then(async (res) => {
+                    if(res){
+                        await Application.update({_id: workflowDetails.application._id},{status: "Completed Run Test"})
+                    }
+                    
+                })
+                .catch(e => {
+                    console.log(e);
+                })
+                ctx.body = {success: true, message: "Tests started"}
+        } catch (e) {
+            console.log(e);
+            ctx.body = { sucess: false, message: "Something went wrong" };
+        }
+    }
 
     async prepareJmeter(jmxFilePath, workflowDetails, testId = null, lastUserLoad = 0, previousUserLoads = [], lastAcceptedUserLoad = 0) {
-        let jtlPath = await this.getJtlPath(workflowDetails.application);
-        const { user_load, duration, rampup_duration, loop_count } = workflowDetails;
-        const testCount = await Test.count({ application: workflowDetails.application })
-        console.log("testCOunt", testCount)
-        const maxUserLoad = user_load;
-        let currentUserLoad = 0;
-        if (testCount === 0) {
-            previousUserLoads.push(maxUserLoad * 0.1);
-            lastUserLoad = maxUserLoad * 0.1;
-            currentUserLoad = maxUserLoad * 0.1;
-            jtlPath = jtlPath + currentUserLoad + '.jtl';
-            const jmeterCommand = await this.prepareJmeterCommand(currentUserLoad, duration, rampup_duration, loop_count, jmxFilePath, jtlPath);
-            console.log("jemtere command prepared", jmeterCommand)
-            this.exectuteJmeter(workflowDetails, jmxFilePath, jmeterCommand, lastUserLoad, previousUserLoads, jtlPath, lastAcceptedUserLoad);
-            console.log("called for first run with user", currentUserLoad);
-        } else {
-            console.log("called in else 2nd time");
-            const failPercent = await this.getFailurePercent(testId);
-            console.log("checking fail percent ", failPercent)
-            console.log("max and last", lastUserLoad, maxUserLoad)
-            if(failPercent <= 40){
-                lastAcceptedUserLoad = lastUserLoad;
+        try {
+            let jtlPath = await this.getJtlPath(workflowDetails.application._id);
+            const { user_load, duration, rampup_duration, loop_count } = workflowDetails;
+            const testCount = await Test.count({ application: workflowDetails.application._id })
+            console.log("testCOunt", testCount)
+            const maxUserLoad = user_load;
+            let currentUserLoad = 0;
+            if (testCount === 0) {
+                previousUserLoads.push(maxUserLoad * 0.1);
+                lastUserLoad = maxUserLoad * 0.1;
+                currentUserLoad = maxUserLoad * 0.1;
+                jtlPath = jtlPath + currentUserLoad + '.jtl';
+                const jmeterCommand = await this.prepareJmeterCommand(currentUserLoad, duration, rampup_duration, loop_count, jmxFilePath, jtlPath);
+                console.log("jemtere command prepared", jmeterCommand)
+                this.exectuteJmeter(workflowDetails, jmxFilePath, jmeterCommand, lastUserLoad, previousUserLoads, jtlPath, lastAcceptedUserLoad);
+                console.log("called for first run with user", currentUserLoad);
+            } else {
+                console.log("called in else 2nd time");
+                const failPercent = await this.getFailurePercent(testId);
+                console.log("checking fail percent ", failPercent)
+                console.log("max and last", lastUserLoad, maxUserLoad)
+                if (failPercent <= 40) {
+                    lastAcceptedUserLoad = lastUserLoad;
+                }
+                currentUserLoad = await this.calculateUserLoad(failPercent, lastUserLoad, maxUserLoad, lastAcceptedUserLoad);
+                console.log("current user load", currentUserLoad)
+                if (previousUserLoads.indexOf(currentUserLoad) != -1 || currentUserLoad < 5 || currentUserLoad > maxUserLoad) {
+                    console.log("runs finised")
+                    return true;
+                }
+                previousUserLoads.push(currentUserLoad);
+                lastUserLoad = currentUserLoad;
+                jtlPath = jtlPath + currentUserLoad + '.jtl';
+                const jmeterCommand = await this.prepareJmeterCommand(currentUserLoad, duration, rampup_duration, loop_count, jmxFilePath, jtlPath);
+                console.log("jemtere command prepared ", jmeterCommand)
+                this.exectuteJmeter(workflowDetails, jmxFilePath, jmeterCommand, lastUserLoad, previousUserLoads, jtlPath, lastAcceptedUserLoad);
+                console.log("exectuded another run with %s users", currentUserLoad)
             }
-            currentUserLoad = await this.calculateUserLoad(failPercent, lastUserLoad, maxUserLoad, lastAcceptedUserLoad);
-            console.log("current user load", currentUserLoad)
-            if (previousUserLoads.indexOf(currentUserLoad) != -1 || currentUserLoad < 5 || currentUserLoad > maxUserLoad) {
-                console.log("runs finised")
-                return;
-            }
-            previousUserLoads.push(currentUserLoad);
-            lastUserLoad = currentUserLoad;
-            jtlPath = jtlPath + currentUserLoad + '.jtl';
-            const jmeterCommand = await this.prepareJmeterCommand(currentUserLoad, duration, rampup_duration, loop_count, jmxFilePath, jtlPath);
-            console.log("jemtere command prepared ", jmeterCommand)
-            this.exectuteJmeter(workflowDetails, jmxFilePath, jmeterCommand, lastUserLoad, previousUserLoads, jtlPath, lastAcceptedUserLoad);
-            console.log("exectuded another run with %s users", currentUserLoad)
+        } catch (e) {
+            throw (e)
         }
     }
 

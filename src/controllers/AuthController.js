@@ -15,29 +15,31 @@ class AuthController{
   async login(ctx){
       const user = await User.findOne({email: ctx.request.body.email, password: encrypt(ctx.request.body.password)});
       console.log(ctx.request.body);
-      if (user) {
+      if(user) {
         delete user.password;
         const token = await session.set(user);
         let data = {
           first_name: user.first_name,
           last_name: user.last_name,
-          email: user.email
+          email: user.email,
+          type: user.type
       };
-        ctx.body = {type:"success", message: "Login successfull", data, token};
+        ctx.body = { success: true, message: "Login successfull", data, token };
       }else{
-        ctx.body = {type: 'error', message: 'Invalid Login details'};
+        ctx.body = {success: false, message: 'Invalid Login details'};
       }
       return;
   }
 
   async register(ctx){
-      let {first_name, last_name, email, password, company_name } = ctx.request.body;
+    console.log("called register");
+      let {first_name, last_name, email, password, company_name, mobile, country, state} = ctx.request.body;
       const existingUser = await User.findOne({email: ctx.request.body.email});
       if(existingUser){
-        return ctx.body = {type: 'success', message: 'Email already exists'};
+        return ctx.body = {success: true, message: 'Email already exists'};
       }
-      await User.create({first_name, last_name, email, password:encrypt(password), company_name})
-      ctx.body = {type: 'success', message: 'Registration successfull'};
+      await User.create({first_name, last_name, email, password:encrypt(password), company_name, mobile, country, state})
+      ctx.body = { success: false, message: 'Registration successfull' };
   }
 
 //   async sendresetlink(ctx, next) {
@@ -65,7 +67,7 @@ class AuthController{
 // }
 
   async logout(ctx){
-    ctx.session = null;``
+    ctx.session = null;
     ctx.redirect('/');
   }
 }

@@ -16,5 +16,6 @@ export default combineRouters([
   scenario,
   api,
   workflow,
-  performance
+  performance,
+  load
 ]);

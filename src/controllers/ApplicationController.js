@@ -3,8 +3,8 @@ import Scenario from '../models/Scenario';
 import Workflow from '../models/Workflow';
 import WorkflowController from './WorkflowController';
 import { deleteAppOrWorkflow } from '../utility/helper';
-class ApplicationController{
-  constructor(){
+class ApplicationController {
+  constructor() {
     return {
       index: this.index.bind(this),
       scenarios: this.scenarios.bind(this),
@@ -14,17 +14,19 @@ class ApplicationController{
     }
   }
 
-  async index(ctx){
+  async index(ctx) {
+    console.log(ctx.user.id);
     const applications = await Application.find({
-      // owner: ctx.user._id
+      owner: ctx.user.id
     }).populate('workflow').populate('test');
-    ctx.body = {success:true, data: applications};
+    ctx.body = { success: true, data: applications };
   }
 
-  async getOne( ctx ){
+  async getOne(ctx) {
     console.log("called getone", ctx.params);
     const application = await Application.findOne({
-      _id:ctx.params.id
+      _id: ctx.params.id,
+      owner: ctx.user.id
     })
 
     ctx.body = {
@@ -33,10 +35,10 @@ class ApplicationController{
     }
   }
 
-  async delete(ctx){
-    try{
+  async delete(ctx) {
+    try {
       await deleteAppOrWorkflow(ctx.params.id, 'application')
-    }catch(e){
+    } catch (e) {
       console.log(e);
       return ctx.body = {
         success: false,
@@ -49,20 +51,18 @@ class ApplicationController{
     }
   }
 
-  async save(ctx){
-    console.log("my request");
-  let {name, url, description, type, version, is_captcha, is_encrypted, is_auth, auth_type } = ctx.request.body;
-  let owner = "5c948af7c7077bb7ec37d652";
-  if(ctx.params.id){
-    console.log("atleast called")
-    await Application.update({_id: ctx.params.id},{name, url, description, type, version, is_captcha, is_encrypted, is_auth, auth_type , owner});
-    return ctx.body = {
-      success: true,
-      message: "Project Updated",
-      data: app
-    };
-  }
-    const app = await Application.create({name, url, description, type, version, is_captcha, is_encrypted, is_auth, auth_type , owner});
+  async save(ctx) {
+    let { name, url, description, type, version, is_captcha, is_encrypted, is_auth, auth_type } = ctx.request.body;
+    let owner = ctx.user.id;
+    if (ctx.params.id) {
+      await Application.update({ _id: ctx.params.id, owner }, { name, url, description, type, version, is_captcha, is_encrypted, is_auth, auth_type, owner });
+      return ctx.body = {
+        success: true,
+        message: "Project Updated",
+        data: app
+      };
+    }
+    const app = await Application.create({ name, url, description, type, version, is_captcha, is_encrypted, is_auth, auth_type, owner });
     ctx.body = {
       success: true,
       message: "Project Saved",
@@ -70,10 +70,10 @@ class ApplicationController{
     };
   }
 
-  async scenarios(ctx){
+  async scenarios(ctx) {
     const application = await Application.findById(ctx.params._id);
-    const scenarios = await Scenario.find({project: ctx.params._id});
-    ctx.body = {success: true, data: scenarios};
+    const scenarios = await Scenario.find({ project: ctx.params._id });
+    ctx.body = { success: true, data: scenarios };
   }
 }
 

@@ -22,6 +22,13 @@ const UserSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  mobile: Number,
+  country: String, 
+  state: String,
+  type: {
+    type: String,
+    deafult: "temp"
+  },
   updated_on: {
     type: Date,
     default: Date.now

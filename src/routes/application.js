@@ -7,10 +7,10 @@ const router = new Router({
   prefix: '/app'
 });
 
-router.get('/applications', ApplicationController.index)
-  .post('/application/save', ApplicationController.save)
-  .post('/application/save/:id', ApplicationController.save)
-  .get('/application/:id', ApplicationController.getOne)
-  .get('/application/delete/:id', ApplicationController.delete )
+router.get('/applications', auth, ApplicationController.index)
+  .post('/application/save', auth, ApplicationController.save)
+  .post('/application/save/:id', auth, ApplicationController.save)
+  .get('/application/:id', auth, ApplicationController.getOne)
+  .get('/application/delete/:id', auth, ApplicationController.delete )
   
 export default router;

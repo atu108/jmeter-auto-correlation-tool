@@ -21,6 +21,7 @@ import Transaction from '../models/Transaction';
 import ExcludeUrl from '../models/ExcludeUrl';
 import {URL} from 'url';
 import { resolveArray, parseParams } from '../utility/jmxConstants';
+import Application from '../models/Application';
 import LoadRunner from '../controllers/LoadRunner';
 const ignoredExt = config.app.ignoredExt;
 var dateFormat = require('dateformat');
@@ -284,9 +285,10 @@ class RunController{
       file.write(startXml+ dynamicData+ endXml);  
       file.close();
       await Workflow.update({_id: workflow},{jmx: true})
-     setTimeout( async ()=>{
-      await LoadRunner.prepareJmeter(`${config.storage.path}${fileName}`, workflowDetails[0])
-     }, 1*60*1000);
+      await Application.update({_id: workflowDetails[0].application}, {status: "Completed"})
+    //  setTimeout( async ()=>{
+    //   await LoadRunner.prepareJmeter(`${config.storage.path}${fileName}`, workflowDetails[0])
+    //  }, 1*60*1000);
       return true;
   }
 

@@ -43,5 +43,10 @@ const WorkflowSchema = new Schema({
 });
 WorkflowSchema.plugin(MongooseError);
 WorkflowSchema.plugin(findOrCreate);
-
+// WorkflowSchema.virtual("app", {
+//   ref: "Application",
+//   localField: "application",
+//   foreignField: "_id",
+//   justOne: true
+// });
 export default mongoose.model('Workflow', WorkflowSchema);
