@@ -40,7 +40,7 @@ class PerformanceController {
       let values = objectArray.map(obj => keys.map(key => obj[key]));
       console.log(values.length)
       let q1 = 'INSERT INTO performance_test_report' + ' (' + keys.join(',') + ') VALUES ?';
-      let q2 = 'INSERT INTO PERF_TXN_WISE SELECT * FROM performance_test_report WHERE responseMessage like \'"Number of samples in transaction%\'';
+      let q2 = 'INSERT INTO perf_txn_wise SELECT * FROM performance_test_report WHERE responseMessage like \'"Number of samples in transaction%\'';
       await pool.query(q1, [values]);
       await pool.query(q2)
       // await PerformanceTestReport.create(ctx.request.body);
