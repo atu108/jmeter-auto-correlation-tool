@@ -2,6 +2,7 @@ import env from '../utility/env';
 
 const app = {
   server: env('SERVER', "PRODUCTION"),
+  jmeterPath: env('JMETER_PATH', ''),
   host: env('HOST', '0.0.0.0'),
   port: env('PORT', 4000),
   name: 'testingtool-app',

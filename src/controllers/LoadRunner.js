@@ -26,7 +26,7 @@ class LoadRunner {
         })
         let jmeterStartCommand = 'jmeter';
         if(config.app.server === 'PRODUCTION'){
-            jmeterStartCommand = '../../jmeter/bin/jmeter.sh';
+            jmeterStartCommand = config.app.jmeterPath + '/jmeter';
         }
         const child = spawn(jmeterStartCommand, jmeterCommand);
         child.stdout.setEncoding('utf8');
