@@ -1,6 +1,7 @@
 import env from '../utility/env';
 
 const app = {
+  server: env('SERVER', "PRODUCTION"),
   host: env('HOST', '0.0.0.0'),
   port: env('PORT', 4000),
   name: 'testingtool-app',

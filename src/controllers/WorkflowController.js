@@ -69,7 +69,6 @@ class WorkflowController{
           }
       }
         let allCommands = readStream['tests'][0]['commands'];
-        console.log("allcommands",JSON.stringify(allCommands));
         let start_url = readStream['url'] + readStream['tests'][0]['commands'][0]['target']
         const workflow = await Workflow.create({name, description, loop_count, application, start_url, user_load, duration, rampup_duration, file: ctx.request.body.files.file.name});
         const run = await Run.create({sequence:1, workflow: workflow._id})
@@ -99,6 +98,7 @@ class WorkflowController{
               return s;
             }) );
             await this._saveRequests( res.data.hars, run._id, workflow._id )
+            await Workflow.update({_id:workflow._id},{run1_request: true})
           }else{
             console.log(res);
           }
@@ -162,7 +162,7 @@ class WorkflowController{
   async saveRun2(workflowId){
     let workflow = await Workflow.findById(workflowId);
     let all_commands = await SeleniumStep.find({workflow : workflow._id}).sort({sequence:1}).populate('run2value')
-   console.log(JSON.stringify(all_commands))
+    await Application.update({_id: workflow.application}, {status: "Generating jmx"})
     const run = await Run.create({sequence:2, workflow: workflow._id})
     all_commands = all_commands.map( c => {
       if(c.run2value && c.run2value.value){
@@ -187,8 +187,6 @@ class WorkflowController{
         console.log("har genearted")
         await this._saveRequests( res.data.hars, run._id, workflow._id )
         await Workflow.update({_id:workflow._id},{run2_request: true})
-        await Application.update({_id: workflow.application}, {status: "Generating jmx"})
-        console.log("request saved")
         await RunController.compare(workflow._id)
       }else{
         console.log(res);

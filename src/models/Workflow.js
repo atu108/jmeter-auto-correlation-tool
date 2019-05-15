@@ -23,6 +23,10 @@ const WorkflowSchema = new Schema({
     type: Schema.Types.Boolean,
     default: false
   },
+  run1_request: {
+    type: Schema.Types.Boolean,
+    default: false
+  },
   run2_request:  {
     type: Schema.Types.Boolean,
     default: false

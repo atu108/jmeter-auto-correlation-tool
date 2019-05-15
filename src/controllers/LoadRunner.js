@@ -24,7 +24,11 @@ class LoadRunner {
             name: `${workflowDetails.application.name}_${lastUserLoad}VU_${today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()}`,
             application: workflowDetails.application._id
         })
-        const child = spawn('jmeter', jmeterCommand);
+        let jmeterStartCommand = 'jmeter';
+        if(config.app.server === 'PRODUCTION'){
+            jmeterStartCommand = '../../jmeter/bin/jmeter.sh';
+        }
+        const child = spawn(jmeterStartCommand, jmeterCommand);
         child.stdout.setEncoding('utf8');
         child.stdout.on('data', async (chunk) => {
             console.log("reading chunk", chunk)
@@ -124,9 +128,7 @@ class LoadRunner {
 
     async getFailurePercent(test_id) {
         const q = `select ((count(ptr.success) * 100) / (select count(*) from performance_test_report where test_id = '${test_id}' and responseMessage like '\"Number of samples in transaction%\')) as failPercent from performance_test_report ptr where ptr.success= 'false' and ptr.test_id = '${test_id}' and ptr.responseMessage like '\"Number of samples in transaction%\'`;
-        console.log("query", q)
         const failPercent = await pool.query(q);
-        console.log("fail percent beofre parsing", typeof failPercent, failPercent)
         return failPercent[0].failPercent ? failPercent[0].failPercent : 0;
     }
 
