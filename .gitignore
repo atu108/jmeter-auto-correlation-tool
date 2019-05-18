@@ -8,4 +8,6 @@ package-lock.json
 dist
 jmx
 jtl
-jmeter.log
+*.log
+*.out
+jmeter
