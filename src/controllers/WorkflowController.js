@@ -11,6 +11,7 @@ import Request from '../models/Request';
 import SeleniumStepValue from '../models/SeleniumStepValue';
 import RunController from '../controllers/RunController';
 import Schedual from '../models/Schedual';
+import ApplicationController from './ApplicationController';
 import { all } from 'q';
 import { deleteAppOrWorkflow } from '../utility/helper';
 
@@ -71,7 +72,8 @@ class WorkflowController{
         let allCommands = readStream['tests'][0]['commands'];
         let start_url = readStream['url'] + readStream['tests'][0]['commands'][0]['target']
         const workflow = await Workflow.create({name, description, loop_count, application, start_url, user_load, duration, rampup_duration, file: ctx.request.body.files.file.name});
-        const run = await Run.create({sequence:1, workflow: workflow._id})
+        const run = await Run.create({sequence:1, workflow: workflow._id});
+        ApplicationController(application, "Fetching data");
         allCommands.map( (obj, index) => {
           delete obj.id
           obj.workflow = workflow._id
@@ -162,7 +164,7 @@ class WorkflowController{
   async saveRun2(workflowId){
     let workflow = await Workflow.findById(workflowId);
     let all_commands = await SeleniumStep.find({workflow : workflow._id}).sort({sequence:1}).populate('run2value')
-    await Application.update({_id: workflow.application}, {status: "Generating jmx"})
+    ApplicationController.updateStatus(workflow.application, "Generating jmx")
     const run = await Run.create({sequence:2, workflow: workflow._id})
     all_commands = all_commands.map( c => {
       if(c.run2value && c.run2value.value){

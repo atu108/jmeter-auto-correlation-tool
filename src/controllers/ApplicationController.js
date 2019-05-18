@@ -10,7 +10,8 @@ class ApplicationController {
       scenarios: this.scenarios.bind(this),
       save: this.save.bind(this),
       delete: this.delete.bind(this),
-      getOne: this.getOne.bind(this)
+      getOne: this.getOne.bind(this),
+      updateStatus: this.updateStatus.bind(this)
     }
   }
 
@@ -68,6 +69,16 @@ class ApplicationController {
       message: "Project Saved",
       data: app
     };
+  }
+  async updateStatus(applicationId, status) {
+    try{
+      await Application.update({_id: applicationId}, {status})
+      return true
+    }catch(e){
+      console.log(e)
+      return false;
+    }
+   
   }
 
   async scenarios(ctx) {

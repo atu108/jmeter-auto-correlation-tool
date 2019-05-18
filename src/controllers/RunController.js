@@ -21,8 +21,7 @@ import Transaction from '../models/Transaction';
 import ExcludeUrl from '../models/ExcludeUrl';
 import {URL} from 'url';
 import { resolveArray, parseParams } from '../utility/jmxConstants';
-import Application from '../models/Application';
-import LoadRunner from '../controllers/LoadRunner';
+import ApplicationController from './ApplicationController';
 const ignoredExt = config.app.ignoredExt;
 var dateFormat = require('dateformat');
 var now = new Date();
@@ -285,7 +284,7 @@ class RunController{
       file.write(startXml+ dynamicData+ endXml);  
       file.close();
       await Workflow.update({_id: workflow},{jmx: true})
-      await Application.update({_id: workflowDetails[0].application}, {status: "Completed"})
+      ApplicationController.updateStatus(application, "Har Generated");
     //  setTimeout( async ()=>{
     //   await LoadRunner.prepareJmeter(`${config.storage.path}${fileName}`, workflowDetails[0])
     //  }, 1*60*1000);
