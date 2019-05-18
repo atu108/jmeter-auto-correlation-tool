@@ -63,7 +63,7 @@ class WorkflowController{
         console.log(e);
           if (e) {
               return ctx.body = {
-                  success: true,
+                  success: false,
                   message: "Invalid Selenium File",
               };
           }
