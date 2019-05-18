@@ -32,14 +32,19 @@ class AuthController{
   }
 
   async register(ctx){
-    console.log("called register");
-      let {first_name, last_name, email, password, company_name, mobile, country, state} = ctx.request.body;
+    try{
+      let {first_name, last_name, email, password, company_name, phone, country, state, country_code} = ctx.request.body;
       const existingUser = await User.findOne({email: ctx.request.body.email});
       if(existingUser){
-        return ctx.body = {success: true, message: 'Email already exists'};
+        return ctx.body = {success: false, message: 'Email already exists! Please Login !'};
       }
-      await User.create({first_name, last_name, email, password:encrypt(password), company_name, mobile, country, state})
-      ctx.body = { success: false, message: 'Registration successfull' };
+      await User.create({first_name, last_name, email, password:encrypt(password), company_name, phone, country, state, country_code, type:"temp"})
+      ctx.body = { success: true, message: 'Registration successfull!' };
+    }catch(e){
+      console.log(e)
+      ctx.body = {success: false, message: 'Something is not right!'};
+    }
+      
   }
 
 //   async sendresetlink(ctx, next) {
