@@ -284,7 +284,7 @@ class RunController{
       file.write(startXml+ dynamicData+ endXml);  
       file.close();
       await Workflow.update({_id: workflow},{jmx: true})
-      ApplicationController.updateStatus(application, "Har Generated");
+      ApplicationController.updateStatus(workflowDetails[0].application, "Jmx Generated");
     //  setTimeout( async ()=>{
     //   await LoadRunner.prepareJmeter(`${config.storage.path}${fileName}`, workflowDetails[0])
     //  }, 1*60*1000);

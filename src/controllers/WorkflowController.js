@@ -73,7 +73,7 @@ class WorkflowController{
         let start_url = readStream['url'] + readStream['tests'][0]['commands'][0]['target']
         const workflow = await Workflow.create({name, description, loop_count, application, start_url, user_load, duration, rampup_duration, file: ctx.request.body.files.file.name});
         const run = await Run.create({sequence:1, workflow: workflow._id});
-        ApplicationController(application, "Fetching data");
+        ApplicationController.updateStatus(application, "Fetching data");
         allCommands.map( (obj, index) => {
           delete obj.id
           obj.workflow = workflow._id
