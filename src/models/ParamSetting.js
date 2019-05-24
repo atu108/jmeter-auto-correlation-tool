@@ -20,15 +20,18 @@ const ParamSetting = new Schema({
         type:Schema.Types.ObjectId,
         ref:"Workflow"
     },
-    added_on: {
-        type: Date,
-        default: Date.now,
+    application:{
+        type: Schema.Types.ObjectId,
+        ref:"Application"
     },
     updated_on: {
         type: Date,
         default: Date.now
     },
-    status: String
+    added_on: {
+        type: Date,
+        default: Date.now,
+    }
 });
 
 ParamSetting.plugin(MongooseError);

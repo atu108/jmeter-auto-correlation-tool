@@ -7,7 +7,7 @@ const router = new Router({
   prefix: '/app'
 });
 
-router.get('/runTest/:workflow', auth , LoadRunnerController.runTest)
-  
-  
+router.get('/runTest/:workflow', auth, LoadRunnerController.runTest)
+
+
 export default router;

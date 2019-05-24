@@ -71,14 +71,14 @@ class ApplicationController {
     };
   }
   async updateStatus(applicationId, status) {
-    try{
-      await Application.update({_id: applicationId}, {status})
+    try {
+      await Application.update({ _id: applicationId }, { status })
       return true
-    }catch(e){
+    } catch (e) {
       console.log(e)
       return false;
     }
-   
+
   }
 
   async scenarios(ctx) {

@@ -11,6 +11,11 @@ const WorkflowSchema = new Schema({
  file: String,
  start_url: String,
  jmx_file_name: String,
+ csv_file_name: String,
+ csv_required: {
+   type: Boolean,
+   default: false
+ },
  user_load: Number,
  duration: Number,
  rampup_duration: Number,

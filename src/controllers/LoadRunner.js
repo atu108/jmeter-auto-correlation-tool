@@ -25,7 +25,7 @@ class LoadRunner {
             application: workflowDetails.application._id
         })
         let jmeterStartCommand = 'jmeter';
-        if(config.app.server === 'PRODUCTION'){
+        if (config.app.server === 'PRODUCTION') {
             jmeterStartCommand = config.app.jmeterPath + '/jmeter';
         }
         const child = spawn(jmeterStartCommand, jmeterCommand);
@@ -57,25 +57,33 @@ class LoadRunner {
     }
 
     async runTest(ctx) {
-        const user = await User.findOne({_id: ctx.user.id})
+        const user = await User.findOne({ _id: ctx.user.id })
         try {
             if (user.type === "temp") {
                 return ctx.body = { success: false, message: "You dont have permissions" };
             }
             const { workflow } = ctx.params;
             const workflowDetails = await Workflow.findOne({ _id: workflow }).populate('application');
-            console.log("cehcnijg workflow",workflowDetails);
+            if(workflowDetails.csv_required && !ctx.request.body.files.file){
+                return ctx.body = {success: false, message: "CSV required"}
+            }
+            if(workflowDetails.csv_required){
+                let fileData = fs.readFileSync(ctx.request.body.files.file.path);
+                let csvName = config.storage.csvPath + workflowDetails._id + ".csv";
+                fs.writeFileSync(csvName , fileData, "utf8" )
+                await Workflow.update({_id: workflow},{csv_file_name: csvName})
+            }
             this.prepareJmeter(`${config.storage.path}${workflowDetails.jmx_file_name}`, workflowDetails)
                 .then(async (res) => {
-                    if(res){
-                        await Application.update({_id: workflowDetails.application._id},{status: "Completed Run Test"})
+                    if (res) {
+                        await Application.update({ _id: workflowDetails.application._id }, { status: "Completed Run Test" })
                     }
-                    
+
                 })
                 .catch(e => {
                     console.log(e);
                 })
-                ctx.body = {success: true, message: "Tests started"}
+            ctx.body = { success: true, message: "Tests started" }
         } catch (e) {
             console.log(e);
             ctx.body = { sucess: false, message: "Something went wrong" };
