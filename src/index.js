@@ -41,6 +41,9 @@ app
   .use(serve(path.join(__dirname, '../jmx'), {
     gzip: true
   }))
+  .use(serve(path.join(__dirname, '../sample_csv'), {
+    gzip: true
+  }))
   .use(session({
     key: config.session.key,
     path: '/',

@@ -145,6 +145,7 @@ class WorkflowController {
     let { workflow, application, time } = ctx.request.body;
     let all_fields = Object.keys(ctx.request.body);
     let dataToSave = [];
+    let keys = [];
     let paramsSettingsdata = [];
     try {
       all_fields.forEach(key => {
@@ -164,14 +165,16 @@ class WorkflowController {
               key: key.split("____")[1],
               value: ctx.request.body[key.split("____")[2]]
             })
+            keys.push(key.split("____")[1] + "_par")
           }
         }
       })
       if(paramsSettingsdata.length > 0){
         await ParamSetting.create(paramsSettingsdata);
+        fs.writeFileSync(config.storage.sampleCsvPath + workflow + ".csv", keys.join(","), "utf8" )
         await Workflow.update({_id: workflow}, {csv_required: true});
-      }
-      
+       
+      } 
       await SeleniumStepValue.create(dataToSave);
       await Workflow.update({ _id: workflow }, { run2_value: true })
       await Schedual.create({ application, time })
@@ -187,10 +190,6 @@ class WorkflowController {
       success: true,
       message: "Values saved"
     }
-  }
-
-  async findKeyValueForParams(workflow, application) {
-
   }
 
   async saveRun2(workflowId) {
@@ -229,10 +228,6 @@ class WorkflowController {
       .catch(error => {
         console.log(error);
       });
-    ctx.body = {
-      success: true,
-      message: "run2 created processing hars"
-    }
   }
 
   async _saveRequests(hars, run, workflow) {

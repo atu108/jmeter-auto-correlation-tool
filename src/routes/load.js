@@ -8,6 +8,7 @@ const router = new Router({
 });
 
 router.get('/runTest/:workflow', auth, LoadRunnerController.runTest)
+      .post('/saveCsv/:workflow', LoadRunnerController.saveCsv)
 
 
 export default router;

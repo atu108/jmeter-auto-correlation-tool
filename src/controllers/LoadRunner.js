@@ -14,7 +14,8 @@ class LoadRunner {
     constructor() {
         return {
             prepareJmeter: this.prepareJmeter.bind(this),
-            runTest: this.runTest.bind(this)
+            runTest: this.runTest.bind(this),
+            saveCsv: this.saveCsv.bind(this)
         }
     }
 
@@ -56,6 +57,22 @@ class LoadRunner {
         }
     }
 
+    async saveCsv(ctx){
+        try{
+            const workflowDetails = await Workflow.findOne({ _id: ctx.params.workflow });
+            if(!ctx.request.body.files.file){
+                return ctx.body = {success: false, message: "CSV required"}
+            }
+                let fileData = fs.readFileSync(ctx.request.body.files.file.path);
+                let csvName = config.storage.csvPath + workflowDetails._id + ".csv";
+                fs.writeFileSync(csvName , fileData, "utf8" )
+                await Workflow.update({_id: ctx.params.workflow},{csv_file_name: csvName})
+            ctx.body = {success: true, message: "CSV saved!"}
+        }catch(e){
+            console.log(e)
+            ctx.body = {success: false, message: "Something went wrong"}
+        } 
+    }
     async runTest(ctx) {
         const user = await User.findOne({ _id: ctx.user.id })
         try {
@@ -64,15 +81,6 @@ class LoadRunner {
             }
             const { workflow } = ctx.params;
             const workflowDetails = await Workflow.findOne({ _id: workflow }).populate('application');
-            if(workflowDetails.csv_required && !ctx.request.body.files.file){
-                return ctx.body = {success: false, message: "CSV required"}
-            }
-            if(workflowDetails.csv_required){
-                let fileData = fs.readFileSync(ctx.request.body.files.file.path);
-                let csvName = config.storage.csvPath + workflowDetails._id + ".csv";
-                fs.writeFileSync(csvName , fileData, "utf8" )
-                await Workflow.update({_id: workflow},{csv_file_name: csvName})
-            }
             this.prepareJmeter(`${config.storage.path}${workflowDetails.jmx_file_name}`, workflowDetails)
                 .then(async (res) => {
                     if (res) {
