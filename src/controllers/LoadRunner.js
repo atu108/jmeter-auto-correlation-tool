@@ -5,6 +5,7 @@ const util = require('util')
 import Application from '../models/Application';
 import PerformanceController from '../controllers/PerformanceController';
 import RunController from '../controllers/RunController';
+import ApplicationController from '../controllers/ApplicationController';
 import Test from '../models/Test';
 import pool from '../middlewares/database';
 import config from '../config';
@@ -81,6 +82,7 @@ class LoadRunner {
             }
             const { workflow } = ctx.params;
             const workflowDetails = await Workflow.findOne({ _id: workflow }).populate('application');
+            ApplicationController.updateStatus(workflowDetails.application._id, "Generating Report");
             this.prepareJmeter(`${config.storage.path}${workflowDetails.jmx_file_name}`, workflowDetails)
                 .then(async (res) => {
                     if (res) {
@@ -126,7 +128,7 @@ class LoadRunner {
                 currentUserLoad = await this.calculateUserLoad(failPercent, lastUserLoad, maxUserLoad, lastAcceptedUserLoad);
                 console.log("current user load", currentUserLoad)
                 if (previousUserLoads.indexOf(currentUserLoad) != -1 || currentUserLoad < 5 || currentUserLoad > maxUserLoad) {
-                    console.log("runs finised")
+                    ApplicationController.updateStatus(workflowDetails.application._id, "Report Generated")
                     return true;
                 }
                 previousUserLoads.push(currentUserLoad);

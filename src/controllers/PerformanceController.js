@@ -384,7 +384,7 @@ class PerformanceController {
   async transactionSummary(ctx) {
     try {
       const { application_id, test_id } = ctx.request.body;
-      const q = `select ptr.label as transaction_Name, min(ptr.elapsed)/1000 as minimum,avg(ptr.elapsed)/1000 as average, max(ptr.elapsed)/1000 as maximum, sqrt((sum(elapsed*elapsed)/count(elapsed)) - (avg(elapsed) * avg(elapsed)))/1000 as std_Deviation, SUM(CASE WHEN ptr.success= 'true' THEN 1 ELSE 0 END) as pass, SUM(CASE WHEN ptr.success= 'false' THEN 1 ELSE 0 END) as fail from perf_txn_wise ptr where application_id= '${application_id}' and test_id = '${test_id}' group by ptr.label`;
+      const q = `select ptr.label as transaction_Name, ROUND(min(ptr.elapsed)/1000, 2) as minimum, ROUND(avg(ptr.elapsed)/1000, 2) as average, ROUND(max(ptr.elapsed)/1000, 2)as maximum, ROUND(sqrt((sum(elapsed*elapsed)/count(elapsed)) - (avg(elapsed) * avg(elapsed)))/1000, 2) as std_Deviation, SUM(CASE WHEN ptr.success= 'true' THEN 1 ELSE 0 END) as pass, SUM(CASE WHEN ptr.success= 'false' THEN 1 ELSE 0 END) as fail from perf_txn_wise ptr where application_id= '${application_id}' and test_id = '${test_id}' group by ptr.label`;
       const elapsedQ = `select elapsed/1000 as elapsed, label from perf_txn_wise where application_id= '${application_id}' and test_id = '${test_id}'`;
       const distinctLabelsq = `select distinct label from perf_txn_wise where application_id='${application_id}' and test_id = '${test_id}'`
       const elapsed = await pool.query(elapsedQ);
@@ -402,10 +402,9 @@ class PerformanceController {
 
       })
       transactionSummary = transactionSummary.map(t => {
-        t['90 Percentile'] = percentile(obj[t.transaction_Name], 90)
+        t['90 Percentile'] = Math.round(percentile(obj[t.transaction_Name], 90) * 100 ) /100
         return t
       })
-      console.log(obj)
       //elapsed.forEach()
       // transactionSummary[0]['90 Percentile'] = percentile(elapsed[0].elapsed)
       return ctx.body = {
