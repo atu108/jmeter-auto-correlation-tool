@@ -22,7 +22,8 @@ class Queue{
       init: this.init.bind(this),
       log: this.log.bind(this),
       mail: this.mail.bind(this),
-      execute: this.execute.bind(this)
+      execute: this.execute.bind(this),
+      har: this.har.bind(this)
     }
   }
 
@@ -40,6 +41,10 @@ class Queue{
   mail(data, priority = 'normal'){
     return this._push('mail', data, priority);
   }
+  
+  har(data, priority = 'high'){
+    return this._push('har', data, priority);
+  }
 
   execute(type, cb){
     this.q.process(type, 1, (job, callback) => {
@@ -48,7 +53,7 @@ class Queue{
   }
 
   _push(id, data, priority = 'normal'){
-    return this.q.create(id, data).priority(priority).removeOnComplete(true).attempts(5).save();
+    return this.q.create(id, data).priority(priority).removeOnComplete(true).attempts(1).save();
   }
 
   _queue_events(){

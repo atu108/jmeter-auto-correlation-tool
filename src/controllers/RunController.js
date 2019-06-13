@@ -4,7 +4,6 @@ import template from '../utility/template';
 import { request, filesInDir, removeDir } from '../utility/helper';
 import config from '../config';
 import Run from '../models/Run';
-import Step from '../models/Step';
 import RunValue from '../models/RunValue';
 import Request from '../models/Request';
 import Compare from '../models/Compare';
@@ -18,7 +17,7 @@ import Workflow from '../models/Workflow';
 import Transaction from '../models/Transaction';
 import ExcludeUrl from '../models/ExcludeUrl';
 import { URL } from 'url';
-import { resolveArray, parseParams } from '../utility/jmxConstants';
+import { resolveArray, parseParams, jmxEndXml, jmxStartXml } from '../utility/jmxConstants';
 import ApplicationController from './ApplicationController';
 const ignoredExt = config.app.ignoredExt;
 var dateFormat = require('dateformat');
@@ -100,6 +99,7 @@ class RunController {
     }
   }
 
+
   async generateJmx(run, workflow) {
     console.log("for rerun using api ", run, "wokrflow", workflow)
     let ignoredUrls = await ExcludeUrl.find({});
@@ -110,42 +110,7 @@ class RunController {
     const workflowDetails = await Workflow.find({ _id: workflow });
     // const {user_load, duration} = workflowDetails[0];
     // run will be paseed to this function
-    const startXml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
-      '<jmeterTestPlan version="1.2" properties="3.2" jmeter="3.3 r1808647">\n' +
-      '  <hashTree>\n' +
-      '    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan" enabled="true">\n' +
-      '      <stringProp name="TestPlan.comments"></stringProp>\n' +
-      '      <boolProp name="TestPlan.functional_mode">false</boolProp>\n' +
-      '      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>\n' +
-      '      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">\n' +
-      '        <collectionProp name="Arguments.arguments"/>\n' +
-      '      </elementProp>\n' +
-      '      <stringProp name="TestPlan.user_define_classpath"></stringProp>\n' +
-      '    </TestPlan>\n' +
-      '    <hashTree>\n' +
-      '      <CacheManager guiclass="CacheManagerGui" testclass="CacheManager" testname="HTTP Cache Manager" enabled="true">\n' +
-      '        <boolProp name="clearEachIteration">true</boolProp>\n' +
-      '        <boolProp name="useExpires">false</boolProp>\n' +
-      '      </CacheManager>\n' +
-      '      <hashTree/>\n' +
-      '      <CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookie Manager" enabled="true">\n' +
-      '        <collectionProp name="CookieManager.cookies"/>\n' +
-      '        <boolProp name="CookieManager.clearEachIteration">true</boolProp>\n' +
-      '      </CookieManager>\n' +
-      '      <hashTree/>\n' +
-      paramsSettingData.map((data) => `<CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="${data.key}_par" enabled="true">
-                <stringProp name="delimiter">,</stringProp>
-                 <stringProp name="fileEncoding"></stringProp>
-                 <stringProp name="filename">${config.storage.csvPath}${workflowDetails[0].csv_file_name}</stringProp>
-                   <boolProp name="ignoreFirstLine">false</boolProp>
-                 <boolProp name="quotedData">false</boolProp>
-                  <boolProp name="recycle">true</boolProp>
-                   <stringProp name="shareMode">shareMode.all</stringProp>
-                  <boolProp name="stopThread">false</boolProp>
-               <stringProp name="variableNames">${data.key}_par</stringProp>
-                 </CSVDataSet>
-                <hashTree/>`).join('') +
-      '     <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="true">\n' +
+    const startXml =`<ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="W${workflowDetails[0].sequence}_${workflowDetails[0].name}" enabled="true">\n` +
       '        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>\n' +
       '        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">\n' +
       '          <boolProp name="LoopController.continue_forever">${__P(isLoop),}</boolProp>\n' +
@@ -159,64 +124,43 @@ class RunController {
       '        <stringProp name="ThreadGroup.duration">${__P(duration,)}</stringProp>\n' +
       '        <stringProp name="ThreadGroup.delay"></stringProp>\n' +
       '      </ThreadGroup>\n' +
-      '      <hashTree>';
-    const endXml = '</hashTree><ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="Aggregate Report" enabled="true">\n' +
-      '          <boolProp name="ResultCollector.error_logging">false</boolProp>\n' +
-      '          <objProp>\n' +
-      '            <name>saveConfig</name>\n' +
-      '            <value class="SampleSaveConfiguration">\n' +
-      '              <time>true</time>\n' +
-      '              <latency>true</latency>\n' +
-      '              <timestamp>true</timestamp>\n' +
-      '              <success>true</success>\n' +
-      '              <label>true</label>\n' +
-      '              <code>true</code>\n' +
-      '              <message>true</message>\n' +
-      '              <threadName>true</threadName>\n' +
-      '              <dataType>true</dataType>\n' +
-      '              <encoding>false</encoding>\n' +
-      '              <assertions>true</assertions>\n' +
-      '              <subresults>true</subresults>\n' +
-      '              <responseData>false</responseData>\n' +
-      '              <samplerData>false</samplerData>\n' +
-      '              <xml>false</xml>\n' +
-      '              <fieldNames>true</fieldNames>\n' +
-      '              <responseHeaders>false</responseHeaders>\n' +
-      '              <requestHeaders>false</requestHeaders>\n' +
-      '              <responseDataOnError>false</responseDataOnError>\n' +
-      '              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>\n' +
-      '              <assertionsResultsToSave>0</assertionsResultsToSave>\n' +
-      '              <bytes>true</bytes>\n' +
-      '              <sentBytes>true</sentBytes>\n' +
-      '              <threadCounts>true</threadCounts>\n' +
-      '              <idleTime>true</idleTime>\n' +
-      '              <connectTime>true</connectTime>\n' +
-      '            </value>\n' +
-      '          </objProp>\n' +
-      '          <stringProp name="filename"></stringProp>\n' +
-      '        </ResultCollector>\n' +
-      '        <hashTree/>\n' +
-      '      </hashTree>\n' +
-      '    </hashTree>\n' +
-      '    <WorkBench guiclass="WorkBenchGui" testclass="WorkBench" testname="WorkBench" enabled="true">\n' +
-      '      <boolProp name="WorkBench.save">true</boolProp>\n' +
-      '    </WorkBench>\n' +
-      '    <hashTree/>\n' +
-      '  </hashTree>\n' +
-      '</jmeterTestPlan>';
+      '      <hashTree>' +
+      '<CacheManager guiclass="CacheManagerGui" testclass="CacheManager" testname="HTTP Cache Manager" enabled="true">\n' +
+      '        <boolProp name="clearEachIteration">true</boolProp>\n' +
+      '        <boolProp name="useExpires">false</boolProp>\n' +
+      '      </CacheManager>\n' +
+      '      <hashTree/>\n' +
+      '      <CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookie Manager" enabled="true">\n' +
+      '        <collectionProp name="CookieManager.cookies"/>\n' +
+      '        <boolProp name="CookieManager.clearEachIteration">true</boolProp>\n' +
+      '      </CookieManager>\n' +
+      '      <hashTree/>\n' +
+      `<CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="parameter" enabled="true">
+                <stringProp name="delimiter">,</stringProp>
+                 <stringProp name="fileEncoding"></stringProp>
+                 <stringProp name="filename">${config.storage.csvPath}${workflowDetails[0]._id}</stringProp>
+                   <boolProp name="ignoreFirstLine">false</boolProp>
+                 <boolProp name="quotedData">false</boolProp>
+                  <boolProp name="recycle">true</boolProp>
+                   <stringProp name="shareMode">shareMode.group</stringProp>
+                  <boolProp name="stopThread">false</boolProp>
+               <stringProp name="variableNames"></stringProp>
+        </CSVDataSet> <hashTree/> `;
     let dynamicData = '';
     const transactions = await Transaction.find({ run }).sort({ "sequence": 1 });
     for (let i = 0; i < transactions.length; i++) {
       let requests = await Request.find({ transaction: transactions[i]._id }).sort({ "sequence": 1 });
-      dynamicData += `<TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="${transactions[i].title}" enabled="true">
+      dynamicData += `<TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="W${workflowDetails[0].sequence}_T${String(transactions[i].sequence).padStart(2, '0')}_${transactions[i].title}" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
           <boolProp name="TransactionController.parent">false</boolProp>
         </TransactionController><hashTree>`;
+    let whichRequest = 0;
       for (let j = 0; j < requests.length; j++) {
         const filterUrl = requests[j].url;
         const loc = new URL(filterUrl)
         const host = loc.host
         if (ignoredExt.indexOf(filterUrl.split(/\#|\?/)[0].split('.').pop().trim()) !== -1 || ignoredUrls.indexOf(host) !== -1) continue;
+        whichRequest++;
         let hasReg = await Correlation.find({ "first.request": requests[j]._id, final_regex: { $ne: 'false' } });
         // console.log("data to read", moreDynamic);
         //let hasDiff = await Difference.find({"first.request":requests[j]._id});
@@ -224,7 +168,7 @@ class RunController {
         const urlWithCorAndPar = await parseParams(requests[j], requests[j].request.url, transactions[i].title);
         //removing headers which have : in their name
         requests[j].request.headers = requests[j].request.headers.filter(header => Object.keys(header)[0][0] !== ':')
-        dynamicData += `<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="${myURL.pathname}" enabled="true">
+        dynamicData += `<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="W${workflowDetails[0].sequence}_T${String(transactions[i].sequence).padStart(2, '0')}_R${String(whichRequest).padStart(2, '0')}_${myURL.pathname}" enabled="true">
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             ${requests[j].request.post_data.length === 0 ?
             `<collectionProp name="Arguments.arguments"/>` :
@@ -275,13 +219,18 @@ class RunController {
       }
       dynamicData += '</hashTree>'
     }
-    const fileName = `${workflowDetails[0].name.split(' ').join('_')}_${forFileName}.jmx`;
-    console.log("jmeter", fileName)
-    await Workflow.findByIdAndUpdate(workflow, { jmx_file_name: fileName });
-    let file = fs.createWriteStream(`${config.storage.path}${fileName}`);
-    file.write(startXml + dynamicData + endXml);
-    file.close();
-    await Workflow.update({ _id: workflow }, { jmx: true })
+    /*
+      Commented code for saving data in workflow db itself
+    */
+
+    // const fileName = `${workflowDetails[0].name.split(' ').join('_')}_${forFileName}.jmx`;
+    // console.log("jmeter", fileName)
+    // await Workflow.findByIdAndUpdate(workflow, { jmx_file_name: fileName });
+    // let file = fs.createWriteStream(`${config.storage.path}${fileName}`);
+    // file.write(startXml + dynamicData);
+    // file.close();
+    console.log("jmx",startXml + dynamicData);
+    await Workflow.findByIdAndUpdate(workflow, { jmx: true, jmx_data: startXml + dynamicData })
     ApplicationController.updateStatus(workflowDetails[0].application, "Jmx Generated");
     //  setTimeout( async ()=>{
     //   await LoadRunner.prepareJmeter(`${config.storage.path}${fileName}`, workflowDetails[0])

@@ -6,28 +6,6 @@ import {URL} from 'url';
 import Request from '../models/Request';
 const parse = require('tld-extract')
 
-//  export async function checkCorName(key , value, request){
-//    const diff = await Difference.find({key,value,"first.request":request});
-//    if(diff.length !== 1) return false;
-//    console.log("found diff", diff);
-//     if(diff[0].duplicate){
-//         const col = await Correlation.find({key ,value ,"first.request":diff[0].duplicate});
-//         if(col.length > 0){
-//             return col[0].reg_name;
-//         }else{
-//             return false;
-//         }
-        
-//     }else{
-//         const col = await Correlation.find({key ,value ,"first.request":request});
-//         console.log("correlatuio cheicng", col);
-//         if(col.length > 0){
-//             return col[0].reg_name;
-//         }else{
-//             return false 
-//         }
-//     }
-// }
 export const resolveArray = async (myArray, request_id) => {
     async function checkCorName(key , value,request){
         const diff = await Difference.find({key,value,"first.request":request});
@@ -113,7 +91,6 @@ export const parseParams = async (request , urlPath) =>{
     let myURL = new URL(pathName);
     const params = request.request.params;
     if(params.length === 0){
-
         return pathName.split(`.${parse(pathName).tld}`)[1].replace(/&/g,'&amp;');
     }
     let inSettings = await ParamSetting.find({
@@ -128,7 +105,59 @@ export const parseParams = async (request , urlPath) =>{
             myURL.searchParams.set(key, `\${${key}_par}`);
         }
     }
-    return decodeURIComponent(myURL.href.split(`.${parse(myURL.href).tld}`)[1].replace(/&/g,'&amp;'));
+    return decodeURIComponent(myURL.href.split(`.${parse(myURL.href).tld}`)[1]).replace(/&/g,'&amp;');
 }
 
+
+export const jmxStartXml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
+'<jmeterTestPlan version="1.2" properties="3.2" jmeter="3.3 r1808647">\n' +
+'  <hashTree>\n' +
+'    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan" enabled="true">\n' +
+'      <stringProp name="TestPlan.comments"></stringProp>\n' +
+'      <boolProp name="TestPlan.functional_mode">false</boolProp>\n' +
+'      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>\n' +
+'      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">\n' +
+'        <collectionProp name="Arguments.arguments"/>\n' +
+'      </elementProp>\n' +
+'      <stringProp name="TestPlan.user_define_classpath"></stringProp>\n' +
+'    </TestPlan>\n' +
+'    <hashTree>\n' +
+'<ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="Aggregate Report" enabled="true">\n' +
+'          <boolProp name="ResultCollector.error_logging">false</boolProp>\n' +
+'          <objProp>\n' +
+'            <name>saveConfig</name>\n' +
+'            <value class="SampleSaveConfiguration">\n' +
+'              <time>true</time>\n' +
+'              <latency>true</latency>\n' +
+'              <timestamp>true</timestamp>\n' +
+'              <success>true</success>\n' +
+'              <label>true</label>\n' +
+'              <code>true</code>\n' +
+'              <message>true</message>\n' +
+'              <threadName>true</threadName>\n' +
+'              <dataType>true</dataType>\n' +
+'              <encoding>false</encoding>\n' +
+'              <assertions>true</assertions>\n' +
+'              <subresults>true</subresults>\n' +
+'              <responseData>false</responseData>\n' +
+'              <samplerData>false</samplerData>\n' +
+'              <xml>false</xml>\n' +
+'              <fieldNames>true</fieldNames>\n' +
+'              <responseHeaders>false</responseHeaders>\n' +
+'              <requestHeaders>false</requestHeaders>\n' +
+'              <responseDataOnError>false</responseDataOnError>\n' +
+'              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>\n' +
+'              <assertionsResultsToSave>0</assertionsResultsToSave>\n' +
+'              <bytes>true</bytes>\n' +
+'              <sentBytes>true</sentBytes>\n' +
+'              <threadCounts>true</threadCounts>\n' +
+'              <idleTime>true</idleTime>\n' +
+'              <connectTime>true</connectTime>\n' +
+'            </value>\n' +
+'          </objProp>\n' +
+'          <stringProp name="filename"></stringProp>\n' +
+'        </ResultCollector>\n' +
+'        <hashTree/>\n';
+
+export const jmxEndXml = '</hashTree></hashTree></hashTree></hashTree></hashTree></jmeterTestPlan>';
  

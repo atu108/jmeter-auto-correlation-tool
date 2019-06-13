@@ -16,6 +16,10 @@ const WorkflowSchema = new Schema({
    type: Boolean,
    default: false
  },
+ sequence: {
+  type: Number,
+  default: 1
+ },
  user_load: Number,
  duration: Number,
  rampup_duration: Number,
@@ -39,6 +43,10 @@ const WorkflowSchema = new Schema({
   jmx: {
     type: Schema.Types.Boolean,
     default: false
+  },
+  jmx_data: {
+    type: Schema.Types.String,
+    default: "" 
   },
   added_on: {
     type: Date,

@@ -10,10 +10,11 @@ const router = new Router({
 
 router.get('/workflows/:application', WorkflowController.get)
   .post('/workflow/save', WorkflowController.save)
-  .get('workflow/delete/:id', WorkflowController.delete)
+  .get('/workflow/delete/:id', WorkflowController.delete)
   .get('/runvalues/:workflow', WorkflowController.getRunValues)
   .post('/run2values', WorkflowController.saveRunValues)
   // .post('/run2', WorkflowController.saveRun2)
-  .get("/recreateJmx/:workflow/:run", RunController.recreate)
+  .get("/recreateJmx/:workflow/:run", auth ,RunController.recreate)
+  .post("/downloadJmx", auth, WorkflowController.downloadJmx)
   
 export default router;

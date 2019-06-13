@@ -577,6 +577,7 @@ class Backtrack {
             return false;
         }
         }catch(e){
+            return false;
             console.log(e);
         }
         
@@ -584,13 +585,19 @@ class Backtrack {
     }
 
     findSelect(body, key, value){
-        let $ = cheerio.load(body.replace((/\\/g, "")));
-        let selects = $('select[name="'+ key +'"] option[value="' + value + '"]').toArray;
-        if( selects.length > 0){
-            return selects;
-        }else{
+        try{
+            let $ = cheerio.load(body.replace((/\\/g, "")));
+            let selects = $('select[name="'+ key +'"] option[value="' + value + '"]').toArray;
+            if( selects.length > 0){
+                return selects;
+            }else{
+                return false;
+            }
+        }catch(e){
             return false;
+            console.log(e);
         }
+       
     }
 
     _getRegName(final,matched,value,key){

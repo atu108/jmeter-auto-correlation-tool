@@ -1,7 +1,6 @@
 import User from '../models/User';
 import { encrypt } from '../utility/helper';
 import session from '../utility/session';
-import template from '../utility/template';
 
 class AuthController {
   constructor() {

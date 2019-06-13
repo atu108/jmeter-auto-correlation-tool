@@ -14,8 +14,11 @@ import logger from './utility/logger';
 import mail from './utility/mail';
 import queue from './utility/queue';
 import httpError from './utility/error';
-
+const socketIo = require("socket.io");
 import response from './middlewares/response';
+import seleniumTaskCron from 'node-cron';
+import Har from './utility/har';
+
 mongoose.connect(config.database.uri, {
   useMongoClient: true
 });
@@ -70,5 +73,8 @@ app.listen(config.app.port, config.app.host, () => {
 
 queue.init();
 mail.init();
-
+seleniumTaskCron.schedule('*/1 * * * *', () => {
+  console.log("cron called")
+  Har.start();
+});
 export default app;

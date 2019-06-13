@@ -16,6 +16,9 @@ import ApplicationController from './ApplicationController';
 import ParamSetting from '../models/ParamSetting';
 import { all } from 'q';
 import { deleteAppOrWorkflow } from '../utility/helper';
+import TrackJob from '../models/TrackJob';
+import { jmxEndXml, jmxStartXml } from '../utility/jmxConstants';
+import Har from '../utility/har';
 
 class WorkflowController {
   constructor() {
@@ -25,7 +28,9 @@ class WorkflowController {
       getRunValues: this.getRunValues.bind(this),
       saveRunValues: this.saveRunValues.bind(this),
       saveRun2: this.saveRun2.bind(this),
-      delete: this.delete.bind(this)
+      delete: this.delete.bind(this),
+      saveRequests: this._saveRequests.bind(this),
+      downloadJmx: this.downloadJmx.bind(this)
     }
   }
 
@@ -56,6 +61,30 @@ class WorkflowController {
       message: "Workflow deleted"
     }
   }
+
+
+  async downloadJmx(ctx) {
+    const workflowIds = ctx.request.body.workflows;
+    const workflowJmxData = await Workflow.find({ _id: { $in: workflowIds } });
+    // console.log(workflowJmxData);
+    let dynamicData = '';
+    let filename = [];
+    let hashTree = '</hashTree>';
+    workflowJmxData.forEach((w,index) => {
+      filename.push(w.name.split(" ").join("_"))
+      if(index + 1 == workflowJmxData.length){
+        dynamicData += w.jmx_data;
+      }else{
+        dynamicData += w.jmx_data + hashTree
+      }
+    });
+    console.log(dynamicData)
+    ctx.attachment(`${filename.join("&")}.jmx`);
+    ctx.type = 'application/xml';
+    ctx.body = jmxStartXml + dynamicData + jmxEndXml;
+    //ctx.set(`Content-disposition', 'attachment; filename= ${filename.join("&")}.jmx`);
+  }
+
   async save(ctx) {
     let { name, description, application, user_load, duration, rampup_duration, loop_count } = ctx.request.body.fields;
     let readStream = null;
@@ -71,8 +100,9 @@ class WorkflowController {
       }
     }
     let allCommands = readStream['tests'][0]['commands'];
-    let start_url = readStream['url'] + readStream['tests'][0]['commands'][0]['target']
-    const workflow = await Workflow.create({ name, description, loop_count, application, start_url, user_load, duration, rampup_duration, file: ctx.request.body.files.file.name });
+    let start_url = readStream['url'] + readStream['tests'][0]['commands'][0]['target'];
+    let workflowSequence = await Workflow.count({application});
+    const workflow = await Workflow.create({ name, description, loop_count, application, start_url, user_load, duration, rampup_duration, file: ctx.request.body.files.file.name, sequence: workflowSequence + 1 });
     const run = await Run.create({ sequence: 1, workflow: workflow._id });
     ApplicationController.updateStatus(application, "Fetching data");
     allCommands.map((obj, index) => {
@@ -82,33 +112,15 @@ class WorkflowController {
       obj.sequence = index
     })
     const savedSteps = await SeleniumStep.create(allCommands);
-    axios({
-      method: 'post',
-      url: 'http://0.0.0.0:4040/generatehar',
-      data: {
-        data: savedSteps,
-        url: start_url,
-        filename: ctx.request.body.files.file.name,
-        saveDropdown: true
-      }
+    await TrackJob.create({
+      savedSteps: JSON.stringify(savedSteps),
+      start_url,
+      filename: ctx.request.body.files.file.name,
+      saveDropdown: true,
+      workflow: workflow._id,
+      application: workflow.application,
+      run: run._id
     })
-      .then(async res => {
-        if (res.data.success) {
-          let all_select = res.data.select
-          console.log(all_select)
-          await Dropdown.create(all_select.map(s => {
-            s.workflow = workflow._id
-            return s;
-          }));
-          await this._saveRequests(res.data.hars, run._id, workflow._id)
-          await Workflow.update({ _id: workflow._id }, { run1_request: true })
-        } else {
-          console.log(res);
-        }
-      })
-      .catch(error => {
-        console.log(error);
-      });
     ctx.body = {
       success: true,
       message: "Selenium Steps Saved",
@@ -127,17 +139,23 @@ class WorkflowController {
     }).populate('options').populate('run2value')
 
     // got requests for parametrisation : where post_data has some value in it
-    let requests = await Request.find({ workflow: ctx.params.workflow, "request.post_data": { $exists: true, $ne: [] } });
+    let postRequests = await Request.find({ workflow: ctx.params.workflow, "request.post_data": { $exists: true, $ne: [] } });
+    let getRequests = await Request.find({ workflow: ctx.params.workflow, "request.params": { $exists: true, $ne: [] } });
     return ctx.body = {
       success: true,
       data: steps,
-      requests: requests.map(r => {
+      postRequests: postRequests.map(r => {
         return {
           postData: r.request.post_data,
           id: r._id
         }
-      }
-      )
+      }),
+      getRequests: getRequests.map(r => {
+        return {
+          params: r.request.params,
+          id: r._id
+        }
+      })
     }
   }
 
@@ -149,7 +167,7 @@ class WorkflowController {
     let paramsSettingsdata = [];
     try {
       all_fields.forEach(key => {
-        if (key !== 'workflow' && key !== "application" && key !== "time") {
+        if (key != 'workflow' && key != "application" && key != "time") {
           if (key.indexOf("____") === -1) {
             dataToSave.push({
               workflow,
@@ -163,18 +181,18 @@ class WorkflowController {
               application,
               request: key.split("____")[0],
               key: key.split("____")[1],
-              value: ctx.request.body[key.split("____")[2]]
+              value: key.split("____")[2]
             })
             keys.push(key.split("____")[1] + "_par")
           }
         }
       })
-      if(paramsSettingsdata.length > 0){
+      if (paramsSettingsdata.length > 0) {
         await ParamSetting.create(paramsSettingsdata);
-        fs.writeFileSync(config.storage.sampleCsvPath + workflow + ".csv", keys.join(","), "utf8" )
-        await Workflow.update({_id: workflow}, {csv_required: true});
-       
-      } 
+        fs.writeFileSync(config.storage.sampleCsvPath + "sample.csv", keys.join(","), "utf8")
+        await Workflow.update({ _id: workflow }, { csv_required: true });
+
+      }
       await SeleniumStepValue.create(dataToSave);
       await Workflow.update({ _id: workflow }, { run2_value: true })
       await Schedual.create({ application, time })
@@ -204,30 +222,17 @@ class WorkflowController {
       delete c.run2value
       return c
     })
-    console.log(JSON.stringify(all_commands))
-    axios({
-      method: 'post',
-      url: 'http://0.0.0.0:4040/generatehar',
-      data: {
-        data: all_commands,
-        url: workflow.start_url,
-        filename: workflow.file ? workflow.file : "temp",
-        saveDropdown: false
-      }
+
+    await TrackJob.create({
+      savedSteps: JSON.stringify(all_commands),
+      start_url: workflow.start_url,
+      filename: workflow.file ? workflow.file : "temp",
+      saveDropdown: false,
+      workflow: workflow._id,
+      application: workflow.application,
+      run: run._id,
+      generateJmx: true
     })
-      .then(async res => {
-        if (res.data.success) {
-          console.log("har genearted")
-          await this._saveRequests(res.data.hars, run._id, workflow._id)
-          await Workflow.update({ _id: workflow._id }, { run2_request: true })
-          await RunController.compare(workflow._id)
-        } else {
-          console.log(res);
-        }
-      })
-      .catch(error => {
-        console.log(error);
-      });
   }
 
   async _saveRequests(hars, run, workflow) {
