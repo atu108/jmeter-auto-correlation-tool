@@ -3,7 +3,9 @@ import Difference from '../models/Difference';
 import Correlation from '../models/Correlation';
 import ParamSetting from '../models/ParamSetting';
 import {URL} from 'url';
+import fs from 'fs';
 import Request from '../models/Request';
+import config from '../config';
 const parse = require('tld-extract')
 
 export const resolveArray = async (myArray, request_id) => {
@@ -57,7 +59,6 @@ export const resolveArray = async (myArray, request_id) => {
         }
        
     }
-    console.log("cheching to send", toSend);
     return toSend;
 }
 
@@ -83,7 +84,6 @@ export const parseParams = async (request , urlPath) =>{
                     pathName = pathName.replace(regName.toReplace[i], `\${${col[0].reg_final_name}_${regName.withWhat[i]}}`);
                 }
                 pathName = diff[0].first.value.split(`.${splitWith}`)[0] + `.${splitWith}` + pathName;
-                console.log("path names", pathName);
             }
         }
     }
@@ -160,4 +160,94 @@ export const jmxStartXml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
 '        <hashTree/>\n';
 
 export const jmxEndXml = '</hashTree></hashTree></hashTree></hashTree></hashTree></jmeterTestPlan>';
+
+export let jmxThreadGroupDetails = function(threadGroupDeatils, userLoad){
+    return `<ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="W${String(threadGroupDeatils.sequence).padStart(2, '0')}_${threadGroupDeatils.name}" enabled="true">\n` +
+    '        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>\n' +
+    '        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">\n' +
+    '          <boolProp name="LoopController.continue_forever">false</boolProp>\n' +
+    `         <stringProp name="LoopController.loops">${threadGroupDeatils.loop_count}</stringProp>\n` +
+    '        </elementProp>\n' +
+    `        <stringProp name="ThreadGroup.num_threads">${userLoad}</stringProp>\n` +
+    `      <stringProp name="ThreadGroup.ramp_time">${threadGroupDeatils.rampup_duration}</stringProp>\n` +
+    '        <longProp name="ThreadGroup.start_time">1511866023000</longProp>\n' +
+    '        <longProp name="ThreadGroup.end_time">1511866023000</longProp>\n' +
+    `        <boolProp name="ThreadGroup.scheduler">${threadGroupDeatils.duration ? true: false}</boolProp>\n` +
+    `        <stringProp name="ThreadGroup.duration">${threadGroupDeatils.duration}</stringProp>\n` +
+    '        <stringProp name="ThreadGroup.delay"></stringProp>\n' +
+    '      </ThreadGroup>\n' +
+    '      <hashTree>'
+}
+
+export const jmxThinkTime = function(delay = 5000, range = 3000){
+    return `<hashTree/><GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer" enabled="true">
+    <stringProp name="ConstantTimer.delay">${delay}</stringProp>
+    <stringProp name="RandomTimer.range">${range}</stringProp>
+  </GaussianRandomTimer>`
+}
+
+export const jmxPacing = function(delay, range){
+    return `<kg.apc.jmeter.samplers.DummySampler guiclass="kg.apc.jmeter.samplers.DummySamplerGui" testclass="kg.apc.jmeter.samplers.DummySampler" testname="jp@gc - Dummy Sampler" enabled="true">
+    <boolProp name="WAITING">true</boolProp>
+    <boolProp name="SUCCESFULL">true</boolProp>
+    <stringProp name="RESPONSE_CODE">200</stringProp>
+    <stringProp name="RESPONSE_MESSAGE">OK</stringProp>
+    <stringProp name="REQUEST_DATA">Dummy Sampler used to simulate requests and responses
+without actual network activity. This helps debugging tests.</stringProp>
+    <stringProp name="RESPONSE_DATA">Dummy Sampler used to simulate requests and responses
+without actual network activity. This helps debugging tests.</stringProp>
+    <stringProp name="RESPONSE_TIME"></stringProp>
+    <stringProp name="LATENCY">0</stringProp>
+    <stringProp name="CONNECT">0</stringProp>
+    <stringProp name="URL"></stringProp>
+    <stringProp name="RESULT_CLASS">org.apache.jmeter.samplers.SampleResult</stringProp>
+  </kg.apc.jmeter.samplers.DummySampler>
+  <hashTree>
+    <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer" enabled="true">
+      <stringProp name="ConstantTimer.delay">${delay}</stringProp>
+      <stringProp name="RandomTimer.range">${range}</stringProp>
+    </GaussianRandomTimer>`
+}
+// param userLoad is calculated whlie runnig jmeter 
+export const mergeJmx =  function(workflows, userLoad, dryRun = false) {
+    let dynamicData = '';
+    let filename = [];
+    const application = workflows[0].application;
+    let hashTree = '</hashTree>';
+    let workflowUserLoad = 0
+    workflows.forEach((w, index) => {
+      filename.push(w.name.split(" ").join("_"));
+      // workflowUserLoad is distributed load on this workflow
+      // user_load is the percentage user load for this workflow
+      workflowUserLoad = (w.user_load * userLoad) / 100;
+      let threadGroupDetails = jmxThreadGroupDetails({
+        name: w.name,
+        loop_count: w.loop_count || '',
+        rampup_duration: w.rampup_duration,
+        sequence: w.sequence,
+        duration: w.duration || ''
+      }, workflowUserLoad);
+      if(dryRun){
+        threadGroupDetails = jmxThreadGroupDetails({
+            name: w.name,
+            loop_count: 1,
+            rampup_duration: 1,
+            sequence: w.sequence,
+            duration: ''
+          }, userLoad)
+      }
+      if (index + 1 == workflows.length) {
+        dynamicData += threadGroupDetails + w.jmx_data + w.jmx_pacing;
+      } else {
+        dynamicData += threadGroupDetails + w.jmx_data + w.jmx_pacing + hashTree;
+      }
+    });
+    const filePath = `${config.storage.path}${application}_${userLoad}.jmx`;
+    fs.writeFileSync(filePath, jmxStartXml + dynamicData + jmxEndXml)
+    return {
+      jmx: jmxStartXml + dynamicData + jmxEndXml,
+      filePath,
+      fileName: `${application}_${userLoad}.jmx`
+  }
+}
  

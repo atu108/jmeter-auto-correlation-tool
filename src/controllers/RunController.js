@@ -1,7 +1,3 @@
-import fs from 'fs';
-import videoshow from 'videoshow';
-import template from '../utility/template';
-import { request, filesInDir, removeDir } from '../utility/helper';
 import config from '../config';
 import Run from '../models/Run';
 import RunValue from '../models/RunValue';
@@ -17,8 +13,10 @@ import Workflow from '../models/Workflow';
 import Transaction from '../models/Transaction';
 import ExcludeUrl from '../models/ExcludeUrl';
 import { URL } from 'url';
-import { resolveArray, parseParams, jmxEndXml, jmxStartXml } from '../utility/jmxConstants';
+import { resolveArray, parseParams, jmxThinkTime, mergeJmx} from '../utility/jmxConstants';
 import ApplicationController from './ApplicationController';
+import LoadRunner from './LoadRunner';
+import Application from '../models/Application';
 const ignoredExt = config.app.ignoredExt;
 var dateFormat = require('dateformat');
 var now = new Date();
@@ -110,22 +108,7 @@ class RunController {
     const workflowDetails = await Workflow.find({ _id: workflow });
     // const {user_load, duration} = workflowDetails[0];
     // run will be paseed to this function
-    const startXml =`<ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="W${workflowDetails[0].sequence}_${workflowDetails[0].name}" enabled="true">\n` +
-      '        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>\n' +
-      '        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">\n' +
-      '          <boolProp name="LoopController.continue_forever">${__P(isLoop),}</boolProp>\n' +
-      '          <stringProp name="LoopController.loops">${__P(loop,)}</stringProp>\n' +
-      '        </elementProp>\n' +
-      '        <stringProp name="ThreadGroup.num_threads">${__P(threads,)}</stringProp>\n' +
-      '        <stringProp name="ThreadGroup.ramp_time">${__P(rampup,)}</stringProp>\n' +
-      '        <longProp name="ThreadGroup.start_time">1511866023000</longProp>\n' +
-      '        <longProp name="ThreadGroup.end_time">1511866023000</longProp>\n' +
-      '        <boolProp name="ThreadGroup.scheduler">${__P(isDuration),}</boolProp>\n' +
-      '        <stringProp name="ThreadGroup.duration">${__P(duration,)}</stringProp>\n' +
-      '        <stringProp name="ThreadGroup.delay"></stringProp>\n' +
-      '      </ThreadGroup>\n' +
-      '      <hashTree>' +
-      '<CacheManager guiclass="CacheManagerGui" testclass="CacheManager" testname="HTTP Cache Manager" enabled="true">\n' +
+    const startXml = '<CacheManager guiclass="CacheManagerGui" testclass="CacheManager" testname="HTTP Cache Manager" enabled="true">\n' +
       '        <boolProp name="clearEachIteration">true</boolProp>\n' +
       '        <boolProp name="useExpires">false</boolProp>\n' +
       '      </CacheManager>\n' +
@@ -135,7 +118,7 @@ class RunController {
       '        <boolProp name="CookieManager.clearEachIteration">true</boolProp>\n' +
       '      </CookieManager>\n' +
       '      <hashTree/>\n' +
-      `<CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="parameter" enabled="true">
+      `<CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="parameter" enabled="${workflowDetails[0].csv_required}">
                 <stringProp name="delimiter">,</stringProp>
                  <stringProp name="fileEncoding"></stringProp>
                  <stringProp name="filename">${config.storage.csvPath}${workflowDetails[0]._id}</stringProp>
@@ -200,11 +183,7 @@ class RunController {
             </elementProp>`).join('')}
             </collectionProp>
             </HeaderManager>
-            ${i !== 0 && j === 0 ? `<hashTree/>
-              <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer" enabled="true">
-                <stringProp name="ConstantTimer.delay">5000</stringProp>
-                <stringProp name="RandomTimer.range">3000</stringProp>
-              </GaussianRandomTimer>`: ''}
+            ${i != 0 && whichRequest == 1 ? `${jmxThinkTime()}`: ''}
               <hashTree/>
             ${hasReg.map((hasReg) => `<RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="client_id_REX" enabled="true">
               <stringProp name="RegexExtractor.useHeaders">false</stringProp>
@@ -229,12 +208,14 @@ class RunController {
     // let file = fs.createWriteStream(`${config.storage.path}${fileName}`);
     // file.write(startXml + dynamicData);
     // file.close();
-    console.log("jmx",startXml + dynamicData);
     await Workflow.findByIdAndUpdate(workflow, { jmx: true, jmx_data: startXml + dynamicData })
-    ApplicationController.updateStatus(workflowDetails[0].application, "Jmx Generated");
     //  setTimeout( async ()=>{
     //   await LoadRunner.prepareJmeter(`${config.storage.path}${fileName}`, workflowDetails[0])
     //  }, 1*60*1000);
+    const totalWorkflowCount = await Workflow.count({application: workflowDetails[0].application})
+    if(totalWorkflowCount == workflowDetails[0].sequence){
+      await LoadRunner.dryRun(workflowDetails[0].application)
+    }
     return true;
   }
 

@@ -48,6 +48,10 @@ const WorkflowSchema = new Schema({
     type: Schema.Types.String,
     default: "" 
   },
+  jmx_pacing: {
+    type: String,
+    default: ''
+  },
   added_on: {
     type: Date,
     default: Date.now,

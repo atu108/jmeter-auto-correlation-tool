@@ -23,6 +23,13 @@ const ApplicationSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  pacing: {
+    err: {
+      type: Boolean,
+      default: false
+    },
+    message: String
+  },
   updated_on: {
     type: Date,
     default: Date.now
@@ -31,10 +38,15 @@ const ApplicationSchema = new Schema({
     type: Schema.Types.String,
     default: "Pending"
   },
+  jmx_file : {
+    type: String,
+    default: ''
+  },
   jmx: {
     type: Schema.Types.String,
     default: "pending"
-  }
+  }, 
+  max_user_load: Number
 }, {
     toJSON: {
       virtuals: true

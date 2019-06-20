@@ -32,10 +32,11 @@ class Har {
             if (task.generateJmx) {
               await RunController.compare(task.workflow)
             } else {
-              ApplicationController.updateStatus(task.application, "Data Fetched");
+              ApplicationController.updateStatus(task.application, "Parametrise pending");
             }
           } else {
             await TrackJob.update({ _id: task._id }, { status: "pending", $inc: { retries: 1 } })
+            ApplicationController.updateStatus(task.application, "Failed");
             console.log(error)
           }
         })

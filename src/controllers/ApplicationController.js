@@ -53,17 +53,17 @@ class ApplicationController {
   }
 
   async save(ctx) {
-    let { name, url, description, type, version, is_captcha, is_encrypted, is_auth, auth_type } = ctx.request.body;
+    let { name, url, description, type, version, is_captcha, is_encrypted, is_auth, auth_type, max_user_load } = ctx.request.body;
     let owner = ctx.user.id;
     if (ctx.params.id) {
-      await Application.update({ _id: ctx.params.id, owner }, { name, url, description, type, version, is_captcha, is_encrypted, is_auth, auth_type, owner });
+      await Application.update({ _id: ctx.params.id, owner }, { name, url, description, type, version, is_captcha, is_encrypted, is_auth, auth_type, owner, max_user_load });
       return ctx.body = {
         success: true,
         message: "Project Updated",
         data: app
       };
     }
-    const app = await Application.create({ name, url, description, type, version, is_captcha, is_encrypted, is_auth, auth_type, owner });
+    const app = await Application.create({ name, url, description, type, version, is_captcha, is_encrypted, is_auth, auth_type, owner, max_user_load });
     ctx.body = {
       success: true,
       message: "Project Saved",

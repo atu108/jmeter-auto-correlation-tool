@@ -7,7 +7,7 @@ const router = new Router({
   prefix: '/app'
 });
 
-router.get('/runTest/:workflow', auth, LoadRunnerController.runTest)
+router.get('/runTest/:application', auth, LoadRunnerController.runTest)
       .post('/saveCsv/:workflow', LoadRunnerController.saveCsv)
 
 

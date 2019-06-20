@@ -11,6 +11,7 @@ const TestSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "Application"
   },
+  is_dry_run: Boolean,
   schedual: {
     type: Schema.Types.ObjectId,
     ref: "Schedual"

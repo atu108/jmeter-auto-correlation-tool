@@ -17,8 +17,7 @@ import ParamSetting from '../models/ParamSetting';
 import { all } from 'q';
 import { deleteAppOrWorkflow } from '../utility/helper';
 import TrackJob from '../models/TrackJob';
-import { jmxEndXml, jmxStartXml } from '../utility/jmxConstants';
-import Har from '../utility/har';
+import { mergeJmx } from '../utility/jmxConstants';
 
 class WorkflowController {
   constructor() {
@@ -65,24 +64,11 @@ class WorkflowController {
 
   async downloadJmx(ctx) {
     const workflowIds = ctx.request.body.workflows;
-    const workflowJmxData = await Workflow.find({ _id: { $in: workflowIds } });
-    // console.log(workflowJmxData);
-    let dynamicData = '';
-    let filename = [];
-    let hashTree = '</hashTree>';
-    workflowJmxData.forEach((w,index) => {
-      filename.push(w.name.split(" ").join("_"))
-      if(index + 1 == workflowJmxData.length){
-        dynamicData += w.jmx_data;
-      }else{
-        dynamicData += w.jmx_data + hashTree
-      }
-    });
-    console.log(dynamicData)
-    ctx.attachment(`${filename.join("&")}.jmx`);
+    const workflows = await Workflow.find({ _id: { $in: workflowIds } });
+    const jmxDeatils = mergeJmx(workflows, 10)
+    ctx.attachment(jmxDeatils.filename);
     ctx.type = 'application/xml';
-    ctx.body = jmxStartXml + dynamicData + jmxEndXml;
-    //ctx.set(`Content-disposition', 'attachment; filename= ${filename.join("&")}.jmx`);
+    ctx.body = jmxDeatils.jmx
   }
 
   async save(ctx) {
@@ -101,7 +87,7 @@ class WorkflowController {
     }
     let allCommands = readStream['tests'][0]['commands'];
     let start_url = readStream['url'] + readStream['tests'][0]['commands'][0]['target'];
-    let workflowSequence = await Workflow.count({application});
+    let workflowSequence = await Workflow.count({ application });
     const workflow = await Workflow.create({ name, description, loop_count, application, start_url, user_load, duration, rampup_duration, file: ctx.request.body.files.file.name, sequence: workflowSequence + 1 });
     const run = await Run.create({ sequence: 1, workflow: workflow._id });
     ApplicationController.updateStatus(application, "Fetching data");
