@@ -16,6 +16,11 @@ const WorkflowSchema = new Schema({
    type: Boolean,
    default: false
  },
+ csv_uploaded:{
+  type: Boolean,
+  default: false
+ },
+ csv_warning: String,
  sequence: {
   type: Number,
   default: 1
@@ -64,10 +69,10 @@ const WorkflowSchema = new Schema({
 });
 WorkflowSchema.plugin(MongooseError);
 WorkflowSchema.plugin(findOrCreate);
-// WorkflowSchema.virtual("app", {
-//   ref: "Application",
-//   localField: "application",
-//   foreignField: "_id",
-//   justOne: true
-// });
+WorkflowSchema.virtual("app", {
+  ref: "Application",
+  localField: "application",
+  foreignField: "_id",
+  justOne: true
+});
 export default mongoose.model('Workflow', WorkflowSchema);

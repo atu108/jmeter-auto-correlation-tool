@@ -108,27 +108,6 @@ class RunController {
     const workflowDetails = await Workflow.find({ _id: workflow });
     // const {user_load, duration} = workflowDetails[0];
     // run will be paseed to this function
-    const startXml = '<CacheManager guiclass="CacheManagerGui" testclass="CacheManager" testname="HTTP Cache Manager" enabled="true">\n' +
-      '        <boolProp name="clearEachIteration">true</boolProp>\n' +
-      '        <boolProp name="useExpires">false</boolProp>\n' +
-      '      </CacheManager>\n' +
-      '      <hashTree/>\n' +
-      '      <CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookie Manager" enabled="true">\n' +
-      '        <collectionProp name="CookieManager.cookies"/>\n' +
-      '        <boolProp name="CookieManager.clearEachIteration">true</boolProp>\n' +
-      '      </CookieManager>\n' +
-      '      <hashTree/>\n' +
-      `<CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="parameter" enabled="${workflowDetails[0].csv_required}">
-                <stringProp name="delimiter">,</stringProp>
-                 <stringProp name="fileEncoding"></stringProp>
-                 <stringProp name="filename">${config.storage.csvPath}${workflowDetails[0]._id}</stringProp>
-                   <boolProp name="ignoreFirstLine">false</boolProp>
-                 <boolProp name="quotedData">false</boolProp>
-                  <boolProp name="recycle">true</boolProp>
-                   <stringProp name="shareMode">shareMode.group</stringProp>
-                  <boolProp name="stopThread">false</boolProp>
-               <stringProp name="variableNames"></stringProp>
-        </CSVDataSet> <hashTree/> `;
     let dynamicData = '';
     const transactions = await Transaction.find({ run }).sort({ "sequence": 1 });
     for (let i = 0; i < transactions.length; i++) {
@@ -201,14 +180,13 @@ class RunController {
     /*
       Commented code for saving data in workflow db itself
     */
-
     // const fileName = `${workflowDetails[0].name.split(' ').join('_')}_${forFileName}.jmx`;
     // console.log("jmeter", fileName)
     // await Workflow.findByIdAndUpdate(workflow, { jmx_file_name: fileName });
     // let file = fs.createWriteStream(`${config.storage.path}${fileName}`);
     // file.write(startXml + dynamicData);
     // file.close();
-    await Workflow.findByIdAndUpdate(workflow, { jmx: true, jmx_data: startXml + dynamicData })
+    await Workflow.findByIdAndUpdate(workflow, { jmx: true, jmx_data: dynamicData })
     //  setTimeout( async ()=>{
     //   await LoadRunner.prepareJmeter(`${config.storage.path}${fileName}`, workflowDetails[0])
     //  }, 1*60*1000);

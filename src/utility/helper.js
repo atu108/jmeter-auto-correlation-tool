@@ -41,6 +41,52 @@ export async function deleteAppOrWorkflow (id, level, type = 'temp'){
   
   
 }
+export const isObject = function(item) {
+  return (typeof item === "object" && !Array.isArray(item) && item !== null);
+}
+
+
+export const calculateTotalRecordsNeeded = async function(workflow) {
+  let workflowDetails;
+  if(!isObject(workflow)){
+    workflowDetails = await Workflow.findOne({ _id: workflow }).populate("app");
+  }else{
+    workflowDetails = workflow
+  }
+  const { user_load, loop_count, app } = workflowDetails;
+  /* 
+   User load%	Comments
+       10	    Worst Case scenario
+       30
+       50
+       60
+       70
+       80
+       90
+       95
+       98
+       100
+       100	    additional Buffer 
+       -------------------------
+       total 783 % rounded to 800 %
+       loop count is divided by 2 for running the test for 30 mins while the inoput is for 1 hr
+   */
+  return user_load / 100 * app.max_user_load * loop_count / 2 * 8;
+}
+
+export const instructionText = function(recordsNeeded){
+  return `
+          Please follow the instruction metioned below to avoid any test failures.
+
+          1: Total number of unique parameters should have ${recordsNeeded} records in csv
+          2: First line should not be blank
+          3: Please do not alter csv headers
+          
+          Note:- Giving less records might cause test failures
+
+          Thank you for chosing Perfeasy
+          `
+} 
 
 export const responses = {
   200: {

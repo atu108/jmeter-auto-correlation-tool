@@ -1,6 +1,8 @@
 import { spawn } from 'child_process';
 import fs from 'fs';
 import Application from '../models/Application';
+import ParamSetting from '../models/ParamSetting';
+import UniqueParam from '../models/UniqueParam';
 import PerformanceController from './PerformanceController';
 import RunController from './RunController';
 import ApplicationController from './ApplicationController';
@@ -9,7 +11,9 @@ import pool from '../middlewares/database';
 import config from '../config';
 import Workflow from '../models/Workflow';
 import User from '../models/User';
-import { mergeJmx , jmxPacing } from '../utility/jmxConstants';
+import { mergeJmx, jmxPacing } from '../utility/jmxConstants';
+import {calculateTotalRecordsNeeded} from '../utility/helper';
+const commonColumns = ['isUniqueRepeated', 'isUsed', 'testId']
 class LoadRunner {
     constructor() {
         return {
@@ -20,22 +24,21 @@ class LoadRunner {
         }
     }
 
-    async afterDryRun(application){
+    async afterDryRun(application) {
         /* 
         do calculation 
             1) get difference between max and min timestamp of each workflow from jtl data as M
-            2) calculate pacing for each workflow as : p = 3600 - ( M * number of itteration (H) ) / H - 1 
-            i) 
+            2) calculate pacing for each workflow as : p = 3600 - ( M * x of itteration (H) ) / H - 1
             3) calculate delay as : p - 15% of p 
             4) calculate range as : 15% of p
             5) update each workflow with pace time delay and range
             6) update application dry run status as true
         */
-        const testDetails = await Test.findOne({application: application._id, is_dry_run: true});
+        const testDetails = await Test.findOne({ application: application._id, is_dry_run: true });
         const q = `select threadName, max(timestamp) - min(timestamp) as timeDuration from performance_test_report where test_id = '${testDetails._id}' and threadName is not null group by threadName`;
         const responseTime = await pool.query(q);
-        console.log("response",responseTime)
-      for(let i = 0; i < responseTime.length; i++){
+        console.log("response", responseTime)
+        for (let i = 0; i < responseTime.length; i++) {
             // eg name : W01_Blaze1
             let obj = responseTime[i];
             console.log("obj", obj['threadName'])
@@ -43,38 +46,47 @@ class LoadRunner {
             // duration is timeDiffernce of workflow from jtl in secs
             let duration = obj['timeDuration'] / 1000;
             // finding workflow which has same sequence as from jtl
-            let found = application.workflow.find( w => w.sequence == workflowSequence);
-            if(found['loop_count'] > 1){
-                let pacing = (3600 - ( duration * found['loop_count'] ))/ found['loop_count'] - 1;
-                if( pacing < 0){
-                    await Application.update({_id: application._id}, {pacing: {
-                        err: true,
-                        message: `Application (${found['name']}) is too slow to complete ${found['loop_count']} itteration in 1 hr. Do you still want to continue ?`
-                    }})
-                }else{
+            let found = application.workflow.find(w => w.sequence == workflowSequence);
+            if (found['loop_count'] > 1) {
+                let pacing = (3600 - (duration * found['loop_count'])) / found['loop_count'] - 1;
+                if (pacing < 0) {
+                    await Application.update({ _id: application._id }, {
+                        pacing: {
+                            err: true,
+                            message: `Application (${found['name']}) is too slow to complete ${found['loop_count']} itteration in 1 hr. Do you still want to continue ?`
+                        }
+                    })
+                } else {
                     const range = Math.round(0.15 * pacing)
                     const delay = Math.round(pacing - range);
-                   await Workflow.update({_id: found['_id'] }, { jmx_pacing: jmxPacing(delay,range) });
-                   console.log("updated pacing", found['_id'])
+                    await Workflow.update({ _id: found['_id'] }, { jmx_pacing: jmxPacing(delay, range) });
+                    console.log("updated pacing", found['_id'])
                 }
             }
         }
-        await Application.update({_id: application._id}, {dry_run: true})
-        let updatedApp = await Application.findOne({_id: application._id}).populate('workflow');
-        const jmxDetails = mergeJmx(updatedApp.workflow, 10);
+        await Application.update({ _id: application._id }, { dry_run: true })
+        let updatedApp = await Application.findOne({ _id: application._id }).populate('workflow');
+        const jmxDetails = await mergeJmx(updatedApp.workflow, 10, false, true);
         ApplicationController.updateStatus(application._id, "Jmx Generated");
-        await Application.update({_id: application._id}, {jmx_file: jmxDetails.fileName})
+        await Application.update({ _id: application._id }, { jmx_file: jmxDetails.fileName });
     }
 
-    async dryRun(applicationId){
-        const application = await Application.findOne({_id: applicationId}).populate('workflow');
-        const jmxDetails = mergeJmx(application.workflow, 1, true);
-        let jtlDir = await this.getJtlPath(application.name);
-        let jtlPath = jtlDir + "dryrun.jtl";
-        const jmeterCommand = await this.prepareJmeterCommand(jmxDetails.filePath , jtlPath);
-        this.exectuteJmeter(application, jmeterCommand, 1, [], jtlPath, 0, true, this.afterDryRun)
-
+    async dryRun(applicationId) {
+        try{
+            const application = await Application.findOne({ _id: applicationId }).populate('workflow');
+            const jmxDetails = await mergeJmx(application.workflow, 1, true);
+            console.log("jmx",jmxDetails)
+            let jtlDir = await this.getJtlPath(application.name);
+            let jtlPath = jtlDir + "dryrun.jtl";
+            const jmeterCommand = await this.prepareJmeterCommand(jmxDetails.filePath, jtlPath);
+            this.exectuteJmeter(application, jmeterCommand, 1, [], jtlPath, 0, true, this.afterDryRun);
+        }catch(e){
+            console.log(e);
+            throw(e)
+        }
+        
     }
+
     async exectuteJmeter(application, jmeterCommand, lastUserLoad, previousUserLoads, jtlPath, lastAcceptedUserLoad, dryRun = false, cb = null) {
         const today = new Date();
         const test = await Test.create({
@@ -82,6 +94,12 @@ class LoadRunner {
             application: application._id,
             is_dry_run: dryRun
         })
+        if(!dryRun){
+            application.workflow.forEach(async w => {
+                const updateSql = `update ${w._id}_csv set testId = '${test['_id']}' where testId = 'tempTestId'`;
+                await pool.query(updateSql);
+            }) 
+        }
         let jmeterStartCommand = 'jmeter';
         if (config.app.server === 'PRODUCTION') {
             jmeterStartCommand = config.app.jmeterPath + '/jmeter';
@@ -93,10 +111,10 @@ class LoadRunner {
             if (chunk.indexOf("end of run") >= 0) {
                 console.log("condition runing")
                 await this.dumper(jtlPath, application._id, test['_id']);
-                if(!dryRun){
-                    await this.prepareJmeter(application, test['_id'], lastUserLoad, previousUserLoads, lastAcceptedUserLoad)
-                }else{
-                    cb(application)
+                if (!dryRun) {
+                    await this.prepareJmeter(application, test['_id'], lastUserLoad, previousUserLoads, lastAcceptedUserLoad);
+                } else {
+                    cb(application);
                 }
             }
         });
@@ -118,22 +136,46 @@ class LoadRunner {
             return Math.round((lastUserLoad + lastAcceptedUserLoad) / 2)
         }
     }
-
-    async saveCsv(ctx){
-        try{
-            const workflowDetails = await Workflow.findOne({ _id: ctx.params.workflow });
-            if(!ctx.request.body.files.file){
-                return ctx.body = {success: false, message: "CSV required"}
+    async saveCsv(ctx) {
+        try {
+            console.log("called saved scv");
+            const workflowDetails = await Workflow.findOne({ _id: ctx.params.workflow }).populate("app");
+            if (!ctx.request.body.files.file) {
+                return ctx.body = { success: false, message: "CSV required" }
             }
-                let fileData = fs.readFileSync(ctx.request.body.files.file.path);
-                let csvName = config.storage.csvPath + workflowDetails.application + ".csv";
-                fs.writeFileSync(csvName , fileData, "utf8" )
-                await Workflow.update({_id: ctx.params.workflow},{csv_file_name: csvName})
-            ctx.body = {success: true, message: "CSV saved!"}
-        }catch(e){
+            let fileData = fs.readFileSync(ctx.request.body.files.file.path, { encoding: 'utf8' });
+            let csvName = config.storage.csvPath + workflowDetails.application + ".csv";
+            fs.writeFileSync(csvName, fileData)
+            let params = await ParamSetting.find({ workflow: ctx.params.workflow });
+            console.log("foundParams", params);
+            let uniqueParams = await UniqueParam.find({ workflow: ctx.params.workflow });
+            console.log("found uniques", uniqueParams);
+            let headers = params.map(p => p.key);
+            console.log("headers", headers)
+            let rawCsvData = this._isCsvValid(fileData, headers, uniqueParams.map(u => u.key), workflowDetails.application.max_user_load)
+            console.log(rawCsvData)
+            if (!rawCsvData) {
+                return ctx.body = { success: false, message: "CSV is not valid" }
+            }
+            let totalRecordsNeeded = await calculateTotalRecordsNeeded(workflowDetails);
+            let parsedCsvData = this._removeEmptyValues(rawCsvData, headers, totalRecordsNeeded);
+            headers.push(...commonColumns)
+            await this.csvToSql(workflowDetails._id, headers, parsedCsvData.data);
+            let recordDiff = totalRecordsNeeded - parsedCsvData.recordProvided;
+            console.log("needed", totalRecordsNeeded, "given", parsedCsvData.recordProvided);
+            let warning = recordDiff > 0 ? `There are ${recordDiff} less records` : 'None';
+            await Workflow.update({ _id: ctx.params.workflow }, { csv_warning: warning, csv_uploaded: true })
+            const totalWorkflowCount = await Workflow.count({application: workflowDetails.application})
+            const totalUploadedCsv = await Workflow.count({application: workflowDetails.application, csv_uploaded: true});
+            let shouldTestRun = false;
+            if(totalWorkflowCount == totalUploadedCsv){
+                shouldTestRun = true;
+            }
+            ctx.body = { success: true, message: "CSV saved!", warning, shouldTestRun, appId: workflowDetails.app._id}
+        } catch (e) {
             console.log(e)
-            ctx.body = {success: false, message: "Something went wrong"}
-        } 
+            ctx.body = { success: false, message: "Something went wrong" }
+        }
     }
 
     async runTest(ctx) {
@@ -142,16 +184,14 @@ class LoadRunner {
             if (user.type === "temp") {
                 return ctx.body = { success: false, message: "You dont have permissions" };
             }
-
             const { application } = ctx.params;
-            const applicationDetails = await Application.findOne({_id:application}).populate("workflow");
+            const applicationDetails = await Application.findOne({ _id: application }).populate("workflow");
             ApplicationController.updateStatus(application, "Generating Report");
             this.prepareJmeter(applicationDetails)
                 .then(async (res) => {
                     if (res) {
                         await Application.update({ _id: workflowDetails.application._id }, { status: "Completed Run Test" })
                     }
-
                 })
                 .catch(e => {
                     console.log(e);
@@ -176,7 +216,7 @@ class LoadRunner {
                 lastUserLoad = maxUserLoad * 0.1;
                 currentUserLoad = maxUserLoad * 0.1;
                 jtlPath = jtlPath + currentUserLoad + '.jtl';
-                const jmxDetails = mergeJmx(application.workflow, currentUserLoad);
+                const jmxDetails = await mergeJmx(application.workflow, currentUserLoad);
                 const jmeterCommand = await this.prepareJmeterCommand(jmxDetails.filePath, jtlPath);
                 console.log("jemtere command prepared", jmeterCommand)
                 this.exectuteJmeter(application, jmeterCommand, lastUserLoad, previousUserLoads, jtlPath, lastAcceptedUserLoad);
@@ -198,7 +238,7 @@ class LoadRunner {
                 previousUserLoads.push(currentUserLoad);
                 lastUserLoad = currentUserLoad;
                 jtlPath = jtlPath + currentUserLoad + '.jtl';
-                const jmxDetails = mergeJmx(application.workflow, currentUserLoad);
+                const jmxDetails = await mergeJmx(application.workflow, currentUserLoad);
                 const jmeterCommand = await this.prepareJmeterCommand(jmxDetails.filePath, jtlPath);
                 console.log("jemtere command prepared ", jmeterCommand)
                 this.exectuteJmeter(application, jmeterCommand, lastUserLoad, previousUserLoads, jtlPath, lastAcceptedUserLoad);
@@ -234,7 +274,7 @@ class LoadRunner {
         //     "threads": "-Jthreads="
         // }
         // let commandArr = ['-n'];
-        const defautCommand = ['-n' ,'-t', jmxPath, '-l', jtlPath]
+        const defautCommand = ['-n', '-t', jmxPath, '-l', jtlPath]
         // commandArr.push(commandObj.threads + userLoad)
         // commandArr.push(commandObj.rampup + rampup)
         // if (!duration) {
@@ -251,8 +291,200 @@ class LoadRunner {
         return defautCommand;
     }
 
-    // agar duration nai aaya hai to isDuration false duration blank hoga isLoop bhi false Loopcout ki valuye hogi
-    // agar duration ki value hai isDuration true and duration mai duration ki value Isloop true loopCount blank rahega 
+    async csvToSql(workflowId, columns, csvArr) {
+        try {
+            const sql = `CREATE TABLE IF NOT EXISTS ${workflowId}_csv ( id int NOT NULL AUTO_INCREMENT PRIMARY KEY, ${columns.map(col => {
+                return `${col} varchar(250)  NOT NULL default ''`
+            }).join(',')})`;
+            await pool.query(sql);
+            console.log("table created");
+            const sqlTruncate = `TRUNCATE TABLE ${workflowId}_csv`;
+            await pool.query(sqlTruncate);
+            let sqlInsert = `INSERT INTO ${workflowId}_csv (${columns.join(',')}) VALUES ?`;
+            await pool.query(sqlInsert, [csvArr]);
+            return;
+        } catch (e) {
+            console.log(e)
+            throw (e)
+        }
+
+    }
+
+    _isCsvValid(csvData, headers, uniuqeParams) {
+        /**********************************************
+
+            input => takes a raw csv string (string) as csvdata , headers (array), uniqueParams (array)
+            conditions =>
+                    1) checks with csv headers and with it should have (headers array) (calls _compareArray())
+                    2) it should not have first line as empty strings
+            output => 1) false if any of above condition fails
+                      2) gives an object has stricture as :-
+                        {
+                            key1: {
+                                values: [],
+                                unique: boolean
+                            },
+                            key2: {
+                                values: [],
+                                unique: boolean
+                            }
+
+                        }
+                        where key is each header in csv , 
+                        values contain all the elements of that header 
+                        and uniuqe is true for unique parameters defined by user
+        *********************************************************/
+        let lines = csvData.split("\n");
+        let schema = lines[0].split(",");
+        let isValid = this._compareArray(headers, [...schema])
+        let csvDataObject = {
+        };
+        // in worst condition no of unique records need :- 783 % of the maxium user load 
+        // both headers provided and headers in csv should have same elements no more no less but can have different sequence 
+        if (!isValid) {
+            return false
+        }
+        lines.splice(0, 1);
+        // minimum lines required 1 and should not be blank
+        if (lines[0].split(',').length < 1 || lines[0].split(',').join('') == '') {
+            return false
+        }
+        // if there are no unique params then required conditions checked before
+        // if (uniuqeParams.length == 0) {
+        //     return true
+        // }
+        headers.forEach(p => {
+            csvDataObject[p] = {
+                values: [],
+                unique: uniuqeParams.indexOf(p) != -1
+            }
+        })
+        lines.forEach(line => {
+            var valArr = line.split(/,(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)/);
+            if (valArr) {
+                headers.forEach(head => {
+                    console.log(head)
+                    console.log(schema)
+                    //console.log(valArr[schema.indexOf(head)])
+                    csvDataObject[head]["values"].push(valArr[schema.indexOf(head)]);
+                })
+            }
+        });
+        return csvDataObject;
+    }
+
+    _removeEmptyValues(csvData, headers, requiredLength) {
+        /*
+            1) takes csv data(in object form ) unparsed and has empty values and csv headers (array) 
+                and total number of records needed for runs
+            2) checks and removes empty values from behind the array of the every csvData header key
+            3) repeats values to fill empty values (calls _repeatValues())
+            4) finally parses data to be compatible with sql insertion and coresponding table 
+                return format :=>  {
+                    data:[[], [], []],
+                    recordProvided: number
+                }
+
+        */
+        try {
+            let originalLength = csvData[headers[0]]["values"].length;
+            // task 2
+            Object.keys(csvData).forEach(key => {
+                let tillWhere = csvData[key]["values"].length;
+                for (let i = csvData[key]["values"].length - 1; i >= 0; i--) {
+                    if (csvData[key]["values"][i] === '') {
+                        tillWhere--;
+                    } else {
+                        break;
+                    }
+                    csvData[key]["values"].splice(tillWhere);
+                }
+
+                // task 3
+                let csvObjectRepectedValues = this._repeatValues(csvData[key]['values'], requiredLength, csvData[key]['unique'])
+                csvData[key]["values"] = csvObjectRepectedValues.values;
+                csvData[key]["repeatedfrom"] = csvObjectRepectedValues.repeatedfrom
+            });
+            console.log("inside remove empty", csvData);
+            let finalArr = []
+
+            // task 4
+            for (let i = 0; i < csvData[headers[0]]["values"].length; i++) {
+                let temp = []
+                let isUniqueRepeated = "false"
+                headers.forEach(h => {
+                    temp.push(csvData[h]["values"][i])
+                    if (csvData[h]["repeatedfrom"] && csvData[h]["repeatedfrom"] - 1 < i) {
+                        // for isUniqueRepeated column
+                        isUniqueRepeated = "true"
+                    }
+                })
+                // for isUniqueRepeated column
+                temp.push(isUniqueRepeated)
+                // for isUsed column
+                temp.push("false")
+                //for testId column
+                temp.push('')
+                finalArr.push(temp)
+            }
+            return {
+                data : finalArr,
+                recordProvided: originalLength 
+            };
+        } catch (e) {
+            throw (e)
+        }
+    }
+    _compareArray(arr1, arr2) {
+        if (arr1.length > 0 && arr1.length == arr2.length) {
+            let isEqual = true
+            arr1.forEach(ele => {
+                let index = arr2.indexOf(ele)
+                if (index == -1) {
+                    isEqual = false
+                } else {
+                    arr2.splice(index, 1)
+                }
+            }
+            )
+            return isEqual
+        } else {
+            return false
+        }
+    }
+
+    _repeatValues(array, reLength, isUnique) {
+        /*
+         input =>   takes in an array , a number (required length), and a boolen(isUnique)
+                    and repetes the arrya value to achive the required length and
+         output => returns an object contaning new array of desired length and number which tell from
+                    where unique got repeated   
+        */
+        try {
+            let length = array.length;
+            if (reLength > length) {
+                let numberOfElementsToPic = reLength % length;
+                let timesToRepeat = (reLength - numberOfElementsToPic) / length;
+                let arrayToReturn = [];
+                for (let i = 0; i < timesToRepeat; i++) {
+                    arrayToReturn.push(...array);
+                }
+                arrayToReturn.push(...array.splice(0, numberOfElementsToPic))
+                return {
+                    values: arrayToReturn,
+                    repeatedfrom: isUnique ? length : null
+                }
+            } else {
+                return {
+                    values: array,
+                    repeatedfrom: null
+                }
+            }
+        } catch (e) {
+            throw (e)
+        }
+
+    }
 
     async dumper(jtlFilePath, applicationId, testId) {
         return new Promise(async (resolve, reject) => {

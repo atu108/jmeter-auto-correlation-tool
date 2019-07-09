@@ -14,10 +14,11 @@ import RunController from '../controllers/RunController';
 import Schedual from '../models/Schedual';
 import ApplicationController from './ApplicationController';
 import ParamSetting from '../models/ParamSetting';
-import { all } from 'q';
+import UniqueParam from '../models/UniqueParam';
 import { deleteAppOrWorkflow } from '../utility/helper';
 import TrackJob from '../models/TrackJob';
 import { mergeJmx } from '../utility/jmxConstants';
+import {instructionText, calculateTotalRecordsNeeded} from '../utility/helper';
 
 class WorkflowController {
   constructor() {
@@ -65,7 +66,7 @@ class WorkflowController {
   async downloadJmx(ctx) {
     const workflowIds = ctx.request.body.workflows;
     const workflows = await Workflow.find({ _id: { $in: workflowIds } });
-    const jmxDeatils = mergeJmx(workflows, 10)
+    const jmxDeatils = await mergeJmx(workflows, 10)
     ctx.attachment(jmxDeatils.filename);
     ctx.type = 'application/xml';
     ctx.body = jmxDeatils.jmx
@@ -124,6 +125,7 @@ class WorkflowController {
       workflow: ctx.params.workflow
     }).populate('options').populate('run2value')
 
+    console.log("checking steps array",steps);
     // got requests for parametrisation : where post_data has some value in it
     let postRequests = await Request.find({ workflow: ctx.params.workflow, "request.post_data": { $exists: true, $ne: [] } });
     let getRequests = await Request.find({ workflow: ctx.params.workflow, "request.params": { $exists: true, $ne: [] } });
@@ -151,34 +153,69 @@ class WorkflowController {
     let dataToSave = [];
     let keys = [];
     let paramsSettingsdata = [];
+    let uniqueParams = [];
+    let secondValue = {
+
+    };
     try {
       all_fields.forEach(key => {
         if (key != 'workflow' && key != "application" && key != "time") {
-          if (key.indexOf("____") === -1) {
-            dataToSave.push({
-              workflow,
-              application,
-              selenium_step: key,
-              value: ctx.request.body[key]
-            })
-          } else {
+          if (key.indexOf("__") == -1) {
+            if(key.includes('_')){
+              secondValue[key.split('_')[1]] = ctx.request.body[key]
+              // secondValue.push({
+              //   key: key.split('_')[1],
+              //   value: 
+              // })
+            }else{
+              dataToSave.push({
+                workflow,
+                application,
+                selenium_step: key,
+                value: ctx.request.body[key]
+              })
+            } 
+          } else if(key.indexOf("__param__") != -1){
+            console.log("called inside params")
             paramsSettingsdata.push({
               workflow,
               application,
-              request: key.split("____")[0],
-              key: key.split("____")[1],
-              value: key.split("____")[2]
+              request: key.split("__param__")[0],
+              key: key.split("__param__")[1],
+              value: key.split("__param__")[2]
             })
-            keys.push(key.split("____")[1] + "_par")
+            keys.push(key.split("__param__")[1])
+          }else if(key.indexOf("__unique__") != -1){
+            uniqueParams.push({
+              workflow,
+              application,
+              request: key.split("__unique__")[0],
+              key: key.split("__unique__")[1],
+              value: key.split("__unique__")[2]
+            })
           }
         }
       })
       if (paramsSettingsdata.length > 0) {
         await ParamSetting.create(paramsSettingsdata);
-        fs.writeFileSync(config.storage.sampleCsvPath + "sample.csv", keys.join(","), "utf8")
+        fs.writeFileSync(config.storage.sampleCsvPath + workflow + '.csv', keys.join(","), "utf8")
         await Workflow.update({ _id: workflow }, { csv_required: true });
-
       }
+      if(uniqueParams.length > 0){
+        await UniqueParam.create(uniqueParams);
+      }
+      let values = [];
+      paramsSettingsdata.forEach( data => {
+        if(secondValue.hasOwnProperty(data['key'])){
+          values.push(secondValue[data['key']])
+        }else{
+          values.push(data['value'])
+        }
+      })
+      let dryRunCsv = keys.join(",") + '\n' + values.join(',');
+      console.log(dryRunCsv);
+      fs.writeFileSync(config.storage.csvPath + workflow + '_dryrun' + '.csv', dryRunCsv, "utf8")
+      fs.writeFileSync(config.storage.csvInstruction + workflow + '.doc', instructionText(await calculateTotalRecordsNeeded(workflow)))
       await SeleniumStepValue.create(dataToSave);
       await Workflow.update({ _id: workflow }, { run2_value: true })
       await Schedual.create({ application, time })

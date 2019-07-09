@@ -1,11 +1,15 @@
 import Run from '../models/Run';
 import Difference from '../models/Difference';
+import Application from '../models/Application';
+import Workflow from '../models/Workflow';
 import Correlation from '../models/Correlation';
 import ParamSetting from '../models/ParamSetting';
+import pool from '../middlewares/database';
 import {URL} from 'url';
 import fs from 'fs';
 import Request from '../models/Request';
 import config from '../config';
+const commonColumns = ['isUniqueRepeated', 'isUsed', 'testId'];
 const parse = require('tld-extract')
 
 export const resolveArray = async (myArray, request_id) => {
@@ -206,48 +210,128 @@ without actual network activity. This helps debugging tests.</stringProp>
     <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer" enabled="true">
       <stringProp name="ConstantTimer.delay">${delay}</stringProp>
       <stringProp name="RandomTimer.range">${range}</stringProp>
-    </GaussianRandomTimer>`
+    </GaussianRandomTimer><hashTree/>
+    </hashTree>`
+}
+export const csvDataSet = function(csvName = 'none'){
+    return  '<CacheManager guiclass="CacheManagerGui" testclass="CacheManager" testname="HTTP Cache Manager" enabled="true">\n' +
+      '        <boolProp name="clearEachIteration">true</boolProp>\n' +
+      '        <boolProp name="useExpires">false</boolProp>\n' +
+      '      </CacheManager>\n' +
+      '      <hashTree/>\n' +
+      '      <CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookie Manager" enabled="true">\n' +
+      '        <collectionProp name="CookieManager.cookies"/>\n' +
+      '        <boolProp name="CookieManager.clearEachIteration">true</boolProp>\n' +
+      '      </CookieManager>\n' +
+      '      <hashTree/>\n' +
+      `<CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="parameter" enabled="true">
+                <stringProp name="delimiter">,</stringProp>
+                 <stringProp name="fileEncoding"></stringProp>
+                 <stringProp name="filename">${config.storage.csvPath}${csvName}</stringProp>
+                   <boolProp name="ignoreFirstLine">false</boolProp>
+                 <boolProp name="quotedData">false</boolProp>
+                  <boolProp name="recycle">true</boolProp>
+                   <stringProp name="shareMode">shareMode.group</stringProp>
+                  <boolProp name="stopThread">false</boolProp>
+               <stringProp name="variableNames"></stringProp>
+        </CSVDataSet><hashTree/>`
+}
+async function _generateDynamicCsv(workflowDetails) {
+    console.log("called generate dynamic")
+    /* 
+        creates csv from data storred in sql for every workflow with records equal to user load
+        stores as file and named according to the user load 
+        updates workflow with the csv file name 
+        updates the sql records which are fetched with the test id in which the records are used
+    */
+   try{
+    const app = await Application.findOne({_id: workflowDetails.application})
+    const userLoad = Math.round(app.max_user_load * workflowDetails.user_load / 100 * workflowDetails.loop_count / 2);
+    const sql = `select * from ${workflowDetails._id}_csv where isUsed = 'false' order by id asc limit ${userLoad}`;
+    const recordsRequired = await pool.query(sql);
+    let ids = [];
+    let headers = Object.keys(recordsRequired[0]);
+    let csvDataStr = headers.join(',') + '\n';
+    recordsRequired.forEach(record => {
+        ids.push(record.id)
+        let temp = []
+        headers.forEach(h => {
+            if (!commonColumns.includes(h)) {
+                temp.push(record[h])
+            }
+        })
+        csvDataStr += temp.join(',') + '\n';
+    })
+    const csvName = `${workflowDetails._id}_${userLoad}`;
+    fs.writeFileSync(config.storage.csvPath + csvName, csvDataStr)
+    await Workflow.update({_id: workflowDetails._id}, {csv_file_name: csvName});
+    const updateSql = `update ${workflowDetails._id}_csv set testId = 'tempTestId' , isUsed = true where id in (${ids.join(',')})`;
+    console.log("update quiery insode dynamic", updateSql);
+    await pool.query(updateSql);
+    return csvName;
+   }catch(e){
+    throw(e)
+   }
 }
 // param userLoad is calculated whlie runnig jmeter 
-export const mergeJmx =  function(workflows, userLoad, dryRun = false) {
-    let dynamicData = '';
-    let filename = [];
-    const application = workflows[0].application;
-    let hashTree = '</hashTree>';
-    let workflowUserLoad = 0
-    workflows.forEach((w, index) => {
-      filename.push(w.name.split(" ").join("_"));
-      // workflowUserLoad is distributed load on this workflow
-      // user_load is the percentage user load for this workflow
-      workflowUserLoad = (w.user_load * userLoad) / 100;
-      let threadGroupDetails = jmxThreadGroupDetails({
-        name: w.name,
-        loop_count: w.loop_count || '',
-        rampup_duration: w.rampup_duration,
-        sequence: w.sequence,
-        duration: w.duration || ''
-      }, workflowUserLoad);
-      if(dryRun){
-        threadGroupDetails = jmxThreadGroupDetails({
+export const mergeJmx =  async function(workflows, userLoad, dryRun = false, defaultJmx = false) {
+    try{
+        let dynamicData = '';
+        let filename = [];
+        const application = workflows[0].application;
+        let hashTree = '</hashTree>';
+        let workflowUserLoad = 0
+        for(let i = 0; i < workflows.length; i++){
+            let w = workflows[i];
+            filename.push(w.name.split(" ").join("_"));
+          // workflowUserLoad is distributed load on this workflow
+          // user_load is the percentage user load for this workflow
+          workflowUserLoad = (w.user_load * userLoad) / 100;
+          let threadGroupDetails = jmxThreadGroupDetails({
             name: w.name,
-            loop_count: 1,
-            rampup_duration: 1,
+            loop_count: w.loop_count || '',
+            rampup_duration: w.rampup_duration,
             sequence: w.sequence,
-            duration: ''
-          }, userLoad)
+            duration: w.duration || ''
+          }, workflowUserLoad);
+          if(dryRun){
+            threadGroupDetails = jmxThreadGroupDetails({
+                name: w.name,
+                loop_count: 1,
+                rampup_duration: 1,
+                sequence: w.sequence,
+                duration: ''
+              }, userLoad)
+          }
+          
+          if(w.csv_required){
+            let csvFileName;
+              if(dryRun){
+                csvFileName = `${w._id}_dryrun.csv`
+              }else if(defaultJmx){
+                csvFileName = `default.csv`
+              }
+              else{
+                  csvFileName = await _generateDynamicCsv(w)
+              }
+            let csvData = csvDataSet(csvFileName)
+            dynamicData += csvData;
+          }
+          if (i + 1 == workflows.length) {
+            dynamicData += threadGroupDetails + w.jmx_data + w.jmx_pacing;
+          } else {
+            dynamicData += threadGroupDetails + w.jmx_data + w.jmx_pacing + hashTree;
+          }
+        }
+        const filePath = `${config.storage.path}${application}_${userLoad}.jmx`;
+        fs.writeFileSync(filePath, jmxStartXml + dynamicData + jmxEndXml)
+        return {
+          jmx: jmxStartXml + dynamicData + jmxEndXml,
+          filePath,
+          fileName: `${application}_${userLoad}.jmx`
       }
-      if (index + 1 == workflows.length) {
-        dynamicData += threadGroupDetails + w.jmx_data + w.jmx_pacing;
-      } else {
-        dynamicData += threadGroupDetails + w.jmx_data + w.jmx_pacing + hashTree;
-      }
-    });
-    const filePath = `${config.storage.path}${application}_${userLoad}.jmx`;
-    fs.writeFileSync(filePath, jmxStartXml + dynamicData + jmxEndXml)
-    return {
-      jmx: jmxStartXml + dynamicData + jmxEndXml,
-      filePath,
-      fileName: `${application}_${userLoad}.jmx`
-  }
+    }catch(e){
+        throw(e)
+    }
 }
  

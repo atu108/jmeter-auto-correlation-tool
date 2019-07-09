@@ -8,7 +8,7 @@ const router = new Router({
 });
 
 router.get('/runTest/:application', auth, LoadRunnerController.runTest)
-      .post('/saveCsv/:workflow', LoadRunnerController.saveCsv)
+      .post('/saveCsv/:workflow', auth, LoadRunnerController.saveCsv)
 
 
 export default router;

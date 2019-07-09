@@ -4,9 +4,6 @@ import body from 'koa-body'
 import Koa from 'koa';
 import mongoose from 'mongoose';
 import serve from 'koa-static';
-import session from 'koa-generic-session';
-import redisStore from 'koa-redis';
-
 import config from './config';
 import router from './routes';
 
@@ -47,14 +44,8 @@ app
   .use(serve(path.join(__dirname, '../sample_csv'), {
     gzip: true
   }))
-  .use(session({
-    key: config.session.key,
-    path: '/',
-    httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000,
-    overwrite: true,
-    signed: true,
-    store: redisStore(config.redis)
+  .use(serve(path.join(__dirname, '../csv_instruction'), {
+    gzip: true
   }))
   .use(response)
   .use(router)
