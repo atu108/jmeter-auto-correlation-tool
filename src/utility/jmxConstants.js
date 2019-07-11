@@ -44,11 +44,13 @@ export const resolveArray = async (myArray, request_id) => {
             value: myArray[i][Object.keys(myArray[i])]
         })
         console.log("cehcking settigns data", inSettings);
+
+        // removed _par from parameter name
         if(inSettings.length === 1){
             toSend += `<elementProp name="key" elementType="HTTPArgument">
             <boolProp name="HTTPArgument.always_encode">false</boolProp>
             <stringProp name="Argument.name">${Object.keys(myArray[i])[0]}</stringProp>
-            <stringProp name="Argument.value">\${${Object.keys(myArray[i])[0]}_par}</stringProp>
+            <stringProp name="Argument.value">\${${Object.keys(myArray[i])[0]}}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
             <boolProp name="HTTPArgument.use_equals">true</boolProp>
           </elementProp>`
@@ -106,7 +108,7 @@ export const parseParams = async (request , urlPath) =>{
         let value = params[i][key];
         let exists = inSettings.findIndex((setting)=> setting.key === key);
         if(exists !== -1){
-            myURL.searchParams.set(key, `\${${key}_par}`);
+            myURL.searchParams.set(key, `\${${key}}`);
         }
     }
     return decodeURIComponent(myURL.href.split(`.${parse(myURL.href).tld}`)[1]).replace(/&/g,'&amp;');
