@@ -50,7 +50,7 @@ export const resolveArray = async (myArray, request_id) => {
             toSend += `<elementProp name="key" elementType="HTTPArgument">
             <boolProp name="HTTPArgument.always_encode">false</boolProp>
             <stringProp name="Argument.name">${Object.keys(myArray[i])[0]}</stringProp>
-            <stringProp name="Argument.value">\${${Object.keys(myArray[i])[0]}}</stringProp>
+            <stringProp name="Argument.value">\${${Object.keys(myArray[i])[0].replace(/&/g, '&amp;')}}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
             <boolProp name="HTTPArgument.use_equals">true</boolProp>
           </elementProp>`
@@ -58,7 +58,7 @@ export const resolveArray = async (myArray, request_id) => {
             toSend += `<elementProp name="key" elementType="HTTPArgument">
             <boolProp name="HTTPArgument.always_encode">false</boolProp>
             <stringProp name="Argument.name">${Object.keys(myArray[i])[0]}</stringProp>
-            <stringProp name="Argument.value">${temp?temp:myArray[i][Object.keys(myArray[i])[0]]}</stringProp>
+            <stringProp name="Argument.value">${temp?temp:myArray[i][Object.keys(myArray[i])[0]].replace(/&/g, '&amp;')}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
             <boolProp name="HTTPArgument.use_equals">true</boolProp>
           </elementProp>`

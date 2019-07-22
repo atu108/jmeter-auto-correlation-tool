@@ -24,5 +24,6 @@ router.post('/performance/save', PerformanceController.save)
       .post("/errorPerSec", PerformanceController.errorPerSec)
       .post("/errorPerSecVUser", PerformanceController.errorPerSecVUser)
       .post("/transactionSummary", PerformanceController.transactionSummary)
+      .post("/pageTimings", PerformanceController.pageTimings)
   
 export default router;

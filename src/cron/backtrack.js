@@ -38,10 +38,27 @@ class Backtrack {
             if(diffs[i].duplicate !== ''){
                 continue;
             }
-            // if(diffs[i].url !== 'https://www.snapdeal.com/product/urbano-fashion-blue-slim-fit/669187938877'){
-            //     continue;
-            // }
             let correlation = await this.searchInBodyNew(diffs[i]);
+            /*
+                check if the correlation is from url 
+                if yes then store it in an array 
+                now keep checking for params too
+                if params correlations match the ones stored in url 
+                then compare the regex of the two 
+                
+                compareReg function 
+                
+                count number of regex in boith the two
+                if greater store that one
+                if same 
+                then compare both strings with the original string found 
+                wich ever has the larger length store that regex and ignore the other one
+
+                findAnchoreTagUsingParams function
+
+                find achore tags wich containes the respective key value pairs and form regex acordingly
+
+            */
             if(correlation){
                 console.log("found one",correlation);
                 this.correlations.push(correlation);

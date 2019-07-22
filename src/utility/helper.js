@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import fetch from 'isomorphic-fetch';
 import rimraf from 'rimraf';
-import {readdirSync} from 'fs';
+import { readdirSync } from 'fs';
 const createCsvWriter = require('csv-writer').createArrayCsvWriter;
 import config from '../config';
 import Run from '../models/Run';
@@ -15,42 +15,42 @@ import Transaction from '../models/Transaction';
 
 
 
-export function id(){
+export function id() {
   return Math.random().toString(13).replace('0.', '')
 }
 
-export async function deleteAppOrWorkflow (id, level, type = 'temp'){
+export async function deleteAppOrWorkflow(id, level, type = 'temp') {
   //according to type of dleteion eg permanent or change status
   let workflow = null
-  if(level === 'application'){
-    await Application.remove({_id:id})
-    workflow = await Workflow.find({application: id})
-    workflow = workflow.map( w => w._id)
-  }else if(level === 'workflow'){
+  if (level === 'application') {
+    await Application.remove({ _id: id })
+    workflow = await Workflow.find({ application: id })
+    workflow = workflow.map(w => w._id)
+  } else if (level === 'workflow') {
     workflow = [id]
   }
-  for(let i = 0; i < workflow.length; i++){
-    await Run.remove({workflow: workflow[i]})
-    await SeleniumStep.remove({workflow: workflow[i]})
-    await Request.remove({workflow: workflow[i]})
-    await SeleniumStepValue.remove({workflow: workflow[i]})
-    await Dropdown.remove({workflow: workflow[i]})
-    await Workflow.remove({_id: workflow[i]})
-    await Transaction.remove({workflow: workflow[i]})
+  for (let i = 0; i < workflow.length; i++) {
+    await Run.remove({ workflow: workflow[i] })
+    await SeleniumStep.remove({ workflow: workflow[i] })
+    await Request.remove({ workflow: workflow[i] })
+    await SeleniumStepValue.remove({ workflow: workflow[i] })
+    await Dropdown.remove({ workflow: workflow[i] })
+    await Workflow.remove({ _id: workflow[i] })
+    await Transaction.remove({ workflow: workflow[i] })
   }
-  
-  
+
+
 }
-export const isObject = function(item) {
+export const isObject = function (item) {
   return (typeof item === "object" && !Array.isArray(item) && item !== null);
 }
 
 
-export const calculateTotalRecordsNeeded = async function(workflow) {
+export const calculateTotalRecordsNeeded = async function (workflow) {
   let workflowDetails;
-  if(!isObject(workflow)){
+  if (!isObject(workflow)) {
     workflowDetails = await Workflow.findOne({ _id: workflow }).populate("app");
-  }else{
+  } else {
     workflowDetails = workflow
   }
   const { user_load, loop_count, app } = workflowDetails;
@@ -74,7 +74,7 @@ export const calculateTotalRecordsNeeded = async function(workflow) {
   return user_load / 100 * app.max_user_load * loop_count / 2 * 8;
 }
 
-export const instructionText = function(recordsNeeded){
+export const instructionText = function (recordsNeeded) {
   return `
           Please follow the instruction metioned below to avoid any test failures.
 
@@ -86,7 +86,7 @@ export const instructionText = function(recordsNeeded){
 
           Thank you for chosing Perfeasy
           `
-} 
+}
 
 export const responses = {
   200: {
@@ -130,7 +130,7 @@ export const responses = {
     status: 'Method Not Allowed',
     message: 'The requested method is not allowed.'
   },
-  406:{
+  406: {
     type: 'error',
     code: 406,
     status: 'Not Acceptable',
@@ -156,7 +156,7 @@ export const errorMessages = {
   INVALID_TOKEN: "Invalid or expired authorization token."
 };
 
-export function isValidMongoDBObjectId(str){
+export function isValidMongoDBObjectId(str) {
   return str.length === 24 && /^[a-f\d]{24}$/i.test(str)
 }
 
@@ -165,7 +165,7 @@ const time = function (start) {
   return (delta < 10000 ? delta + 'ms' : Math.round(delta / 1000) + 's');
 };
 
-export function logInfo(start, ctx, logger){
+export function logInfo(start, ctx, logger) {
   const res = ctx.res;
 
   const onFinish = done.bind(null, 'finish');
@@ -180,7 +180,7 @@ export function logInfo(start, ctx, logger){
 
     const resp = responses[ctx.status];
 
-    if(!resp || (ctx.originalUrl.indexOf("/dist/") !== -1 && ctx.status === 200)) return;
+    if (!resp || (ctx.originalUrl.indexOf("/dist/") !== -1 && ctx.status === 200)) return;
 
     const upstream = resp.type == "error" ? 'xxx' : event === 'close' ? '-x-' : '-->';
     logger.info(`${upstream} ${ctx.method} ${ctx.originalUrl} ${ctx.status} ${time(start)}`);
@@ -221,12 +221,49 @@ export const removeDir = (dir, cb) => {
 }
 
 export const writeCSV = (header, arr) => {
-const csvWriter = createCsvWriter({
-  header: header,
-  path: config.storage.csvPath
-})
-csvWriter.writeRecords(arr)
-  .then(() => {
+  const csvWriter = createCsvWriter({
+    header: header,
+    path: config.storage.csvPath
+  })
+  csvWriter.writeRecords(arr)
+    .then(() => {
       console.log('...Done');
+    });
+}
+
+
+/*
+  perfromance matrix has various values but needed one should be extracted to make a meaningfull data
+  this function takes all of the data and extracts whats necessary from that datra in miliseconds
+ */
+export const extractDataFromPerformanceTiming = (timing, ...dataNames) => {
+  const navigationStart = timing.navigationStart;
+
+  const extractedData = {};
+  dataNames.forEach(name => {
+    extractedData[name] = timing[name] - navigationStart;
   });
+
+  return extractedData;
+};
+
+export const formatPerfromanceMatrix = (perfData, workflow, application) => {
+  try{
+    console.log("inside format data", perfData)
+    const transctionNames = Object.keys(perfData);
+    const formatedData = [];
+    transctionNames.forEach(name => {
+      formatedData.push({
+        transaction_name: name,
+        matrix: perfData[name]['perf_data'],
+        sequence: perfData[name]['sequence'],
+        workflow,
+        application
+      })
+    })
+    return formatPerfromanceMatrix;
+  }catch(e){
+    console.log(e);
+    throw(e)
+  }
 }

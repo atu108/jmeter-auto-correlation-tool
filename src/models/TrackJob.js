@@ -12,6 +12,7 @@ const TrackJobSchema = new Schema({
     start_url: String,
     filename: String,
     saveDropdown: Boolean,
+    savePageTiming: Boolean,
     generateJmx: {
         type: Boolean,
         default: false

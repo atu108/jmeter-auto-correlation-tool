@@ -67,8 +67,7 @@ class LoadRunner {
         await Application.update({ _id: application._id }, { dry_run: true })
         let updatedApp = await Application.findOne({ _id: application._id }).populate('workflow');
         const jmxDetails = await mergeJmx(updatedApp.workflow, 10, false, true);
-        ApplicationController.updateStatus(application._id, "Jmx Generated");
-        await Application.update({ _id: application._id }, { jmx_file: jmxDetails.fileName });
+        await Application.update({_id:application._id},{jmx: true, status: "Jmx Generated", jmx_file: jmxDetails.fileName});
     }
 
     async dryRun(applicationId) {
@@ -96,8 +95,11 @@ class LoadRunner {
         })
         if(!dryRun){
             application.workflow.forEach(async w => {
-                const updateSql = `update ${w._id}_csv set testId = '${test['_id']}' where testId = 'tempTestId'`;
-                await pool.query(updateSql);
+                //if csv not required then dont do anything for that workflow regarding csv
+                if(w.csv_required){
+                    const updateSql = `update ${w._id}_csv set testId = '${test['_id']}' where testId = 'tempTestId'`;
+                    await pool.query(updateSql);
+                }
             }) 
         }
         let jmeterStartCommand = 'jmeter';
@@ -147,13 +149,13 @@ class LoadRunner {
             let csvName = config.storage.csvPath + workflowDetails.application + ".csv";
             fs.writeFileSync(csvName, fileData)
             let params = await ParamSetting.find({ workflow: ctx.params.workflow });
-            console.log("foundParams", params);
+            // console.log("foundParams", params);
             let uniqueParams = await UniqueParam.find({ workflow: ctx.params.workflow });
-            console.log("found uniques", uniqueParams);
+            // console.log("found uniques", uniqueParams);
             let headers = params.map(p => p.key);
-            console.log("headers", headers)
+            // console.log("headers", headers)
             let rawCsvData = this._isCsvValid(fileData, headers, uniqueParams.map(u => u.key), workflowDetails.application.max_user_load)
-            console.log(rawCsvData)
+            // console.log(rawCsvData)
             if (!rawCsvData) {
                 return ctx.body = { success: false, message: "CSV is not valid" }
             }
@@ -162,7 +164,7 @@ class LoadRunner {
             headers.push(...commonColumns)
             await this.csvToSql(workflowDetails._id, headers, parsedCsvData.data);
             let recordDiff = totalRecordsNeeded - parsedCsvData.recordProvided;
-            console.log("needed", totalRecordsNeeded, "given", parsedCsvData.recordProvided);
+            // console.log("needed", totalRecordsNeeded, "given", parsedCsvData.recordProvided);
             let warning = recordDiff > 0 ? `There are ${recordDiff} less records` : 'None';
             await Workflow.update({ _id: ctx.params.workflow }, { csv_warning: warning, csv_uploaded: true })
             const totalWorkflowCount = await Workflow.count({application: workflowDetails.application})

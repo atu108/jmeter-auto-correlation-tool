@@ -130,7 +130,7 @@ class RunController {
         const urlWithCorAndPar = await parseParams(requests[j], requests[j].request.url, transactions[i].title);
         //removing headers which have : in their name
         requests[j].request.headers = requests[j].request.headers.filter(header => Object.keys(header)[0][0] !== ':')
-        dynamicData += `<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="W${workflowDetails[0].sequence}_T${String(transactions[i].sequence).padStart(2, '0')}_R${String(whichRequest).padStart(2, '0')}_${myURL.pathname}" enabled="true">
+        dynamicData += `<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="W${workflowDetails[0].sequence}_T${String(transactions[i].sequence).padStart(2, '0')}_R${String(whichRequest).padStart(2, '0')}_${myURL.pathname.replace(/&/g,'&amp;')}" enabled="true">
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             ${requests[j].request.post_data.length === 0 ?
             `<collectionProp name="Arguments.arguments"/>` :

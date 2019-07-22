@@ -106,7 +106,8 @@ class WorkflowController {
       saveDropdown: true,
       workflow: workflow._id,
       application: workflow.application,
-      run: run._id
+      run: run._id,
+      savePageTiming: true
     })
     ctx.body = {
       success: true,
@@ -254,7 +255,8 @@ class WorkflowController {
       workflow: workflow._id,
       application: workflow.application,
       run: run._id,
-      generateJmx: true
+      generateJmx: true,
+      savePageTiming: false
     })
   }
 
@@ -273,6 +275,7 @@ class WorkflowController {
       });
       let finalData = [];
       // console.log("transaction of sequence saved", hars[key]['sequence'], key)
+      //fs.writeFileSync('./' + hars[key]['sequence'], hars[key]['har_data'], 'utf8')
       hars[key]['har_data'].log.entries.forEach((entry, index) => {
         let data = { request: {}, response: {} };
         data.url = entry.request.url.split('?')[0];

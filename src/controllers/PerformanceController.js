@@ -10,6 +10,8 @@ import HitPerSecond from '../models/HitPerSecond';
 import RunningVUser from '../models/RunningVUser';
 import pool from '../middlewares/database';
 import percentile from 'stats-percentile';
+import PerfromanceMatrix from '../models/PerfromanceMatrix';
+import { extractDataFromPerformanceTiming, pad } from '../utility/helper';
 
 class PerformanceController {
   constructor() {
@@ -30,7 +32,8 @@ class PerformanceController {
       errorPerSecByDescVUser: this.errorPerSecByDescVUser.bind(this),
       errorPerSec: this.errorPerSec.bind(this),
       errorPerSecVUser: this.errorPerSecVUser.bind(this),
-      transactionSummary: this.transactionSummary.bind(this)
+      transactionSummary: this.transactionSummary.bind(this),
+      pageTimings: this.pageTimings.bind(this)
     }
   }
 
@@ -402,7 +405,7 @@ class PerformanceController {
 
       })
       transactionSummary = transactionSummary.map(t => {
-        t['90 Percentile'] = Math.round(percentile(obj[t.transaction_Name], 90) * 100 ) /100
+        t['90 Percentile'] = Math.round(percentile(obj[t.transaction_Name], 90) * 100) / 100
         return t
       })
       //elapsed.forEach()
@@ -411,6 +414,41 @@ class PerformanceController {
         success: true,
         data: transactionSummary
       }
+    } catch (e) {
+      console.log(e)
+      return ctx.body = {
+        success: false,
+        message: "Something went wrong"
+      }
+    }
+  }
+
+  async pageTimings(ctx) {
+    try {
+      const { application_id } = ctx.request.body;
+      const perfData = await PerfromanceMatrix.find({ application: application_id }).sort({sequence:1});
+      let perfFinalData = [];
+      let tempWorkflow = '';
+      let count = 0;
+      perfData.forEach(d => {
+        if(tempWorkflow != d.workflow.toString()){
+          tempWorkflow = d.workflow;
+          count++;
+        }
+        let matrix = extractDataFromPerformanceTiming(
+          JSON.parse(d.matrix),
+          'responseStart',
+          'responseEnd',
+          'domInteractive',
+          'domContentLoadedEventEnd',
+          'loadEventEnd');
+        
+          perfFinalData.push(Object.assign({
+          transaction: 'W_' + pad(count, 2) + '_'+ d.transaction_name,
+          sequence:d.sequence 
+        }, matrix))
+      })
+      return ctx.body = {success: true, data:perfFinalData}
     } catch (e) {
       console.log(e)
       return ctx.body = {
