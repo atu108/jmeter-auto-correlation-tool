@@ -14,3 +14,5 @@ sample_csv
 *.log
 *.out
 jmeter
+jmeter.log
+sample_csv
