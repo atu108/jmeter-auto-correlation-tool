@@ -27,7 +27,8 @@ class RunController {
       compare: this.compare.bind(this),
       delete: this.delete.bind(this),
       generateJmx: this.generateJmx.bind(this),
-      recreate: this.recreate.bind(this)
+      recreate: this.recreate.bind(this),
+      callBacktrack: this.callBacktrack.bind(this)
     }
   }
 
@@ -60,6 +61,10 @@ class RunController {
     });
   }
 
+  async callBacktrack(ctx){
+    await this.backtrack(ctx.request.body.workflow, ctx.request.body.run)
+    ctx.body = {status: true, message: "running"}
+  }
   async backtrack(workflow, run1) {
     const job = new Cron('backtrack', workflow);
     job.done(async (res) => {

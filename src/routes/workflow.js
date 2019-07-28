@@ -16,5 +16,6 @@ router.get('/workflows/:application', WorkflowController.get)
   // .post('/run2', WorkflowController.saveRun2)
   .get("/recreateJmx/:workflow/:run", auth ,RunController.recreate)
   .post("/downloadJmx", auth, WorkflowController.downloadJmx)
+  .post("/callBacktrack", RunController.callBacktrack)
   
 export default router;
