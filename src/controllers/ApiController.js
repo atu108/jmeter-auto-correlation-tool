@@ -148,7 +148,7 @@ class ApiController {
         from: config.mail.auth.user,
         html: emailMessage,
         subject: 'Contact Form',
-        to: 'atul23571@gmail.com'
+        to: 'ektaenterprises555@gmail.com'
       }
       Email.send(emailData)
       ctx.set('Access-Control-Allow-Origin', '*')

@@ -13,13 +13,19 @@ const commonColumns = ['isUniqueRepeated', 'isUsed', 'testId'];
 const parse = require('tld-extract')
 
 export const resolveArray = async (myArray, request_id) => {
+    console.log("requeste being processed", request_id)
     async function checkCorName(key , value,request){
-        const diff = await Difference.find({key,value,"first.request":request});
-        if(diff.length !== 1) return false;
+        console.log("================== ================= forINput cor name =============================================")
+        console.log(key ,"    " ,value, "  " ,request)
+        const diff = await Difference.find({key,"first.value":value,"first.request":request});
+        console.log("*************************** difference *****************************")
+        console.log(diff.length , diff[0])
+        if(diff.length != 1) return false;
          if(diff[0].duplicate){
              const col = await Correlation.find({difference:diff[0].duplicate});
              if(col.length > 0){
-                 return "\${"+col[0].reg_name+"}";
+                 return `\${${col[0].reg_final_name}_${col[0].reg_name.withWhat[0]}}`
+                //  return "\${"+col[0].reg_name+"}";
              }else{
                  return false;
              }
@@ -27,7 +33,8 @@ export const resolveArray = async (myArray, request_id) => {
          }else{
              const col = await Correlation.find({difference:diff[0]._id});
              if(col.length > 0){
-                 return "\${"+col[0].reg_name+"}";
+                return `\${${col[0].reg_final_name}_${col[0].reg_name.withWhat[0]}}`
+                //  return "\${"+col[0].reg_name+"}";
              }else{
                  return false;
              }
@@ -36,14 +43,15 @@ export const resolveArray = async (myArray, request_id) => {
 
      let toSend = ''
     for(let i = 0; i < myArray.length; i++){
-        let temp = await checkCorName(Object.keys(myArray[i])[0],myArray[Object.keys(myArray[i])[0]],request_id);
-        console.log("data to fetch", request_id, Object.keys(myArray[i])[0], myArray[i][Object.keys(myArray[i])])
+        let temp = await checkCorName(Object.keys(myArray[i])[0],myArray[i][Object.keys(myArray[i])],request_id);
+        console.log("checing cor name", temp)
+        // console.log("data to fetch", request_id, Object.keys(myArray[i])[0], myArray[i][Object.keys(myArray[i])])
         let inSettings = await ParamSetting.find({
             request: request_id,
             key: Object.keys(myArray[i])[0],
             value: myArray[i][Object.keys(myArray[i])]
         })
-        console.log("cehcking settigns data", inSettings);
+        // console.log("cehcking settigns data", inSettings);
 
         // removed _par from parameter name
         if(inSettings.length === 1){
@@ -78,14 +86,14 @@ export const parseParams = async (request , urlPath) =>{
     if(diff.length > 0){
         const col = await Correlation.find({difference:diff[0]._id});
         if(col.length > 0){
-            console.log("found col", col);
+            // console.log("found col", col);
             const splitWith = parse(diff[0].first.value).tld
             pathName = diff[0].first.value.split(`.${splitWith}`)[1];
-            console.log("checking path name", pathName);
+            // console.log("checking path name", pathName);
             const index = (col[0].key === 'url');
             if(index){
                 let regName = col[0].reg_name;
-                console.log("inside jmx constants", regName);
+                // console.log("inside jmx constants", regName);
                 for(let i = 0; i < regName.toReplace.length; i++){
                     pathName = pathName.replace(regName.toReplace[i], `\${${col[0].reg_final_name}_${regName.withWhat[i]}}`);
                 }
@@ -126,8 +134,8 @@ export const jmxStartXml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
 '        <collectionProp name="Arguments.arguments"/>\n' +
 '      </elementProp>\n' +
 '      <stringProp name="TestPlan.user_define_classpath"></stringProp>\n' +
-'    </TestPlan>\n' +
-'    <hashTree>\n' +
+'    </TestPlan>\n<hashTree><CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookie Manager" enabled="true"><collectionProp name="CookieManager.cookies"/><boolProp name="CookieManager.clearEachIteration">false</boolProp></CookieManager><hashTree/><CacheManager guiclass="CacheManagerGui" testclass="CacheManager" testname="HTTP Cache Manager" enabled="true"><boolProp name="clearEachIteration">false</boolProp><boolProp name="useExpires">true</boolProp></CacheManager>' +
+'    <hashTree/>\n' +
 '<ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="Aggregate Report" enabled="true">\n' +
 '          <boolProp name="ResultCollector.error_logging">false</boolProp>\n' +
 '          <objProp>\n' +
@@ -216,17 +224,7 @@ without actual network activity. This helps debugging tests.</stringProp>
     </hashTree>`
 }
 export const csvDataSet = function(csvName = 'none'){
-    return  '<CacheManager guiclass="CacheManagerGui" testclass="CacheManager" testname="HTTP Cache Manager" enabled="true">\n' +
-      '        <boolProp name="clearEachIteration">true</boolProp>\n' +
-      '        <boolProp name="useExpires">false</boolProp>\n' +
-      '      </CacheManager>\n' +
-      '      <hashTree/>\n' +
-      '      <CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookie Manager" enabled="true">\n' +
-      '        <collectionProp name="CookieManager.cookies"/>\n' +
-      '        <boolProp name="CookieManager.clearEachIteration">true</boolProp>\n' +
-      '      </CookieManager>\n' +
-      '      <hashTree/>\n' +
-      `<CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="parameter" enabled="true">
+    return `<CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="parameter" enabled="true">
                 <stringProp name="delimiter">,</stringProp>
                  <stringProp name="fileEncoding"></stringProp>
                  <stringProp name="filename">${config.storage.csvPath}${csvName}</stringProp>

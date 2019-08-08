@@ -248,7 +248,7 @@ class Backtrack {
 
     _fixBoundary(str1, str2, values, ) {
         console.log("checking sts", str1, str2);
-        let temp = [str1.replace(values[0], '(*?)'), str2.replace(values[1], '(*?)')]
+        let temp = [str1.replace(values[0], '(.*?)'), str2.replace(values[1], '(.*?)')]
         //for cheching its anchor tag
         if (str1.substring(0, 3) !== '<a ') {
             if (temp[0] === temp[1])
@@ -431,6 +431,7 @@ class Backtrack {
         let value1 = diff.first.value.replace('+', ' ');
         let value2 = diff.second.value.replace('+', ' ');
         let finalReg = '';
+        console.log(diff.first.request)
         let stepSeq = [diff.first.request.sequence, diff.second.request.sequence];
         //console.log("differnce sequence number", diff.first.request.sequence);
         // console.log("inside new serach", key, "--", value1, "--",value2);
@@ -472,12 +473,15 @@ class Backtrack {
             console.log("url to be found", allRequests[i].url);
             console.log("request detail", allRequests[i].request.method, "transaction", allRequests[i].txn_sequence, "id", allRequests[i].transaction);
             if (tags.value && tags.value.length > 0) {
-                let second = await Request.find({ run: runs[1], url: allRequests[i].url, txn_sequence: allRequests[i].transaction_sequence, 'request.method': allRequests[i].request.method });
+                let second = await Request.find({ run: runs[1], url: allRequests[i].url, txn_sequence: allRequests[i].txn_sequence, 'request.method': allRequests[i].request.method });
+                console.log("input response", second[0]);
+                //if did not find with same url as run 1 then find in its parents in diffrence
                 if (!second[0]) {
                     const findParent = await Difference.find({ "first.value": allRequests[i].url });
                     console.log(findParent);
                     if (findParent[0]) {
-                        second = await Request.find({ run: runs[1], url: findParent[0].second.value, txn_sequence: allRequests[i].txn_sequence, 'request.method': allRequests[i].method });
+                        //second = await Request.find({ run: runs[1], url: findParent[0].second.value, txn_sequence: allRequests[i].txn_sequence, 'request.method': allRequests[i].method });
+                        second = await Request.find({ _id: findParent[0].second.request });
                     }
 
                 }
@@ -501,15 +505,25 @@ class Backtrack {
                         forFinalReg[0].attribs.value = forFinalReg[0].attribs.value.replace(" ", '+');
                         forFinalReg[1].attribs.value = forFinalReg[1].attribs.value.replace(" ", '+');
                         finalReg = this._fixBoundary(cheerio.html(forFinalReg[0]), cheerio.html(forFinalReg[1]), [value1, value2]);
+                        //closing tag has been done to fix if 
+                        //the fix boundry has removed last closing tag then add one else dont
+                        let closingTag = '>'
+                        if (finalReg[finalReg.length - 1] == '>') {
+                            closingTag = ''
+                        }
+                        finalReg = finalReg + closingTag;
                         const reg_name = this._getRegName(finalReg, cheerio.html(forFinalReg[0]), value1, key)
+                        finalReg = this.verifyTagClosing(body,finalReg,value1);
+                        console.log("final reg after modification", finalReg)
                         return {
                             key: key,
                             priority: 1,
                             compared_url: diff.url,
                             location: diff.location,
-                            reg_count: this._countReg(finalReg + '>'),
+                            reg_count: this._countReg(finalReg),
                             reg_name: reg_name,
-                            final_regex: finalReg + '>',
+                            final_regex: finalReg,
+                            reg_final_name: diff._id,
                             first: {
                                 url: allRequests[i].url,
                                 matched: cheerio.html(forFinalReg[0]),
@@ -517,7 +531,7 @@ class Backtrack {
                                 txn_sequence: allRequests[i].transaction.sequence,
                                 request: allRequests[i]._id,
                                 run: allRequests[i].run,
-                                atPos: 'Not Required'
+                                atPos: 0
 
                             },
                             second: {
@@ -527,7 +541,7 @@ class Backtrack {
                                 txn_sequence: second[0].transaction.sequence,
                                 request: second[0]._id,
                                 run: second[0].run,
-                                atPos: 'Not Required'
+                                atPos: 0
 
                             },
                             workflow: diff.workflow,
@@ -541,7 +555,35 @@ class Backtrack {
     }
 
 
-
+    verifyTagClosing(body, reg, value) {
+        let strippedClosingRegTag = reg.substring(0, reg.length - 1)
+        let possibleReg = [
+            reg,
+            strippedClosingRegTag + ' />',
+            strippedClosingRegTag + '/>',
+            strippedClosingRegTag + ' >'
+        ]
+        for (let i = 0; i < possibleReg.length; i++) {
+        console.log("----------------------------posibke reg ---------------------------------------------")
+        console.log(possibleReg)
+            let matched = body.match(new RegExp(possibleReg[i], 'gi'))
+            console.log("matched" , matched)
+            if (Array.isArray(matched)) {
+                // return possibleReg[i]; 
+                for(let j = 0; j < matched.length; j++){
+                    let tempMatch = matched[j].match(new RegExp(possibleReg[i]))
+                    // console.log("value match",))
+                    // console.log("value ", value)
+                    console.log("checking temp match", tempMatch[1] , "value", value)
+                    if(tempMatch[1] == value){
+                        console.log("called")
+                        return possibleReg[i];
+                    }
+                }
+            }
+        }
+        return false;
+    }
     checkExactMatch(tag, tag2) {
         try {
             for (let i = 0; i < tag.length; i++) {
@@ -581,10 +623,13 @@ class Backtrack {
     }
 
     findInput(body, key, value) {
+        console.log("--------------------------------------------------------------------------------------------------------------------------")
+        console.log("input key", key, "value", value)
         try {
             let $ = cheerio.load(body.replace((/\\/g, "")));
+            console.log(body)
             let inputs = $('input[name="' + key + '"][value="' + value + '"]').toArray();
-            // console.log("inputs check", typeof inputs, "all inouts", inputs[0]);
+            console.log("inputs check all inouts", inputs);
             if (inputs.length > 0) {
                 return inputs;
                 // return inputs;
@@ -614,6 +659,9 @@ class Backtrack {
 
     }
 
+
+    // take in an url and a return type and return
+    // parameters of the url in obj defualt or string
     getUrlParameters(url, type = 'Obj') {
         const loc = new URL(url);
         if (type == 'Obj') {
@@ -622,20 +670,17 @@ class Backtrack {
                 obj[name] = value
             }
             return obj;
-        }else if(type == 'String'){
-            console.log("search param",loc.search)
+        } else if (type == 'String') {
+            console.log("search param", loc.search)
             return loc.search.split('&')[1]
-        } 
+        }
     }
 
     findParamsInAchorTag(body, keyValue) {
-        console.log("called in side find anchor tag", body)
         try {
-            let newBody1 = body.replace(/\\/g, "")
-            let $ = cheerio.load(newBody1.toString(), { xml: { decodeEntities: false, lowerCaseAttributeNames: false } });
+            let $ = cheerio.load(body.toString(), { xml: { decodeEntities: false, lowerCaseAttributeNames: false } });
             // let $ = cheerio.load(body.replace((/\\/g, "")));
             let anchorTags = $(`a[href*='${keyValue}']`).toArray();
-            console.log("finsing anchortags", anchorTags);
             // console.log("inputs check", typeof inputs, "all inouts", inputs[0]);
             if (anchorTags.length > 0) {
                 return anchorTags;
@@ -650,16 +695,31 @@ class Backtrack {
     }
 
     _getRegName(final, matched, value, key) {
-        let resultArr = matched.match(new RegExp(final + ">"))
+        // console.log("final reg",final)
+        // console.log("matched",matched)
+        // console.log("value",value)
+        // console.log("key",key)
+        let toReplace = [];
+        let withWhat = []
+        let resultArr = matched.match(new RegExp(final))
         if (resultArr.length === 2) {
-            return key + "_COR"
-        }
-        for (let i = 1; i < resultArr.length; i++) {
-            if (resultArr[i].replace(/"/g, '').replace(/'/g, '') === value) {
-                return key + "_COR_g" + i;
-            } else {
-                console.log(resultArr[i].replace('"', '', g))
+            toReplace.push(resultArr[1])
+            withWhat.push("COR")
+            // return key + "_COR"
+        } else {
+            for (let i = 1; i < resultArr.length; i++) {
+                if (resultArr[i].replace(/"/g, '').replace(/'/g, '') === value) {
+                    toReplace.push(resultArr[i])
+                    withWhat.push(key + "COR_g" + i)
+                    // return key + "_COR_g" + i;
+                } else {
+                    console.log(resultArr[i].replace('"', '', g))
+                }
             }
+        }
+        return {
+            toReplace,
+            withWhat
         }
     }
     _getAnchorRegName(final, matched, value, condition, splitWith) {
@@ -754,7 +814,7 @@ class Backtrack {
                 if (!second[0]) {
                     const findParent = await Difference.find({ "first.value": request.url });
                     if (findParent[0]) {
-                        second = await Request.find({ run: runs[1], url: findParent[0].second.value, txn_sequence: request.txn_sequence, 'request.method': request.request.method });
+                        second = await Request.find({ _id: findParent[0].second.request });
                     }
                 }
                 let newBody2 = second[0].response.body.replace((/\\/g, ""));
@@ -788,82 +848,29 @@ class Backtrack {
                     }
                 }
                 if (anchor2.length > 0) {
+                    return this._anchorCorrelationFinal(second, anchor1, anchor2, newBody1, newBody2, diff, request, splitWith, value1)
                     //console.log("fund anchors", anchor1, anchor2);
-                    let forFinalReg = this.checkExactMatch(anchor1, anchor2)
-                    if (!forFinalReg) {
-                        forFinalReg = this.checkLooseMatch(anchor1, anchor2);
-                    }
-                    // console.log("forFinal reg",forFinalReg);
-                    if (forFinalReg) {
-                        let finalReg = this.matchAnchorTags(forFinalReg[0], forFinalReg[1]);
-                        finalReg = finalReg.replace(/[^\*\?](\W\?)/g, '{{TEMP}}');
-                        finalReg = finalReg.replace(/\?/g, "\\?").replace(/{{TEMP}}/g, ".*?")
-                        console.log("final", finalReg);
-                        const counts = this.verifyAnchorTag(
-                            finalReg,
-                            [cheerio.html(forFinalReg[0]), cheerio.html(forFinalReg[1])],
-                            newBody1,
-                            newBody2
-                        )
-
-                        // need transaction name 
-                        // sequence of request
-
-                        const reg_name = this._getAnchorRegName(finalReg, cheerio.html(forFinalReg[0]), value1, condition, splitWith)
-                        //console.log("regex name ",reg_name);
-                        finalReg = counts[2].replace(/\?/g, "\?").replace(/{{TEMP}}/g, ".*?")
-                        console.log(finalReg)
-                        return {
-                            key: "url",
-                            priority: 1,
-                            compared_url: diff.url,
-                            location: diff.location,
-                            reg_count: this._countReg(finalReg),
-                            reg_name: reg_name,
-                            reg_final_name: diff._id,
-                            final_regex: finalReg.replace('&amp;', '&'),
-                            first: {
-                                url: request.url,
-                                matched: cheerio.html(forFinalReg[0]),
-                                txn_title: request.transaction.title,
-                                txn_sequence: request.transaction.sequence,
-                                request: request._id,
-                                run: request.run,
-                                atPos: counts[0] ? counts[0] : false
-
-                            },
-                            second: {
-
-                                url: second[0].url,
-                                matched: cheerio.html(forFinalReg[1]),
-                                txn_title: second[0].transaction.title,
-                                txn_sequence: second[0].transaction.sequence,
-                                request: second[0]._id,
-                                run: second[0].run,
-                                atPos: counts[1] ? counts[1] : false
-
-                            },
-                            workflow: diff.workflow,
-                            difference: diff._id
+                }
+            } else {
+                let params1 = this.getUrlParameters(value1, 'String');
+                let param2 = this.getUrlParameters(value2, 'String');
+                let newBody1 = body.replace(/\\/g, "")
+                let found1 = this.findParamsInAchorTag(newBody1, params1);
+                if (found1) {
+                    let second = await Request.find({ run: runs[1], url: request.url, txn_sequence: request.txn_sequence, 'request.method': request.request.method });
+                    // to do : Refactor code for resuability for find parent
+                    if (!second[0]) {
+                        const findParent = await Difference.find({ "first.value": request.url });
+                        console.log("parent", findParent);
+                        if (findParent[0]) {
+                            second = await Request.find({ _id: findParent[0].second.request });
                         }
                     }
-                }
-
-            } else {
-                console.log("finding params exectuing", value1, value2)
-                let params1 = this.getUrlParameters(value1, 'String');
-                console.log("checking params in find using params", params1);
-                let param2 = this.getUrlParameters(value2, 'String');
-                console.log("checking params in find using params", param2);
-                let found1 = this.findParamsInAchorTag(body,params1);
-                console.log("finding params found 1nd", found1)
-                if(found1){
-                    let secondRunBody = await Request.find({ run: runs[1], url: request.url, txn_sequence: request.txn_sequence, 'request.method': request.request.method });
-                    console.log("finding params found second body", secondRunBody[0].response.body);
-                    if(secondRunBody.length > 0){
-                        let found2 = this.findParamsInAchorTag(secondRunBody,param2);
-                        if(found2){
-                            console.log("finding params found 2nd too", found2)
+                    if (second.length > 0) {
+                        let newBody2 = second[0].response.body.replace(/\\/g, "")
+                        let found2 = this.findParamsInAchorTag(newBody2, param2);
+                        if (found2.length > 0) {
+                            return this._anchorCorrelationFinal(second, found1, found2, newBody1, newBody2, diff, request, splitWith, value1)
                         }
                     }
                 }
@@ -871,6 +878,66 @@ class Backtrack {
             }
         } catch (e) {
             console.log(e);
+        }
+    }
+    _anchorCorrelationFinal(second, found1, found2, newBody1, newBody2, diff, request, splitWith, value1) {
+        /*
+         when everything is found then this function is used to 
+         create final regex and correlation documnet to insert
+        */
+        let forFinalReg = this.checkExactMatch(found1, found2)
+        if (!forFinalReg) {
+            forFinalReg = this.checkLooseMatch(found1, found2);
+        }
+        console.log("forFinal reg", forFinalReg);
+        if (forFinalReg) {
+            console.log("inside finak reg")
+            let finalReg = this.matchAnchorTags(forFinalReg[0], forFinalReg[1]);
+            finalReg = finalReg.replace(/[^\*\?](\W\?)/g, '{{TEMP}}');
+            finalReg = finalReg.replace(/\?/g, "\\?").replace(/{{TEMP}}/g, ".*?");
+            finalReg = finalReg.replace("=undefined", "");
+            console.log("final", finalReg);
+            const counts = this.verifyAnchorTag(
+                finalReg,
+                [cheerio.html(forFinalReg[0]), cheerio.html(forFinalReg[1])],
+                newBody1,
+                newBody2
+            )
+            const reg_name = this._getAnchorRegName(finalReg, cheerio.html(forFinalReg[0]), value1, 3, splitWith)
+            //console.log("regex name ",reg_name);
+            finalReg = counts[2].replace(/\?/g, "\?").replace(/{{TEMP}}/g, ".*?")
+            return {
+                key: "url",
+                priority: 1,
+                compared_url: diff.url,
+                location: diff.location,
+                reg_count: this._countReg(finalReg),
+                reg_name: reg_name,
+                reg_final_name: diff._id,
+                final_regex: finalReg.replace('&amp;', '&'),
+                first: {
+                    url: request.url,
+                    matched: cheerio.html(forFinalReg[0]),
+                    txn_title: request.transaction.title,
+                    txn_sequence: request.transaction.sequence,
+                    request: request._id,
+                    run: request.run,
+                    atPos: counts[0] ? counts[0] : false
+
+                },
+                second: {
+                    url: second[0].url,
+                    matched: cheerio.html(forFinalReg[1]),
+                    txn_title: second[0].transaction.title,
+                    txn_sequence: second[0].transaction.sequence,
+                    request: second[0]._id,
+                    run: second[0].run,
+                    atPos: counts[1] ? counts[1] : false
+
+                },
+                workflow: diff.workflow,
+                difference: diff._id
+            }
         }
     }
     matchAnchorTags(obj1, obj2) {

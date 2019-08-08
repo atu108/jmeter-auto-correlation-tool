@@ -62,7 +62,7 @@ class RunController {
   }
 
   async callBacktrack(ctx){
-    await this.backtrack(ctx.request.body.workflow, ctx.request.body.run)
+    await this.compare(ctx.request.body.workflow)
     ctx.body = {status: true, message: "running"}
   }
   async backtrack(workflow, run1) {
@@ -95,7 +95,11 @@ class RunController {
     for (let i = 0; i < object.length; i++) {
       for (let j = i; j < objectCopy.length; j++) {
         if (object[i].key === objectCopy[j].key && check.indexOf(j) === -1 && object[i]._id !== objectCopy[j]._id && object[i].first.value === objectCopy[j].first.value && object[i].second.value === objectCopy[j].second.value) {
-          await Difference.findByIdAndUpdate(objectCopy[j]._id, { duplicate: object[i]._id });
+          if(object[i].first.request.toString() == objectCopy[j].first.request.toString()){
+            await Difference.remove({_id:objectCopy[j]._id});
+          }else{
+            await Difference.findByIdAndUpdate(objectCopy[j]._id, { duplicate: object[i]._id });
+          }
           check.push(j);
         }
       }

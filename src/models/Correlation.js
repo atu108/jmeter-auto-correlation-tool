@@ -30,7 +30,7 @@ const CorrelationSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: "Run"
         },
-        atPos: Number
+        atPos: String
 
     },
     second: {
@@ -52,7 +52,7 @@ const CorrelationSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: "Run"
         },
-        atPos: Number
+        atPos: String
     },
     workflow:{
         type: Schema.Types.ObjectId,

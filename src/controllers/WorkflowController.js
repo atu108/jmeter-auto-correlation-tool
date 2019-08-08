@@ -260,23 +260,33 @@ class WorkflowController {
     })
   }
 
+ _sortBySpecificKey( a, b ) {
+    if ( a.sequence < b.sequence ){
+      return -1;
+    }
+    if ( a.sequence > b.sequence ){
+      return 1;
+    }
+    return 0;
+  }
   async _saveRequests(hars, run, workflow) {
-    const harKeys = Object.keys(hars)
-    let key = null;
+    hars = hars.sort(this._sortBySpecificKey)
+    // const harKeys = Object.keys(hars)
     let step_sequence = null;
     let txn = null;
-    for (let i = 0; i < harKeys.length; i++) {
-      key = harKeys[i];
+    for (let i = 0; i < hars.length; i++) {
       step_sequence = await Request.find({ run }).count();
+      console.log("har sequence", hars[i]['sequence'])
+      console.log("checking step sequence", step_sequence)
       txn = await Transaction.create({
-        title: key,
+        title: hars[i]["name"],
         run,
-        sequence: hars[key]['sequence']
+        sequence: hars[i]['sequence']
       });
       let finalData = [];
-      // console.log("transaction of sequence saved", hars[key]['sequence'], key)
+      console.log("transaction of sequence saved", hars[i]['sequence'])
       //fs.writeFileSync('./' + hars[key]['sequence'], hars[key]['har_data'], 'utf8')
-      hars[key]['har_data'].log.entries.forEach((entry, index) => {
+      hars[i]['har_data'].log.entries.forEach((entry, index) => {
         let data = { request: {}, response: {} };
         data.url = entry.request.url.split('?')[0];
         data.request.method = entry.request.method;
@@ -292,7 +302,7 @@ class WorkflowController {
         data.run = run;
         data.transaction = txn._id;
         data.workflow = workflow;
-        data.txn_sequence = hars[key]['sequence'];
+        data.txn_sequence = hars[i]['sequence'];
         data.sequence = step_sequence + index + 1;
         finalData.push(data);
         console.log("check request sequence", step_sequence + index + 1)

@@ -49,6 +49,7 @@ class LoadRunner {
             let found = application.workflow.find(w => w.sequence == workflowSequence);
             if (found['loop_count'] > 1) {
                 let pacing = (3600 - (duration * found['loop_count'])) / found['loop_count'] - 1;
+                console.log("hceking pacing count", pacing);
                 if (pacing < 0) {
                     await Application.update({ _id: application._id }, {
                         pacing: {
