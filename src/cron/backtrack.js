@@ -449,12 +449,87 @@ class Backtrack {
             //console.log("counting session",allRequests[i].session_sequence, allRequests[i].sequence)
             let body = allRequests[i].response.body;
             if (body === undefined || !body || body == '') {
-                continue;
+                if (allRequests[i].response.status != 302) {
+                    continue;
+                }
             }
 
             // for searching the differences in url
 
             if (diff.location === 'url') {
+                console.log("response status =====>", allRequests[i].response.status, ", sequnce => ", allRequests[i].sequence)
+                if (allRequests[i].response.status > 299 && allRequests[i].response.status < 400) {
+                    console.log("****************  *************** inside 300 reauets **************************************")
+                    //await this.findAnchorTagInHeader(body, value1, value2, allRequests[i], diff, runs)
+                    let indexOfLocation = allRequests[i].response.headers.findIndex(function findLocationKey(header) {
+                        let tempKey = Object.keys(header)[0];
+                        return tempKey.toLowerCase() == 'location' && header[tempKey] == value1;
+                    })
+
+                    if (indexOfLocation != -1) {
+                        let second = await Request.find({ run: runs[1], url: allRequests[i].url, txn_sequence: allRequests[i].txn_sequence, 'request.method': allRequests[i].request.method });
+                        console.log("input response", second[0]);
+                        //if did not find with same url as run 1 then find in its parents in diffrence
+                        if (!second[0]) {
+                            const findParent = await Difference.find({ "first.value": allRequests[i].url });
+                            console.log(findParent);
+                            if (findParent[0]) {
+                                //second = await Request.find({ run: runs[1], url: findParent[0].second.value, txn_sequence: allRequests[i].txn_sequence, 'request.method': allRequests[i].method });
+                                second = await Request.find({ _id: findParent[0].second.request });
+                            }
+                        }
+                        if (second[0]) {
+                            let indexOfLocation = second[0].response.headers.findIndex(function findLocationKey(header) {
+                                let tempKey = Object.keys(header)[0];
+                                return tempKey.toLowerCase() == 'location' && header[tempKey] == value2;
+                            })
+                            if (indexOfLocation != -1) {
+                                //return this._anchorCorrelationFinal(second, value1, value2, newBody1, newBody2, diff, request, splitWith, value1)
+                                let finalReg = this._compareUrl(value1, value2);
+                                let reg_name = this._getHrefRegName(finalReg, value1)
+                                finalReg = 'Location: ' + finalReg + '\s';
+                                console.log("302 reg name", reg_name);
+                                return {
+                                    key: key,
+                                    priority: 1,
+                                    compared_url: diff.url,
+                                    location: diff.location,
+                                    reg_count: this._countReg(finalReg),
+                                    reg_name: reg_name,
+                                    final_regex: finalReg,
+                                    reg_final_name: diff._id,
+                                    first: {
+                                        url: allRequests[i].url,
+                                        matched: value1,
+                                        txn_title: allRequests[i].transaction.title,
+                                        txn_sequence: allRequests[i].transaction.sequence,
+                                        request: allRequests[i]._id,
+                                        run: allRequests[i].run,
+                                        atPos: 0
+        
+                                    },
+                                    second: {
+                                        url: second[0].url,
+                                        matched: value2,
+                                        txn_title: second[0].transaction.title,
+                                        txn_sequence: second[0].transaction.sequence,
+                                        request: second[0]._id,
+                                        run: second[0].run,
+                                        atPos: 0
+        
+                                    },
+                                    workflow: diff.workflow,
+                                    difference: diff._id
+                                }
+                                // regex will be from by just comapring the urls as above
+                                // now get the nameof the reg as g1 g2 by just macthing the original values and then replaing
+                                // values with cor or cor_g<number>
+                                // then pick that correlarion object and push it in correlaration array
+
+                            }
+                        }
+                    }
+                }
                 let result = await this._findAchorTag(body, value1, value2, allRequests[i], diff, runs);
                 if (result) {
                     return result;
@@ -469,16 +544,11 @@ class Backtrack {
                 tags.value = this.findSelect(body, key, value1);
                 tags.type = 2
             }
-            console.log("tag found in first", tags.value, tags.type);
-            console.log("url to be found", allRequests[i].url);
-            console.log("request detail", allRequests[i].request.method, "transaction", allRequests[i].txn_sequence, "id", allRequests[i].transaction);
             if (tags.value && tags.value.length > 0) {
                 let second = await Request.find({ run: runs[1], url: allRequests[i].url, txn_sequence: allRequests[i].txn_sequence, 'request.method': allRequests[i].request.method });
-                console.log("input response", second[0]);
                 //if did not find with same url as run 1 then find in its parents in diffrence
                 if (!second[0]) {
                     const findParent = await Difference.find({ "first.value": allRequests[i].url });
-                    console.log(findParent);
                     if (findParent[0]) {
                         //second = await Request.find({ run: runs[1], url: findParent[0].second.value, txn_sequence: allRequests[i].txn_sequence, 'request.method': allRequests[i].method });
                         second = await Request.find({ _id: findParent[0].second.request });
@@ -513,7 +583,7 @@ class Backtrack {
                         }
                         finalReg = finalReg + closingTag;
                         const reg_name = this._getRegName(finalReg, cheerio.html(forFinalReg[0]), value1, key)
-                        finalReg = this.verifyTagClosing(body,finalReg,value1);
+                        finalReg = this.verifyTagClosing(body, finalReg, value1);
                         console.log("final reg after modification", finalReg)
                         return {
                             key: key,
@@ -564,19 +634,14 @@ class Backtrack {
             strippedClosingRegTag + ' >'
         ]
         for (let i = 0; i < possibleReg.length; i++) {
-        console.log("----------------------------posibke reg ---------------------------------------------")
-        console.log(possibleReg)
             let matched = body.match(new RegExp(possibleReg[i], 'gi'))
-            console.log("matched" , matched)
             if (Array.isArray(matched)) {
                 // return possibleReg[i]; 
-                for(let j = 0; j < matched.length; j++){
+                for (let j = 0; j < matched.length; j++) {
                     let tempMatch = matched[j].match(new RegExp(possibleReg[i]))
                     // console.log("value match",))
                     // console.log("value ", value)
-                    console.log("checking temp match", tempMatch[1] , "value", value)
-                    if(tempMatch[1] == value){
-                        console.log("called")
+                    if (tempMatch[1] == value) {
                         return possibleReg[i];
                     }
                 }
@@ -600,7 +665,6 @@ class Backtrack {
                     return [tag[i], tag2[index]];
                 }
             }
-            console.log("input check match", tag, tag2)
             return false;
         } catch (e) {
             return false
@@ -623,13 +687,13 @@ class Backtrack {
     }
 
     findInput(body, key, value) {
-        console.log("--------------------------------------------------------------------------------------------------------------------------")
-        console.log("input key", key, "value", value)
+        // console.log("--------------------------------------------------------------------------------------------------------------------------")
+        // console.log("input key", key, "value", value)
         try {
             let $ = cheerio.load(body.replace((/\\/g, "")));
-            console.log(body)
+            // console.log(body)
             let inputs = $('input[name="' + key + '"][value="' + value + '"]').toArray();
-            console.log("inputs check all inouts", inputs);
+            // console.log("inputs check all inouts", inputs);
             if (inputs.length > 0) {
                 return inputs;
                 // return inputs;
@@ -671,7 +735,7 @@ class Backtrack {
             }
             return obj;
         } else if (type == 'String') {
-            console.log("search param", loc.search)
+            // console.log("search param", loc.search)
             return loc.search.split('&')[1]
         }
     }
@@ -722,12 +786,37 @@ class Backtrack {
             withWhat
         }
     }
+
+    _getHrefRegName(final, matched){
+        let toReplace = [];
+        let withWhat = [];
+        final = final.replace(/[^\*\?](\W\?)/g, '{{TEMP}}');
+        final = final.replace(/\?/g, "\\?").replace(/{{TEMP}}/g, ".*?")
+        console.log("herf regex",  final )
+       matched = matched.replace(/&/g, "&amp;") + '/'
+        let resultArr = matched.match(final + '/')
+        console.log("result arr",resultArr)
+        if (resultArr && resultArr.length === 2) {
+            toReplace.push(resultArr[1])
+            withWhat.push("COR")
+        } else if (resultArr) {
+            for (let i = 1; i < valuesInHref.length; i++) {
+                toReplace.push(valuesInHref[i]);
+                withWhat.push("COR_g" + resultArr.indexOf(valuesInHref[i]))
+            }
+        }
+        // key+"_COR_g"+i
+        return {
+            toReplace,
+            withWhat
+        }
+    }
     _getAnchorRegName(final, matched, value, condition, splitWith) {
         let toReplace = [];
         let withWhat = [];
-        console.log("checking cndition", condition);
-        console.log("matched", matched)
-        console.log("value", value)
+        // console.log("checking cndition", condition);
+        // console.log("matched", matched)
+        // console.log("value", value)
         if (condition === 3 || condition === 5) {
             value = value.split(`.${splitWith}/`)[1]
         } else if (condition === 4 || condition === 6) {
@@ -805,10 +894,10 @@ class Backtrack {
             //  anchor1 = anchor1.length > 0 ? anchor1 : $('a[href='+value1.split('.com/')[1]+']').toArray();
             //  console.log("achor1 in next search", anchor1)
             //  console.log("inputs check", typeof inputs, "all inouts", inputs[0]);
-            console.log("checking values", request.url, request.txn_sequence);
-            console.log("checkinf if found", anchor1);
+            // console.log("checking values", request.url, request.txn_sequence);
+            // console.log("checkinf if found", anchor1);
             if (anchor1.length > 0) {
-                console.log("checking condition", condition)
+                // console.log("checking condition", condition)
                 let second = await Request.find({ run: runs[1], url: request.url, txn_sequence: request.txn_sequence, 'request.method': request.request.method });
                 // console.log("second top section", second[0].response.body);
                 if (!second[0]) {
@@ -848,7 +937,7 @@ class Backtrack {
                     }
                 }
                 if (anchor2.length > 0) {
-                    return this._anchorCorrelationFinal(second, anchor1, anchor2, newBody1, newBody2, diff, request, splitWith, value1)
+                    return this._anchorCorrelationFinal(second, anchor1, anchor2, newBody1, newBody2, diff, request, splitWith, value1, condition)
                     //console.log("fund anchors", anchor1, anchor2);
                 }
             } else {
@@ -861,7 +950,7 @@ class Backtrack {
                     // to do : Refactor code for resuability for find parent
                     if (!second[0]) {
                         const findParent = await Difference.find({ "first.value": request.url });
-                        console.log("parent", findParent);
+                        // console.log("parent", findParent);
                         if (findParent[0]) {
                             second = await Request.find({ _id: findParent[0].second.request });
                         }
@@ -870,7 +959,7 @@ class Backtrack {
                         let newBody2 = second[0].response.body.replace(/\\/g, "")
                         let found2 = this.findParamsInAchorTag(newBody2, param2);
                         if (found2.length > 0) {
-                            return this._anchorCorrelationFinal(second, found1, found2, newBody1, newBody2, diff, request, splitWith, value1)
+                            return this._anchorCorrelationFinal(second, found1, found2, newBody1, newBody2, diff, request, splitWith, value1, condition)
                         }
                     }
                 }
@@ -880,7 +969,7 @@ class Backtrack {
             console.log(e);
         }
     }
-    _anchorCorrelationFinal(second, found1, found2, newBody1, newBody2, diff, request, splitWith, value1) {
+    _anchorCorrelationFinal(second, found1, found2, newBody1, newBody2, diff, request, splitWith, value1, condition) {
         /*
          when everything is found then this function is used to 
          create final regex and correlation documnet to insert
@@ -889,21 +978,21 @@ class Backtrack {
         if (!forFinalReg) {
             forFinalReg = this.checkLooseMatch(found1, found2);
         }
-        console.log("forFinal reg", forFinalReg);
+        //console.log("forFinal reg", forFinalReg);
         if (forFinalReg) {
-            console.log("inside finak reg")
+            //console.log("inside finak reg")
             let finalReg = this.matchAnchorTags(forFinalReg[0], forFinalReg[1]);
             finalReg = finalReg.replace(/[^\*\?](\W\?)/g, '{{TEMP}}');
             finalReg = finalReg.replace(/\?/g, "\\?").replace(/{{TEMP}}/g, ".*?");
             finalReg = finalReg.replace("=undefined", "");
-            console.log("final", finalReg);
+            //console.log("final", finalReg);
             const counts = this.verifyAnchorTag(
                 finalReg,
                 [cheerio.html(forFinalReg[0]), cheerio.html(forFinalReg[1])],
                 newBody1,
                 newBody2
             )
-            const reg_name = this._getAnchorRegName(finalReg, cheerio.html(forFinalReg[0]), value1, 3, splitWith)
+            const reg_name = this._getAnchorRegName(finalReg, cheerio.html(forFinalReg[0]), value1, condition, splitWith)
             //console.log("regex name ",reg_name);
             finalReg = counts[2].replace(/\?/g, "\?").replace(/{{TEMP}}/g, ".*?")
             return {
@@ -941,16 +1030,16 @@ class Backtrack {
         }
     }
     matchAnchorTags(obj1, obj2) {
-        console.log("checking tag objects", obj1, obj2);
+        // console.log("checking tag objects", obj1, obj2);
         let anchor1props = obj1.attribs;
         let anchor2props = obj2.attribs;
-        console.log("checking anchor props", anchor1props, anchor2props);
+        //console.log("checking anchor props", anchor1props, anchor2props);
         //console.log("reached till props", anchor1props)
         let allKeys1 = Object.keys(anchor1props);
         let forCreating = {}
         for (let i = 0; i < allKeys1.length; i++) {
             if (anchor1props[allKeys1[i]] === anchor2props[allKeys1[i]]) {
-                console.log(forCreating[allKeys1[i]], "in side matched propres value", anchor1props[allKeys1[i]])
+                // console.log(forCreating[allKeys1[i]], "in side matched propres value", anchor1props[allKeys1[i]])
                 forCreating[allKeys1[i]] = anchor1props[allKeys1[i]]
             } else if (allKeys1[i] === 'href') {
                 const comparedUrls = this._compareUrl(anchor1props[allKeys1[i]], anchor2props[allKeys1[i]]);
@@ -979,50 +1068,50 @@ class Backtrack {
         // console.log("hello world", Reg);
         let matched1 = matchedStrings[0];
         let matched2 = matchedStrings[1];
-        console.log("matched", matched1, matched2);
+        //console.log("matched", matched1, matched2);
         let values1 = matched1.match(reg);
         let values2 = matched2.match(reg);
-        console.log("values", values2, values1)
+        //console.log("values", values2, values1)
         let totalMatches1 = body1.match(Reg)
         if (!totalMatches1 || totalMatches1.length === 0) {
             reg = reg.replace(/href="([^"]+)"/g, "href=$1")
             Reg = new RegExp(reg.replace('&amp;', '&'), 'gi')
-            console.log("test reg", Reg);
+            //console.log("test reg", Reg);
             totalMatches1 = body1.match(Reg)
         }
-        console.log("----------------------------total Matches1----------------------------")
-        console.log(totalMatches1)
+        //console.log("----------------------------total Matches1----------------------------")
+        // console.log(totalMatches1)
         let totalMatches2 = body2.match(Reg)
-        console.log("----------------------------total Matches2----------------------------")
-        console.log(totalMatches2)
-        console.log("counting how many matched", totalMatches1.length, totalMatches2.length);
+        // console.log("----------------------------total Matches2----------------------------")
+        //console.log(totalMatches2)
+        //console.log("counting how many matched", totalMatches1.length, totalMatches2.length);
         const first = this.compareRegValues(totalMatches1, values1, reg.replace('&amp;', '&'));
-        console.log("first count", first);
+        //console.log("first count", first);
         const second = this.compareRegValues(totalMatches2, values2, reg.replace('&amp;', '&'));
-        console.log("first count", second);
+        //console.log("first count", second);
 
         // added 1 to compansate array indexing
         return [+first + 1, +second + 1, reg];
     }
     compareRegValues(totalMatches, values, reg) {
-        console.log("values", values)
-        console.log(totalMatches.length)
+        //console.log("values", values)
+        //console.log(totalMatches.length)
         for (let i = 0; i < totalMatches.length; i++) {
             let arrTemp = totalMatches[i].match(reg);
             let count = 0;
             for (let j = 1; j < arrTemp.length; j++) {
-                console.log("get values of both arr", arrTemp[j], "--------------", values[j])
+                // console.log("get values of both arr", arrTemp[j], "--------------", values[j])
                 if (arrTemp[j] === values[j]) {
-                    console.log("get values of both arr", arrTemp[j], "--------------", values[j])
-                    console.log("occorance", i)
+                    //console.log("get values of both arr", arrTemp[j], "--------------", values[j])
+                    //console.log("occorance", i)
                     count++;
                 }
-                console.log("coujt in loop", count)
+                //console.log("coujt in loop", count)
             }
-            console.log("total count", count)
-            console.log("values length", values.length);
+            // console.log("total count", count)
+            // console.log("values length", values.length);
             if (count === values.length - 1) {
-                console.log("reached inside true compare")
+                //console.log("reached inside true compare")
                 return i;
             }
         }

@@ -127,6 +127,7 @@ class RunController {
         </TransactionController><hashTree>`;
     let whichRequest = 0;
       for (let j = 0; j < requests.length; j++) {
+        let isRedirection = requests[j].response.status > 299 && requests[j].response.status < 400;
         const filterUrl = requests[j].url;
         const loc = new URL(filterUrl)
         const host = loc.host
@@ -152,7 +153,7 @@ class RunController {
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
             <stringProp name="HTTPSampler.path">${urlWithCorAndPar}</stringProp>
             <stringProp name="HTTPSampler.method">${requests[j].request.method}</stringProp>
-            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.follow_redirects">${!isRedirection}</boolProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
@@ -174,7 +175,7 @@ class RunController {
             ${i != 0 && whichRequest == 1 ? `${jmxThinkTime()}`: ''}
               <hashTree/>
             ${hasReg.map((hasReg) => `<RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="client_id_REX" enabled="true">
-              <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+              <stringProp name="RegexExtractor.useHeaders">${isRedirection}</stringProp>
               <stringProp name="RegexExtractor.refname">${hasReg.reg_final_name}_COR</stringProp>
               <stringProp name="RegexExtractor.regex">${this._encodeHtml(hasReg.final_regex)}</stringProp>
               <stringProp name="RegexExtractor.template">${hasReg.reg_count}</stringProp>
