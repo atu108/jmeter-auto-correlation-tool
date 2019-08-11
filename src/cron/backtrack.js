@@ -449,7 +449,8 @@ class Backtrack {
             //console.log("counting session",allRequests[i].session_sequence, allRequests[i].sequence)
             let body = allRequests[i].response.body;
             if (body === undefined || !body || body == '') {
-                if (allRequests[i].response.status != 302) {
+                console.log("response status", allRequests[i].response.status)
+                if (allRequests[i].response.status < 300 || allRequests[i].response.status > 399) {
                     continue;
                 }
             }
@@ -487,7 +488,7 @@ class Backtrack {
                                 //return this._anchorCorrelationFinal(second, value1, value2, newBody1, newBody2, diff, request, splitWith, value1)
                                 let finalReg = this._compareUrl(value1, value2);
                                 let reg_name = this._getHrefRegName(finalReg, value1)
-                                finalReg = 'Location: ' + finalReg + '\s';
+                                finalReg = 'Location: ' + finalReg + '\\s';
                                 console.log("302 reg name", reg_name);
                                 return {
                                     key: key,
@@ -529,6 +530,7 @@ class Backtrack {
                             }
                         }
                     }
+                    return false;
                 }
                 let result = await this._findAchorTag(body, value1, value2, allRequests[i], diff, runs);
                 if (result) {
