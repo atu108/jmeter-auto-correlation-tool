@@ -317,13 +317,13 @@ class WorkflowController {
       let test = {};
       let name = obj['name'].indexOf('.') !== -1 ? obj['name'].split(".").join("U+FF0E") : obj['name'];
 
-      let value = obj['value'];
+      let value = obj['value'].toString().replace(/%/g,'~~pct~~') ;
       // key name Cookie in header is being ignored
       if (name != 'Cookie') {
-        // console.log("checking names", name);
+        console.log("checking names", name);
         if (isEncoded) {
           value = decodeURIComponent(value);
-          name = decodeURIComponent(name);
+          name = decodeURIComponent(name.toString().replace(/%/g,'~~pct~~'));
           test[name] = value;
           temp.push(test);
         } else {

@@ -246,10 +246,50 @@ export const extractDataFromPerformanceTiming = (timing, ...dataNames) => {
 
   return extractedData;
 };
+// Connection Time: ConnectEnd - ConnectStart
+// DNS Lookup Time: DomainlookupEnd-DomainLookupStart
+// Page Load Time: page_load_time = now - performance.timing.navigationStart;
+// SSL Time - Connection End - Secure connectionStart
+// TTFB= now-ResponseStart
+
+// {
+//   "connectEnd": "1565676184966",
+//   "connectStart": "1565676184966",
+//   "domComplete": 1565676185301,
+//   "domContentLoadedEventEnd": 1565676185298,
+//   "domContentLoadedEventStart": 1565676185298,
+//   "domInteractive": 1565676185298,
+//   "domLoading": 1565676185285,
+//   "domainLookupEnd": 1565676184966,
+//   "domainLookupStart": 1565676184966,
+//   "fetchStart": 1565676184966,
+//   "loadEventEnd": 1565676185301,
+//   "loadEventStart": 1565676185301,
+//   "navigationStart": 1565676184962,
+//   "redirectEnd": 0,
+//   "redirectStart": 0,
+//   "requestStart": 1565676184971,
+//   "responseEnd": 1565676185277,
+//   "responseStart": 1565676185276,
+//   "secureConnectionStart": 0,
+//   "toJSON": {},
+//   "unloadEventEnd": 1565676185282,
+//   "unloadEventStart": 1565676185282
+// }
+
+export const extractDataFromPerformanceTimingForUap = (timing) => {
+  return {
+    connectionTime: timing['connectEnd'] - timing['connectStart'],
+    dnsLookUpTime: timing['domainLookupEnd'] - timing['domainLookupStart'],
+    pageLoadTime: timing['loadEventEnd'] - timing['navigationStart'],
+    sslTime: timing['connectEnd'] - timing['secureConnectionStart'] - timing['navigationStart'] <= 0?0:timing['connectEnd'] - timing['secureConnectionStart'] - timing['navigationStart'],
+    ttfb: timing['responseStart'] - timing['navigationStart'],
+    redirectTime: timing['redirectEnd'] - timing['redirectStart']
+  }
+}
 
 export const formatPerfromanceMatrix = (perfData, workflow, application) => {
   try{
-    console.log("inside format data", perfData)
     const transctionNames = Object.keys(perfData);
     const formatedData = [];
     transctionNames.forEach(name => {

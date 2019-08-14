@@ -11,8 +11,12 @@
 import pool from '../middlewares/database';
 import percentile from 'stats-percentile';
 import PerfromanceMatrix from '../models/PerfromanceMatrix';
-import { extractDataFromPerformanceTiming, pad } from '../utility/helper';
-
+import FrontEndLoadResult from '../models/FrontEndLoadResult';
+import { extractDataFromPerformanceTiming, pad, extractDataFromPerformanceTimingForUap } from '../utility/helper';
+import Workflow from '../models/Workflow';
+import SeleniumStep from '../models/SeleniumStep';
+import logger from '../utility/logger';
+import axios from 'axios';
 class PerformanceController {
   constructor() {
     return {
@@ -33,7 +37,9 @@ class PerformanceController {
       errorPerSec: this.errorPerSec.bind(this),
       errorPerSecVUser: this.errorPerSecVUser.bind(this),
       transactionSummary: this.transactionSummary.bind(this),
-      pageTimings: this.pageTimings.bind(this)
+      pageTimings: this.pageTimings.bind(this),
+      startAutomation: this.startAutomation.bind(this),
+      automationResult: this.automationResult.bind(this)
     }
   }
 
@@ -425,30 +431,35 @@ class PerformanceController {
 
   async pageTimings(ctx) {
     try {
-      const { application_id } = ctx.request.body;
-      const perfData = await PerfromanceMatrix.find({ application: application_id }).sort({sequence:1});
+      const { application_id, type } = ctx.request.body;
+      const perfData = await PerfromanceMatrix.find({ application: application_id }).sort({ sequence: 1 });
       let perfFinalData = [];
       let tempWorkflow = '';
       let count = 0;
       perfData.forEach(d => {
-        if(tempWorkflow != d.workflow.toString()){
+        if (tempWorkflow != d.workflow.toString()) {
           tempWorkflow = d.workflow;
           count++;
         }
-        let matrix = extractDataFromPerformanceTiming(
-          JSON.parse(d.matrix),
-          'responseStart',
-          'responseEnd',
-          'domInteractive',
-          'domContentLoadedEventEnd',
-          'loadEventEnd');
-        
-          perfFinalData.push(Object.assign({
-          transaction: 'W_' + pad(count, 2) + '_'+ d.transaction_name,
-          sequence:d.sequence 
+        let matrix = null;
+        if( type == 'uap'){
+          matrix = extractDataFromPerformanceTimingForUap(JSON.parse(d.matrix))
+        }else{
+          matrix = extractDataFromPerformanceTiming(
+            JSON.parse(d.matrix),
+            'responseStart',
+            'responseEnd',
+            'domInteractive',
+            'domContentLoadedEventEnd',
+            'loadEventEnd');
+        } 
+
+        perfFinalData.push(Object.assign({
+          transaction: 'W_' + pad(count, 2) + '_' + d.transaction_name,
+          sequence: d.sequence
         }, matrix))
       })
-      return ctx.body = {success: true, data:perfFinalData}
+      return ctx.body = { success: true, data: perfFinalData }
     } catch (e) {
       console.log(e)
       return ctx.body = {
@@ -457,8 +468,95 @@ class PerformanceController {
       }
     }
   }
+  async startAutomation(ctx) {
+    //to do: 
+    // which broser to execute
+    // for how much time
+    try {
+      let users = 2;
+      const workflows = await Workflow.find({ application: ctx.params.application });
+      for (let i = 0; i < workflows.length; i++) {
+        let workflowId = workflows[i]._id;
+        let url = workflows[i].start_url;
+        let seleniumSteps = await SeleniumStep.find({ workflow: workflowId }).sort({ sequence: 1 });
+        for (let j = 0; j < users; j++) {
+          axios({
+            method: 'post',
+            url: 'http://0.0.0.0:5001/startAutomation',
+            data: {
+              data: seleniumSteps,
+              url,
+              saveDropdown: false,
+              savePageTiming: true
+            }
+          }).then(async res => {
+            if (res.data.success) {
+              let perfData = res.data.performance;
+              const transctionNames = Object.keys(perfData);
+              let formatedData = [];
+              transctionNames.forEach(name => {
+                formatedData.push({
+                  transaction_name: name,
+                  matrix: JSON.stringify(perfData[name]['perf_data']),
+                  sequence: perfData[name]['sequence'],
+                  workflow: workflows[i]._id,
+                  application: ctx.params.application,
+                  run: j + 1
+                })
+              })
+              if (formatedData.length > 0) {
+                await FrontEndLoadResult.create(formatedData);
+              }
+            }
+          }).catch(error => {
+            logger.error(error);
+          })
+        
+      }
+    }
+      return ctx.body = {success: true, message: "Load run started"}
+    } catch (e) {
+      console.log(e);
+      logger.error(e);
+      return ctx.body = {success: true, message: "Something went wrong"}
+    }
+  }
 
-
+  async automationResult(ctx){
+    try{
+      const result = await FrontEndLoadResult.find({application:ctx.params.application});
+      let perfFinalData = [];
+      let tempWorkflow = '';
+      let count = 0;
+      result.forEach(d => {
+        if (tempWorkflow != d.workflow.toString()) {
+          tempWorkflow = d.workflow;
+          count++;
+        }
+        let matrix = null;
+        if( ctx.params.caller == 'uap'){
+          matrix = extractDataFromPerformanceTimingForUap(JSON.parse(d.matrix))
+        }else{
+          matrix = extractDataFromPerformanceTiming(
+            JSON.parse(d.matrix),
+            'responseStart',
+            'responseEnd',
+            'domInteractive',
+            'domContentLoadedEventEnd',
+            'loadEventEnd');
+        } 
+        perfFinalData.push(Object.assign({
+          transaction: 'W_' + pad(count, 2) + '_' + d.transaction_name,
+          sequence: d.sequence,
+          run: d.run
+        }, matrix))
+      })
+      return ctx.body = {success: true, data: perfFinalData}
+    }catch(e){
+      console.log(e);
+      return ctx.body = {success: false, message: "Something went wrong"}
+    }
+  }
 }
 
 export default new PerformanceController();

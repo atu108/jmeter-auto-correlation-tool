@@ -13,7 +13,8 @@ import Workflow from '../models/Workflow';
 import User from '../models/User';
 import { mergeJmx, jmxPacing } from '../utility/jmxConstants';
 import {calculateTotalRecordsNeeded} from '../utility/helper';
-const commonColumns = ['isUniqueRepeated', 'isUsed', 'testId']
+const commonColumns = ['isUniqueRepeated', 'isUsed', 'testId'];
+//const io = require('../utility/socket').getio();
 class LoadRunner {
     constructor() {
         return {
@@ -69,6 +70,7 @@ class LoadRunner {
         let updatedApp = await Application.findOne({ _id: application._id }).populate('workflow');
         const jmxDetails = await mergeJmx(updatedApp.workflow, 10, false, true);
         await Application.update({_id:application._id},{jmx: true, status: "Jmx Generated", jmx_file: jmxDetails.fileName});
+        require('../utility/socket').getio().emit("refresh")
     }
 
     async dryRun(applicationId) {

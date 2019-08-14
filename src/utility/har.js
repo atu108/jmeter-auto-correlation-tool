@@ -35,10 +35,12 @@ class Har {
               await RunController.compare(task.workflow)
             } else {
               ApplicationController.updateStatus(task.application, "Parametrise pending");
+              require('../utility/socket').getio().emit('refresh');
             }
           } else {
             await TrackJob.update({ _id: task._id }, { status: "pending", $inc: { retries: 1 } })
             ApplicationController.updateStatus(task.application, "Failed");
+            require('../utility/socket').getio().emit('refresh');
             console.log(error)
           }
         })

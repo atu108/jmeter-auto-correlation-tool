@@ -1,10 +1,16 @@
-var sio = require('socket.io');
-var io = null;
-
-exports.io = function () {
-  return io;
-};
-
-exports.initialize = function(server) {
-  return io = sio(server);
-};
+let io;
+let sockets_by_id = {}
+module.exports = {
+    init: function(server) {
+        // start socket.io server and cache io value
+        io = require('socket.io').listen(server); io.origins('*:*');
+        return io;
+    },
+    getio: function() {
+        // return previously cached value
+        if (!io) {
+            throw new Error("must call .init(server) before you can call .getio()");
+        }
+        return io;
+    }
+}

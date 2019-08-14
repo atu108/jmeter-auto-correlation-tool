@@ -11,7 +11,7 @@ import logger from './utility/logger';
 import mail from './utility/mail';
 import queue from './utility/queue';
 import httpError from './utility/error';
-const socketIo = require("socket.io");
+// const socketIo = require("socket.io");
 import response from './middlewares/response';
 import seleniumTaskCron from 'node-cron';
 import Har from './utility/har';
@@ -57,11 +57,11 @@ app.on('error', (err) => {
 });
 
 // Start the application
-app.listen(config.app.port, config.app.host, () => {
+const server = app.listen(config.app.port, config.app.host, () => {
   console.log(`🖥  Server started at http://0.0.0.0:${config.app.port}/`);
   logger.info(`Server started at http://0.0.0.0:${config.app.port}/`);
 });
-
+require('./utility/socket').init(server);
 queue.init();
 mail.init();
 seleniumTaskCron.schedule('*/1 * * * *', () => {
