@@ -19,6 +19,7 @@ const RequestSchema = new Schema({
   },
   response: {
     status: Number,
+    mime_type: String,
     body: String,
     headers: [],
     cookies: []

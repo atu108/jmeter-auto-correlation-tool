@@ -8,6 +8,7 @@ import logger from './logger';
 import { formatPerfromanceMatrix } from '../utility/helper';
 import ApplicationController from '../controllers/ApplicationController';
 import RunController from '../controllers/RunController';
+var exec = require('child_process').exec;
 const conncurrency = 1;
 const retries = 4;
 
@@ -17,8 +18,6 @@ class Har {
       start: this.start.bind(this)
     }
   }
-
-
   async start() {
     console.log("cron start called")
     const runningTaskCount = await TrackJob.count({ status: "running" });
@@ -33,6 +32,8 @@ class Har {
             await TrackJob.remove({ _id: taskId });
             if (task.generateJmx) {
               await RunController.compare(task.workflow)
+              ApplicationController.updateStatus(task.application, "Generating Jmx");
+              require('../utility/socket').getio().emit('refresh');
             } else {
               ApplicationController.updateStatus(task.application, "Parametrise pending");
               require('../utility/socket').getio().emit('refresh');
@@ -94,6 +95,18 @@ class Har {
           logger.error(res);
           return cb(res);
         }
+      }).catch(function(error){
+        console.log(error);
+      if(error.code = 'ECONNREFUSED'){
+        console.log("python server closed")
+        exec('sudo kill `sudo lsof -t -i:4040`')
+        let restarted = exec('nohup python3 /home/perfeasy/recorder/app.py &') 
+        restarted.on('exit', async function(){
+          console.log("started python server")
+          return cb(error);
+        })
+
+      }
       })
       .catch(error => {
         logger.error(error);

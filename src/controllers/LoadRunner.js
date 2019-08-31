@@ -50,7 +50,7 @@ class LoadRunner {
             let found = application.workflow.find(w => w.sequence == workflowSequence);
             if (found['loop_count'] > 1) {
                 let pacing = (3600 - (duration * found['loop_count'])) / found['loop_count'] - 1;
-                console.log("hceking pacing count", pacing);
+                console.log("cheking pacing count", pacing);
                 if (pacing < 0) {
                     await Application.update({ _id: application._id }, {
                         pacing: {
@@ -70,7 +70,6 @@ class LoadRunner {
         let updatedApp = await Application.findOne({ _id: application._id }).populate('workflow');
         const jmxDetails = await mergeJmx(updatedApp.workflow, 10, false, true);
         await Application.update({_id:application._id},{jmx: true, status: "Jmx Generated", jmx_file: jmxDetails.fileName});
-        require('../utility/socket').getio().emit("refresh")
     }
 
     async dryRun(applicationId) {
@@ -192,6 +191,8 @@ class LoadRunner {
             const { application } = ctx.params;
             const applicationDetails = await Application.findOne({ _id: application }).populate("workflow");
             ApplicationController.updateStatus(application, "Generating Report");
+            require('../utility/socket').getio().emit("refresh");
+            await this.dryRun(application);
             this.prepareJmeter(applicationDetails)
                 .then(async (res) => {
                     if (res) {

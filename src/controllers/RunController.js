@@ -202,7 +202,11 @@ class RunController {
     //  }, 1*60*1000);
     const totalWorkflowCount = await Workflow.count({application: workflowDetails[0].application})
     if(totalWorkflowCount == workflowDetails[0].sequence){
-      await LoadRunner.dryRun(workflowDetails[0].application)
+      // await LoadRunner.dryRun(workflowDetails[0].application)
+      const application = await Application.findOne({ _id: workflowDetails[0].application }).populate('workflow');
+      const jmxDetails = await mergeJmx(application.workflow, 1, true);
+      await Application.update({_id:application._id},{jmx: true, status: "Jmx Generated", jmx_file: jmxDetails.fileName});
+      require('../utility/socket').getio().emit("refresh");
     }
     return true;
   }

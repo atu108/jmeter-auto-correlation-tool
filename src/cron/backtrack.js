@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import config from '../config';
 import logger from '../utility/logger';
-
 import Compare from '../models/Compare';
 import Difference from '../models/Difference';
 import Request from '../models/Request';
@@ -453,6 +452,48 @@ class Backtrack {
                 if (allRequests[i].response.status < 300 || allRequests[i].response.status > 399) {
                     continue;
                 }
+            }
+
+            //for searching diff in response body is in json form
+            // check body type to be application/json
+            console.log("response type", allRequests[i].response.mime_type);
+            if(allRequests[i].response.mime_type == 'application/json'){
+                console.log("one json body found")
+                // parse body and split the diff key with unique identifire used for saving post data in request
+                let parentsInKey = key.split("$#$");
+                console.log("all parsed keys", parentsInKey)
+                try{
+                    let responseBodyInJson = JSON.parse(body);
+                    console.log("json body",body)
+                    if( value1 == eval(`responseBodyInJson.${parentsInKey.join('.')}`)){
+                    let second = await Request.find({ run: runs[1], url: request.url, txn_sequence: request.txn_sequence, 'request.method': request.request.method });
+                    // to do : Refactor code for resuability for finding parent
+                    console.log("json found second", second)
+                    if (!second[0]) {
+
+                        const findParent = await Difference.find({ "key": key });
+                        console.log("json parent", findParent);
+                        if (findParent[0]) {
+                            second = await Request.find({ _id: findParent[0].second.request });
+                        }
+                    }
+                    if (second.length > 0) {
+                        console.log("json found second", second)
+                        if(second[0].response.mime_type == 'application/json'){
+                            if( value1 == eval(`responseBodyInJson.${parentsInKey.join('.')}`)){
+                                console.log("found in bothn json body")
+                            }
+                        }
+                    }
+                    }else{
+                        continue;
+                    }
+                }catch(e){
+                    continue;
+                }
+                
+                // then find the key value as nest object key value
+
             }
 
             // for searching the differences in url

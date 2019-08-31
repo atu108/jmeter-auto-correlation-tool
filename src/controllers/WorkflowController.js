@@ -214,7 +214,6 @@ class WorkflowController {
         }
       })
       let dryRunCsv = keys.join(",") + '\n' + values.join(',');
-      console.log(dryRunCsv);
       fs.writeFileSync(config.storage.csvPath + workflow + '_dryrun' + '.csv', dryRunCsv, "utf8")
       fs.writeFileSync(config.storage.csvInstruction + workflow + '.doc', instructionText(await calculateTotalRecordsNeeded(workflow)))
       await SeleniumStepValue.create(dataToSave);
@@ -228,6 +227,7 @@ class WorkflowController {
         message: "Something went wrong"
       }
     }
+    require('../utility/socket').getio().emit("refresh")
     ctx.body = {
       success: true,
       message: "Values saved"
@@ -294,10 +294,15 @@ class WorkflowController {
         data.request.headers = this._parse(entry.request.headers);
         data.request.cookies = this._parse(entry.request.cookies);
         data.request.params = entry.request.queryString ? this._parse(entry.request.queryString) : [];
-        data.request.post_data = entry.request.postData ? this._parse(entry.request.postData.params ? entry.request.postData.params : [], entry.request.postData.mimeType === 'application/x-www-form-urlencoded') : [];
+        if(entry.request.postData && entry.request.postData.mimeType && entry.request.postData.mimeType == "application/json;charset=UTF-8"){
+          data.request.post_data = this._flatenObject(JSON.parse(entry.request.postData.text))
+        }else{
+          data.request.post_data = entry.request.postData ? this._parse(entry.request.postData.params ? entry.request.postData.params : [], entry.request.postData.mimeType == 'application/x-www-form-urlencoded') : [];
+        }
         data.response.status = entry.response.status;
         data.response.headers = this._parse(entry.response.headers);
         data.response.cookies = this._parse(entry.response.cookies);
+        data.response.mime_type = entry.response.content.mimeType;
         data.response.body = entry.response.content.text;
         data.run = run;
         data.transaction = txn._id;
@@ -333,6 +338,30 @@ class WorkflowController {
       }
     });
     return temp;
+  }
+  _flatenObject(obj, pre = "", arr=[]){
+    // it flats objects with parents identifire
+    // pre is used for identifiying and conatcting parents name to child's name keys with $#$ for nested objects e.g {a:{b:{c:"test"}}} => {a$#$b$#$c: "test"}
+    const keys = Object.keys(obj);
+    for(let i = 0; i < keys.length; i++){
+      if(typeof obj[keys[i]] === "object" && obj[keys[i]] !== null){
+        if(Array.isArray(obj[keys[i]])){
+          let tempKey = pre ? pre + '$#$' + keys[i]: keys[i]
+          arr.push({
+            [tempKey] : obj[keys[i]] 
+          })
+        }else{
+          let tempKey = pre ? pre + '$#$' + keys[i]: keys[i]
+          this._flatenObject(obj[keys[i]], tempKey, arr)
+        }
+      }else{
+        let temp = pre ? pre + '$#$' + keys[i]: keys[i]
+        arr.push({
+          [temp] : obj[keys[i]]
+        })
+      }
+    }
+    return arr
   }
 }
 
