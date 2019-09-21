@@ -8,10 +8,15 @@ import Run from '../models/Run';
 import SeleniumStep from '../models/SeleniumStep';
 import Request from '../models/Request';
 import SeleniumStepValue from '../models/SeleniumStepValue';
+import Correlation from '../models/Correlation';
 import Dropdown from '../models/Dropdown';
 import Application from '../models/Application';
 import Workflow from '../models/Workflow';
 import Transaction from '../models/Transaction';
+import TrackJobs from '../models/TrackJob';
+import Difference from '../models/Difference';
+import FrontEndLoadResult from '../models/FrontEndLoadResult';
+import ParamSetting from '../models/ParamSetting';
 
 
 
@@ -37,6 +42,11 @@ export async function deleteAppOrWorkflow(id, level, type = 'temp') {
     await Dropdown.remove({ workflow: workflow[i] })
     await Workflow.remove({ _id: workflow[i] })
     await Transaction.remove({ workflow: workflow[i] })
+    await TrackJobs.remove({ workflow: workflow[i]})
+    await Difference.remove({workflow: workflow[i]})
+    await Correlation.remove({workflow: workflow[i]})
+    await FrontEndLoadResult.remove({workflow: workflow[i]})
+    await ParamSetting.remove({workflow: workflow[i]})
   }
 
 

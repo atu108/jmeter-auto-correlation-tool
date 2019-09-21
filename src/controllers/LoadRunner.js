@@ -12,7 +12,7 @@ import config from '../config';
 import Workflow from '../models/Workflow';
 import User from '../models/User';
 import { mergeJmx, jmxPacing } from '../utility/jmxConstants';
-import {calculateTotalRecordsNeeded} from '../utility/helper';
+import { calculateTotalRecordsNeeded } from '../utility/helper';
 const commonColumns = ['isUniqueRepeated', 'isUsed', 'testId'];
 //const io = require('../utility/socket').getio();
 class LoadRunner {
@@ -69,23 +69,23 @@ class LoadRunner {
         await Application.update({ _id: application._id }, { dry_run: true })
         let updatedApp = await Application.findOne({ _id: application._id }).populate('workflow');
         const jmxDetails = await mergeJmx(updatedApp.workflow, 10, false, true);
-        await Application.update({_id:application._id},{jmx: true, status: "Jmx Generated", jmx_file: jmxDetails.fileName});
+        await Application.update({ _id: application._id }, { jmx_file: jmxDetails.fileName, status: "Jmx generated" });
+        require('../utility/socket').getio().emit("refresh");
     }
 
     async dryRun(applicationId) {
-        try{
+        try {
             const application = await Application.findOne({ _id: applicationId }).populate('workflow');
             const jmxDetails = await mergeJmx(application.workflow, 1, true);
-            console.log("jmx",jmxDetails)
             let jtlDir = await this.getJtlPath(application.name);
             let jtlPath = jtlDir + "dryrun.jtl";
             const jmeterCommand = await this.prepareJmeterCommand(jmxDetails.filePath, jtlPath);
-            this.exectuteJmeter(application, jmeterCommand, 1, [], jtlPath, 0, true, this.afterDryRun);
-        }catch(e){
+            this.exectuteJmeter(application, jmeterCommand, 1, [], jtlPath, 0, true, this.afterDryRun.bind(this));
+        } catch (e) {
             console.log(e);
-            throw(e)
+            throw (e)
         }
-        
+
     }
 
     async exectuteJmeter(application, jmeterCommand, lastUserLoad, previousUserLoads, jtlPath, lastAcceptedUserLoad, dryRun = false, cb = null) {
@@ -95,14 +95,14 @@ class LoadRunner {
             application: application._id,
             is_dry_run: dryRun
         })
-        if(!dryRun){
+        if (!dryRun) {
             application.workflow.forEach(async w => {
                 //if csv not required then dont do anything for that workflow regarding csv
-                if(w.csv_required){
+                if (w.csv_required) {
                     const updateSql = `update ${w._id}_csv set testId = '${test['_id']}' where testId = 'tempTestId'`;
                     await pool.query(updateSql);
                 }
-            }) 
+            })
         }
         let jmeterStartCommand = 'jmeter';
         if (config.app.server === 'PRODUCTION') {
@@ -116,9 +116,9 @@ class LoadRunner {
                 console.log("condition runing")
                 await this.dumper(jtlPath, application._id, test['_id']);
                 if (!dryRun) {
-                    await this.prepareJmeter(application, test['_id'], lastUserLoad, previousUserLoads, lastAcceptedUserLoad);
+                    return await this.prepareJmeter(application, test['_id'], lastUserLoad, previousUserLoads, lastAcceptedUserLoad);
                 } else {
-                    cb(application);
+                    return cb(application);
                 }
             }
         });
@@ -162,6 +162,7 @@ class LoadRunner {
                 return ctx.body = { success: false, message: "CSV is not valid" }
             }
             let totalRecordsNeeded = await calculateTotalRecordsNeeded(workflowDetails);
+            console.log("total records needed",totalRecordsNeeded)
             let parsedCsvData = this._removeEmptyValues(rawCsvData, headers, totalRecordsNeeded);
             headers.push(...commonColumns)
             await this.csvToSql(workflowDetails._id, headers, parsedCsvData.data);
@@ -169,13 +170,13 @@ class LoadRunner {
             // console.log("needed", totalRecordsNeeded, "given", parsedCsvData.recordProvided);
             let warning = recordDiff > 0 ? `There are ${recordDiff} less records` : 'None';
             await Workflow.update({ _id: ctx.params.workflow }, { csv_warning: warning, csv_uploaded: true })
-            const totalWorkflowCount = await Workflow.count({application: workflowDetails.application})
-            const totalUploadedCsv = await Workflow.count({application: workflowDetails.application, csv_uploaded: true});
+            // const totalWorkflowCount = await Workflow.count({ application: workflowDetails.application })
+            // const totalUploadedCsv = await Workflow.count({ application: workflowDetails.application, csv_uploaded: true });
             let shouldTestRun = false;
-            if(totalWorkflowCount == totalUploadedCsv){
-                shouldTestRun = true;
-            }
-            ctx.body = { success: true, message: "CSV saved!", warning, shouldTestRun, appId: workflowDetails.app._id}
+            // if (totalWorkflowCount == totalUploadedCsv) {
+            //     shouldTestRun = true;
+            // }
+            ctx.body = { success: true, message: "CSV saved!", warning, shouldTestRun, appId: workflowDetails.app._id }
         } catch (e) {
             console.log(e)
             ctx.body = { success: false, message: "Something went wrong" }
@@ -189,19 +190,10 @@ class LoadRunner {
                 return ctx.body = { success: false, message: "You dont have permissions" };
             }
             const { application } = ctx.params;
-            const applicationDetails = await Application.findOne({ _id: application }).populate("workflow");
-            ApplicationController.updateStatus(application, "Generating Report");
+            await ApplicationController.updateStatus(application, "Generating Report");
+            const updatedApplication = await Application.findOne({_id: application}).populate("workflow");
             require('../utility/socket').getio().emit("refresh");
-            await this.dryRun(application);
-            this.prepareJmeter(applicationDetails)
-                .then(async (res) => {
-                    if (res) {
-                        await Application.update({ _id: workflowDetails.application._id }, { status: "Completed Run Test" })
-                    }
-                })
-                .catch(e => {
-                    console.log(e);
-                })
+            await this.prepareJmeter(updatedApplication)
             ctx.body = { success: true, message: "Tests started" }
         } catch (e) {
             console.log(e);
@@ -238,7 +230,8 @@ class LoadRunner {
                 currentUserLoad = await this.calculateUserLoad(failPercent, lastUserLoad, maxUserLoad, lastAcceptedUserLoad);
                 console.log("current user load", currentUserLoad)
                 if (previousUserLoads.indexOf(currentUserLoad) != -1 || currentUserLoad < 5 || currentUserLoad > maxUserLoad) {
-                    ApplicationController.updateStatus(application._id, "Report Generated")
+                    await ApplicationController.updateStatus(application._id, "Report Generated");
+                    require('../utility/socket').getio().emit("refresh");
                     return true;
                 }
                 previousUserLoads.push(currentUserLoad);
@@ -343,6 +336,9 @@ class LoadRunner {
         let lines = csvData.split("\n");
         let schema = lines[0].split(",");
         let isValid = this._compareArray(headers, [...schema])
+        if (!lines[1] || !lines[1].trim()) {
+            isValid = false
+        }
         let csvDataObject = {
         };
         // in worst condition no of unique records need :- 783 % of the maxium user load 
@@ -434,8 +430,8 @@ class LoadRunner {
                 finalArr.push(temp)
             }
             return {
-                data : finalArr,
-                recordProvided: originalLength 
+                data: finalArr,
+                recordProvided: originalLength
             };
         } catch (e) {
             throw (e)
@@ -518,7 +514,8 @@ class LoadRunner {
                     "ErrorCount",
                     "IdleTime",
                     "Hostname",
-                    "Connect"
+                    "Connect",
+                    "id"
                 ]
                 var lines = data.split("\n");
                 var schema = lines[0];
@@ -538,7 +535,7 @@ class LoadRunner {
                         parsed.push(entry);
                     }
                 });
-                await PerformanceController.save(parsed)
+                await PerformanceController.save(parsed, applicationId, testId)
                 resolve()
                 console.log("saved performcae data");
             });

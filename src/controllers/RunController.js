@@ -13,7 +13,7 @@ import Workflow from '../models/Workflow';
 import Transaction from '../models/Transaction';
 import ExcludeUrl from '../models/ExcludeUrl';
 import { URL } from 'url';
-import { resolveArray, parseParams, jmxThinkTime, mergeJmx} from '../utility/jmxConstants';
+import { resolveArray, parseParams, jmxThinkTime, mergeJmx } from '../utility/jmxConstants';
 import ApplicationController from './ApplicationController';
 import LoadRunner from './LoadRunner';
 import Application from '../models/Application';
@@ -61,9 +61,9 @@ class RunController {
     });
   }
 
-  async callBacktrack(ctx){
+  async callBacktrack(ctx) {
     await this.compare(ctx.request.body.workflow)
-    ctx.body = {status: true, message: "running"}
+    ctx.body = { status: true, message: "running" }
   }
   async backtrack(workflow, run1) {
     const job = new Cron('backtrack', workflow);
@@ -95,9 +95,9 @@ class RunController {
     for (let i = 0; i < object.length; i++) {
       for (let j = i; j < objectCopy.length; j++) {
         if (object[i].key === objectCopy[j].key && check.indexOf(j) === -1 && object[i]._id !== objectCopy[j]._id && object[i].first.value === objectCopy[j].first.value && object[i].second.value === objectCopy[j].second.value) {
-          if(object[i].first.request.toString() == objectCopy[j].first.request.toString()){
-            await Difference.remove({_id:objectCopy[j]._id});
-          }else{
+          if (object[i].first.request.toString() == objectCopy[j].first.request.toString()) {
+            await Difference.remove({ _id: objectCopy[j]._id });
+          } else {
             await Difference.findByIdAndUpdate(objectCopy[j]._id, { duplicate: object[i]._id });
           }
           check.push(j);
@@ -125,7 +125,7 @@ class RunController {
           <boolProp name="TransactionController.includeTimers">false</boolProp>
           <boolProp name="TransactionController.parent">false</boolProp>
         </TransactionController><hashTree>`;
-    let whichRequest = 0;
+      let whichRequest = 0;
       for (let j = 0; j < requests.length; j++) {
         let isRedirection = requests[j].response.status > 299 && requests[j].response.status < 400;
         const filterUrl = requests[j].url;
@@ -140,7 +140,7 @@ class RunController {
         const urlWithCorAndPar = await parseParams(requests[j], requests[j].request.url, transactions[i].title);
         //removing headers which have : in their name
         requests[j].request.headers = requests[j].request.headers.filter(header => Object.keys(header)[0][0] !== ':')
-        dynamicData += `<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="W${workflowDetails[0].sequence}_T${String(transactions[i].sequence).padStart(2, '0')}_R${String(whichRequest).padStart(2, '0')}_${myURL.pathname.replace(/&/g,'&amp;')}" enabled="true">
+        dynamicData += `<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="W${workflowDetails[0].sequence}_T${String(transactions[i].sequence).padStart(2, '0')}_R${String(whichRequest).padStart(2, '0')}_${myURL.pathname.replace(/&/g, '&amp;')}" enabled="true">
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             ${requests[j].request.post_data.length === 0 ?
             `<collectionProp name="Arguments.arguments"/>` :
@@ -172,7 +172,7 @@ class RunController {
             </elementProp>`).join('')}
             </collectionProp>
             </HeaderManager>
-            ${i != 0 && whichRequest == 1 ? `${jmxThinkTime()}`: ''}
+            ${i != 0 && whichRequest == 1 ? `${jmxThinkTime()}` : ''}
               <hashTree/>
             ${hasReg.map((hasReg) => `<RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="client_id_REX" enabled="true">
               <stringProp name="RegexExtractor.useHeaders">${isRedirection}</stringProp>
@@ -200,13 +200,13 @@ class RunController {
     //  setTimeout( async ()=>{
     //   await LoadRunner.prepareJmeter(`${config.storage.path}${fileName}`, workflowDetails[0])
     //  }, 1*60*1000);
-    const totalWorkflowCount = await Workflow.count({application: workflowDetails[0].application})
-    if(totalWorkflowCount == workflowDetails[0].sequence){
-      // await LoadRunner.dryRun(workflowDetails[0].application)
-      const application = await Application.findOne({ _id: workflowDetails[0].application }).populate('workflow');
-      const jmxDetails = await mergeJmx(application.workflow, 1, true);
-      await Application.update({_id:application._id},{jmx: true, status: "Jmx Generated", jmx_file: jmxDetails.fileName});
-      require('../utility/socket').getio().emit("refresh");
+    const totalWorkflowCount = await Workflow.count({ application: workflowDetails[0].application })
+    if (totalWorkflowCount == workflowDetails[0].sequence) {
+      await LoadRunner.dryRun(workflowDetails[0].application)
+      // const application = await Application.findOne({ _id: workflowDetails[0].application }).populate('workflow');
+      // const jmxDetails = await mergeJmx(application.workflow, 1, true);
+      // await Application.update({_id:application._id},{jmx: true, status: "Jmx Generated", jmx_file: jmxDetails.fileName});
+      // require('../utility/socket').getio().emit("refresh");
     }
     return true;
   }

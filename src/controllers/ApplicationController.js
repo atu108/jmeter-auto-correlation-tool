@@ -75,7 +75,6 @@ class ApplicationController {
       await Application.update({ _id: applicationId }, { status })
       return true
     } catch (e) {
-      console.log(e)
       return false;
     }
 

@@ -227,7 +227,6 @@ class WorkflowController {
         message: "Something went wrong"
       }
     }
-    require('../utility/socket').getio().emit("refresh")
     ctx.body = {
       success: true,
       message: "Values saved"

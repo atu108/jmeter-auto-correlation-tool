@@ -22,7 +22,7 @@ class Har {
     console.log("cron start called")
     const runningTaskCount = await TrackJob.count({ status: "running" });
     if (runningTaskCount < conncurrency) {
-      const tasksToRun = await TrackJob.find({ status: "pending", retries: { $lt: retries } }).sort({ priority: -1 }).limit(conncurrency);
+      const tasksToRun = await TrackJob.find({ status: "pending", retries: { $lt: retries } }).sort({ priority: -1 }).limit(conncurrency).populate("workflow");
       tasksToRun.forEach(async task => {
         console.log("found one job and executing")
         await TrackJob.update({ _id: task._id }, { status: "running" })
@@ -32,15 +32,24 @@ class Har {
             await TrackJob.remove({ _id: taskId });
             if (task.generateJmx) {
               await RunController.compare(task.workflow)
-              ApplicationController.updateStatus(task.application, "Generating Jmx");
-              require('../utility/socket').getio().emit('refresh');
+              // ApplicationController.updateStatus(task.application, "Generating Jmx");
+              // require('../utility/socket').getio().emit('refresh');
             } else {
+              const totalWorkflowCount = await Workflow.count({application: task.application})
+              console.log("sequence",task.workflow.sequence)
+              if(totalWorkflowCount == task.workflow.sequence){
               ApplicationController.updateStatus(task.application, "Parametrise pending");
               require('../utility/socket').getio().emit('refresh');
+              }else{
+                ApplicationController.updateStatus(task.application, "Generating Jmx");
+
+                require('../utility/socket').getio().emit('refresh');
+              }
             }
           } else {
-            await TrackJob.update({ _id: task._id }, { status: "pending", $inc: { retries: 1 } })
-            ApplicationController.updateStatus(task.application, "Failed");
+            await TrackJob.update({ _id: task._id }, { status: "pending", $inc: { retries: 1 }})
+            //adding task.retries + 1 beacuse we dont have updated task
+            ApplicationController.updateStatus(task.application, `${task.retries + 1 <= retries ? "Retrying..." : "Failed"}`);
             require('../utility/socket').getio().emit('refresh');
             console.log(error)
           }
@@ -96,17 +105,8 @@ class Har {
           return cb(res);
         }
       }).catch(function(error){
-        console.log(error);
-      if(error.code = 'ECONNREFUSED'){
-        console.log("python server closed")
-        exec('sudo kill `sudo lsof -t -i:4040`')
-        let restarted = exec('nohup python3 /home/perfeasy/recorder/app.py &') 
-        restarted.on('exit', async function(){
-          console.log("started python server")
-          return cb(error);
-        })
-
-      }
+        logger.error(error);
+        return cb(error);
       })
       .catch(error => {
         logger.error(error);

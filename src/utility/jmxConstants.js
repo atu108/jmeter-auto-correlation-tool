@@ -237,7 +237,6 @@ export const csvDataSet = function(csvName = 'none'){
         </CSVDataSet><hashTree/>`
 }
 async function _generateDynamicCsv(workflowDetails) {
-    console.log("called generate dynamic")
     /* 
         creates csv from data storred in sql for every workflow with records equal to user load
         stores as file and named according to the user load 
