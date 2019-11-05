@@ -1,0 +1,11 @@
+{
+    "accessKeyId": "AKIAJQTPAP4EARMO3CXA",
+    "secretAccessKey": "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",
+    "region":"us-east-2",
+    "InstanceIds": [
+        "i-07a196ce854d1dcbf"
+     ],
+     "GroupIds":[
+         "sg-06bded2aeb9c85aa6"
+     ]
+}

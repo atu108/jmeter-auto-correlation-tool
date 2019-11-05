@@ -481,7 +481,7 @@ class Backtrack {
                         console.log("json found second", second)
                         if(second[0].response.mime_type == 'application/json'){
                             if( value1 == eval(`responseBodyInJson.${parentsInKey.join('.')}`)){
-                                console.log("found in bothn json body")
+                                console.log("found in bothn json body", value1)
                             }
                         }
                     }

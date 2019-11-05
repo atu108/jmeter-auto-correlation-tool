@@ -19,7 +19,7 @@
   "dependencies": {
     "@koa/cors": "^3.0.0",
     "async-busboy": "^0.6.2",
-    "aws-sdk": "^2.253.1",
+    "aws-sdk": "^2.537.0",
     "axios": "^0.18.0",
     "babel-plugin-transform-regenerator": "^6.26.0",
     "babel-polyfill": "^6.5.0",

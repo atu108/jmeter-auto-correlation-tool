@@ -36,7 +36,6 @@ class WorkflowController {
 
   async get(ctx) {
     // const workflows = await Application.find({owner: ctx.user._id, application: ctx.params.application});
-    console.log("called")
     const workflows = await Workflow.find({ application: ctx.params.application });
     ctx.body = { success: true, data: workflows };
   }
@@ -346,8 +345,14 @@ class WorkflowController {
       if(typeof obj[keys[i]] === "object" && obj[keys[i]] !== null){
         if(Array.isArray(obj[keys[i]])){
           let tempKey = pre ? pre + '$#$' + keys[i]: keys[i]
-          arr.push({
-            [tempKey] : obj[keys[i]] 
+          /*
+            handling arrays in side objects and naming them as 0th 1st 2nd
+          */
+          obj[keys[i]].forEach( (ar, index) => {
+            if(typeof ar == 'object' && arr !== null){
+              let nestedTempKey = tempKey ? tempKey + '$#$' + index: index
+              this._flatenObject(ar, nestedTempKey, arr)
+            }
           })
         }else{
           let tempKey = pre ? pre + '$#$' + keys[i]: keys[i]
