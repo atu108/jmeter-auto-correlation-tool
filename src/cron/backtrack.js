@@ -324,7 +324,7 @@ class Backtrack {
     // this to comapre urls and fix their param values
     _compareUrl(url1, url2) {
         //to do:- handle whole url rather than only params
-        console.log("reached inside url match", url1, "url 2", url2)
+        // console.log("reached inside url match", url1, "url 2", url2)
         try {
             const loc1 = new URL(url1);
             const loc2 = new URL(url2);
@@ -430,7 +430,7 @@ class Backtrack {
         let value1 = diff.first.value.replace('+', ' ');
         let value2 = diff.second.value.replace('+', ' ');
         let finalReg = '';
-        console.log(diff.first.request)
+        // console.log(diff.first.request)
         let stepSeq = [diff.first.request.sequence, diff.second.request.sequence];
         //console.log("differnce sequence number", diff.first.request.sequence);
         // console.log("inside new serach", key, "--", value1, "--",value2);
@@ -439,6 +439,7 @@ class Backtrack {
         const allRequests = await Request.find({ run: runs[0], sequence: { $lt: stepSeq[0] } }).sort({ sequence: -1 });
         //const allRequests = await Request.find({_id:"5c4beb1ed5f904246e9a2103"});
         for (let i = 0; i < allRequests.length; i++) {
+            // console.log("diff id---",diff._id, '---------------------', "sequence----", i, "request sequence ------",  allRequests[i].sequence, "value1---", value1)
             // console.log("type of id and all ids", typeof allRequests[i]._id, allRequests[i]._id)
             // if(allRequests[i]._id == '5c4beb1ed5f904246e9a2103'){
             //     console.log("----------------------got desired request id-----------------------------------------------")
@@ -448,7 +449,8 @@ class Backtrack {
             //console.log("counting session",allRequests[i].session_sequence, allRequests[i].sequence)
             let body = allRequests[i].response.body;
             if (body === undefined || !body || body == '') {
-                console.log("response status", allRequests[i].response.status)
+                // console.log("called here inside not body", allRequests[i].sequence);
+                // console.log("response status", allRequests[i].response.status)
                 if (allRequests[i].response.status < 300 || allRequests[i].response.status > 399) {
                     continue;
                 }
@@ -456,42 +458,42 @@ class Backtrack {
 
             //for searching diff in response body is in json form
             // check body type to be application/json
-            console.log("response type", allRequests[i].response.mime_type);
-            if(allRequests[i].response.mime_type == 'application/json'){
-                console.log("one json body found")
+            // console.log("response type", allRequests[i].response.mime_type);
+            if (allRequests[i].response.mime_type == 'application/json') {
+                // console.log("one json body found")
                 // parse body and split the diff key with unique identifire used for saving post data in request
                 let parentsInKey = key.split("$#$");
-                console.log("all parsed keys", parentsInKey)
-                try{
+                // console.log("all parsed keys", parentsInKey)
+                try {
                     let responseBodyInJson = JSON.parse(body);
-                    console.log("json body",body)
-                    if( value1 == eval(`responseBodyInJson.${parentsInKey.join('.')}`)){
-                    let second = await Request.find({ run: runs[1], url: request.url, txn_sequence: request.txn_sequence, 'request.method': request.request.method });
-                    // to do : Refactor code for resuability for finding parent
-                    console.log("json found second", second)
-                    if (!second[0]) {
+                    // console.log("json body",body)
+                    if (value1 == eval(`responseBodyInJson.${parentsInKey.join('.')}`)) {
+                        let second = await Request.find({ run: runs[1], url: request.url, txn_sequence: request.txn_sequence, 'request.method': request.request.method });
+                        // to do : Refactor code for resuability for finding parent
+                        // console.log("json found second", second)
+                        if (!second[0]) {
 
-                        const findParent = await Difference.find({ "key": key });
-                        console.log("json parent", findParent);
-                        if (findParent[0]) {
-                            second = await Request.find({ _id: findParent[0].second.request });
-                        }
-                    }
-                    if (second.length > 0) {
-                        console.log("json found second", second)
-                        if(second[0].response.mime_type == 'application/json'){
-                            if( value1 == eval(`responseBodyInJson.${parentsInKey.join('.')}`)){
-                                console.log("found in bothn json body", value1)
+                            const findParent = await Difference.find({ "key": key });
+                            // console.log("json parent", findParent);
+                            if (findParent[0]) {
+                                second = await Request.find({ _id: findParent[0].second.request });
                             }
                         }
-                    }
-                    }else{
+                        if (second.length > 0) {
+                            // console.log("json found second", second)
+                            if (second[0].response.mime_type == 'application/json') {
+                                if (value1 == eval(`responseBodyInJson.${parentsInKey.join('.')}`)) {
+                                    // console.log("found in bothn json body", value1)
+                                }
+                            }
+                        }
+                    } else {
                         continue;
                     }
-                }catch(e){
+                } catch (e) {
                     continue;
                 }
-                
+
                 // then find the key value as nest object key value
 
             }
@@ -499,10 +501,19 @@ class Backtrack {
             // for searching the differences in url
 
             if (diff.location === 'url') {
-                console.log("response status =====>", allRequests[i].response.status, ", sequnce => ", allRequests[i].sequence)
+                // console.log("response status =====>", allRequests[i].response.status, ", sequnce => ", allRequests[i].sequence)
+
+                /*
+                    Seraching implimented for respose status 300 to 399 for current body
+                    for finding url in header under location
+                    after finding location find that url and then find in that else find prents diff location url
+
+                    - Rest will found using _findInAchor tag 
+                */
                 if (allRequests[i].response.status > 299 && allRequests[i].response.status < 400) {
-                    console.log("****************  *************** inside 300 reauets **************************************")
+                    // console.log("****************  *************** inside 300 reauets **************************************")
                     //await this.findAnchorTagInHeader(body, value1, value2, allRequests[i], diff, runs)
+                    console.log("sequence inside 300 to 400 requests", allRequests[i].sequence);
                     let indexOfLocation = allRequests[i].response.headers.findIndex(function findLocationKey(header) {
                         let tempKey = Object.keys(header)[0];
                         return tempKey.toLowerCase() == 'location' && header[tempKey] == value1;
@@ -510,7 +521,7 @@ class Backtrack {
 
                     if (indexOfLocation != -1) {
                         let second = await Request.find({ run: runs[1], url: allRequests[i].url, txn_sequence: allRequests[i].txn_sequence, 'request.method': allRequests[i].request.method });
-                        console.log("input response", second[0]);
+                        // console.log("input response", second[0]);
                         //if did not find with same url as run 1 then find in its parents in diffrence
                         if (!second[0]) {
                             const findParent = await Difference.find({ "first.value": allRequests[i].url });
@@ -530,7 +541,7 @@ class Backtrack {
                                 let finalReg = this._compareUrl(value1, value2);
                                 let reg_name = this._getHrefRegName(finalReg, value1)
                                 finalReg = 'Location: ' + finalReg + '\\s';
-                                console.log("302 reg name", reg_name);
+                                // console.log("302 reg name", reg_name);
                                 return {
                                     key: key,
                                     priority: 1,
@@ -548,7 +559,7 @@ class Backtrack {
                                         request: allRequests[i]._id,
                                         run: allRequests[i].run,
                                         atPos: 0
-        
+
                                     },
                                     second: {
                                         url: second[0].url,
@@ -558,7 +569,7 @@ class Backtrack {
                                         request: second[0]._id,
                                         run: second[0].run,
                                         atPos: 0
-        
+
                                     },
                                     workflow: diff.workflow,
                                     difference: diff._id
@@ -801,6 +812,25 @@ class Backtrack {
         }
     }
 
+    findParamsInFormTag(body, keyValue) {
+        //console.log(body, "-------------------------------------------------",keyValue);
+        try {
+            let $ = cheerio.load(body.toString(), { xml: { decodeEntities: false, lowerCaseAttributeNames: false } });
+            // let $ = cheerio.load(body.replace((/\\/g, "")));
+            let formTags = $(`form[action*='${keyValue}']`).toArray();
+            // console.log("inputs check", typeof inputs, "all inouts", inputs[0]);
+            if (formTags.length > 0) {
+                return formTags;
+                // return inputs;
+            } else {
+                return false;
+            }
+        } catch (e) {
+            return false;
+            console.log(e);
+        }
+    }
+
     _getRegName(final, matched, value, key) {
         // console.log("final reg",final)
         // console.log("matched",matched)
@@ -830,15 +860,15 @@ class Backtrack {
         }
     }
 
-    _getHrefRegName(final, matched){
+    _getHrefRegName(final, matched) {
         let toReplace = [];
         let withWhat = [];
         final = final.replace(/[^\*\?](\W\?)/g, '{{TEMP}}');
         final = final.replace(/\?/g, "\\?").replace(/{{TEMP}}/g, ".*?")
-        console.log("herf regex",  final )
-       matched = matched.replace(/&/g, "&amp;") + '/'
+        console.log("herf regex", final)
+        matched = matched.replace(/&/g, "&amp;") + '/'
         let resultArr = matched.match(final + '/')
-        console.log("result arr",resultArr)
+        console.log("result arr", resultArr)
         if (resultArr && resultArr.length === 2) {
             toReplace.push(resultArr[1])
             withWhat.push("COR")
@@ -894,8 +924,61 @@ class Backtrack {
             withWhat
         }
     }
+    _getFormRegName(final, matched, value, condition, splitWith) {
+        // console.log("Final before-------", final);
+        let toReplace = [];
+        let withWhat = [];
+        // console.log("checking cndition", condition);
+        // console.log("matched", matched)
+        // console.log("value", value)
+        if (condition === 3 || condition === 5) {
+            value = value.split(`.${splitWith}/`)[1]
+        } else if (condition === 4 || condition === 6) {
+            value = value.split(`.${splitWith}`)[1]
+        }
+        value = value.replace(/&/g, "&amp;") + '/'
+        // console.log(value)
+        let regHref = final.match(/<(.*?)action="([^"]*)/)[2];
+        // regHref = regHref.replace(/[^\*\?](\W\?)/g, '{{TEMP}}');replace(/[^\*\?](\W\?)/g, '{{TEMP}}')
+        // console.log("check href reg for form ---- 1 ", regHref)
+        // regHref = regHref.replace(/\?/g, "\\?").replace(/{{TEMP}}/g, ".*?");
+        // console.log("check href reg for form ---- 2 ", regHref)
+        regHref= regHref.replace(/[^\*\?](\W\?)/g, '{{TEMP}}');
+        // console.log("before after temp ------", final)
+        regHref = regHref.replace(/\?/g, "\\?").replace(/{{TEMP}}/g, ".*?")
+        let valuesInHref = value.match(regHref + '/');
+        // console.log("check href reg for form ----  3 ", regHref)
+        if (regHref === '(.*?)') {
+            valuesInHref = ['', value.slice(0, -1)];
+        }
+        // console.log(valuesInHref)
+        final = final.replace(/[^\*\?](\W\?)/g, '{{TEMP}}');
+        // console.log("before after temp ------", final)
+        final = final.replace(/\?/g, "\?").replace(/{{TEMP}}/g, ".*?")
+        // console.log("Final after----------", final)
+        let resultArr = matched.replace(/&amp;amp;/g,'&amp;').match(final)
+        // console.log("matched ------------", matched);
+        // console.log("result arr------", resultArr);
+        // console.log(resultArr)
+    
+        if (resultArr && resultArr.length === 2) {
+            toReplace.push(resultArr[1])
+            withWhat.push("COR")
+        } else if (resultArr) {
+            for (let i = 1; i < valuesInHref.length; i++) {
+                toReplace.push(valuesInHref[i]);
+                withWhat.push("COR_g" + resultArr.indexOf(valuesInHref[i]))
+            }
+        }
+        // key+"_COR_g"+i
+        return {
+            toReplace,
+            withWhat
+        }
+    }
 
     async _findAchorTag(body, value1, value2, request, diff, runs) {
+        //console.log("diff id---",diff._id, '---------------------', "sequence----", "request sequence ------",  request.sequence, "value1---", value1)
         try {
             /**************** Discription of this function *********************************
             * 
@@ -940,7 +1023,7 @@ class Backtrack {
             // console.log("checking values", request.url, request.txn_sequence);
             // console.log("checkinf if found", anchor1);
             if (anchor1.length > 0) {
-                // console.log("checking condition", condition)
+                // console.log("inside find one anchor req seq: -", request.sequence)
                 let second = await Request.find({ run: runs[1], url: request.url, txn_sequence: request.txn_sequence, 'request.method': request.request.method });
                 // console.log("second top section", second[0].response.body);
                 if (!second[0]) {
@@ -980,15 +1063,52 @@ class Backtrack {
                     }
                 }
                 if (anchor2.length > 0) {
+                    // console.log("inside found second anchor req seq: -", request.sequence)
                     return this._anchorCorrelationFinal(second, anchor1, anchor2, newBody1, newBody2, diff, request, splitWith, value1, condition)
                     //console.log("fund anchors", anchor1, anchor2);
                 }
             } else {
-                let params1 = this.getUrlParameters(value1, 'String');
-                let param2 = this.getUrlParameters(value2, 'String');
-                let newBody1 = body.replace(/\\/g, "")
-                let found1 = this.findParamsInAchorTag(newBody1, params1);
+                /*
+                    after anchor tag then check form tag 
+                    then go in params
+                    
+                */
+                // console.log("value---------", value1)
+                // console.log("request sequence inside form------", request.sequence)
+                // if(request.sequence == 1){
+                //     console.log(newBody1)
+                // }
+                let newBody1 = body.replace(/\\/g, "");
+                let params1 = value1.replace(/&/gi, '&amp;')
+                let found1 = this.findParamsInFormTag(newBody1, params1);
+                let param2 = value2.replace(/&/gi, '&amp;')
                 if (found1) {
+                    console.log("found first in from")
+                    let second = await Request.find({ run: runs[1], url: request.url, txn_sequence: request.txn_sequence, 'request.method': request.request.method });
+                    // to do : Refactor code for resuability for find parent
+                    if (!second[0]) {
+                        const findParent = await Difference.find({ "first.value": request.url });
+                        // console.log("parent", findParent);
+                        if (findParent[0]) {
+                            second = await Request.find({ _id: findParent[0].second.request });
+                        }
+                    }
+                    if (second.length > 0) {
+                        console.log("found Seccond body")
+                        let newBody2 = second[0].response.body.replace(/\\/g, "")
+                        let found2 = this.findParamsInFormTag(newBody2, param2);
+                        if (found2.length > 0) {
+                            return this._formCorrelationFinal(second, found1, found2, newBody1, newBody2, diff, request, splitWith, value1, condition)
+                        }
+                    }
+                }
+                // console.log("called in side params request seq: - ", request.sequence)
+                params1 = this.getUrlParameters(value1, 'String');
+                param2 = this.getUrlParameters(value2, 'String');
+                found1 = this.findParamsInAchorTag(newBody1, params1);
+                if (found1) {
+                    // console.log(" inside params found1 :-", request.sequence);
+                    // console.log(value1, "found 1st in params request 1", found1)
                     let second = await Request.find({ run: runs[1], url: request.url, txn_sequence: request.txn_sequence, 'request.method': request.request.method });
                     // to do : Refactor code for resuability for find parent
                     if (!second[0]) {
@@ -1012,6 +1132,72 @@ class Backtrack {
             console.log(e);
         }
     }
+
+    _formCorrelationFinal(second, found1, found2, newBody1, newBody2, diff, request, splitWith, value1, condition) {
+        /*
+         when everything is found then this function is used to 
+         create final regex and correlation documnet to insert
+        */
+        let forFinalReg = this.checkExactMatch(found1, found2)
+        if (!forFinalReg) {
+            forFinalReg = this.checkLooseMatch(found1, found2);
+        }
+        //console.log("forFinal reg", forFinalReg);
+        if (forFinalReg) {
+            //console.log("inside finak reg")
+            let finalReg = this.matchFormTags(forFinalReg[0], forFinalReg[1]);
+            // console.log("final---1", finalReg);
+            let forFormRegNameRegex = finalReg;
+            finalReg = finalReg.replace(/[^\*\?](\W\?)/g, '{{TEMP}}');
+            // console.log("final----2", finalReg);
+            finalReg = finalReg.replace(/\?/g, "\\?").replace(/{{TEMP}}/g, ".*?");
+            // console.log("final----3", finalReg);
+            finalReg = finalReg.replace("=undefined", "");
+            console.log("final----4", finalReg);
+            const counts = this.verifyFormTag(
+                finalReg,
+                [cheerio.html(forFinalReg[0]), cheerio.html(forFinalReg[1])],
+                newBody1,
+                newBody2
+            )
+            console.log("final----5", finalReg);
+            const reg_name = this._getFormRegName(forFormRegNameRegex, cheerio.html(forFinalReg[0]), value1, condition, splitWith)
+            // const finalReg1 = finalReg.replace(new RegExp('\\\\\\?', 'g'), '\\?')
+            finalReg = finalReg.replace(/\/\/\?/g, '\?');
+            return {
+                key: "url",
+                priority: 1,
+                compared_url: diff.url,
+                location: diff.location,
+                reg_count: this._countReg(finalReg),
+                reg_name: reg_name,
+                reg_final_name: diff._id,
+                final_regex: finalReg,
+                first: {
+                    url: request.url,
+                    matched: cheerio.html(forFinalReg[0]),
+                    txn_title: request.transaction.title,
+                    txn_sequence: request.transaction.sequence,
+                    request: request._id,
+                    run: request.run,
+                    atPos: counts[0] ? counts[0] : false
+
+                },
+                second: {
+                    url: second[0].url,
+                    matched: cheerio.html(forFinalReg[1]),
+                    txn_title: second[0].transaction.title,
+                    txn_sequence: second[0].transaction.sequence,
+                    request: second[0]._id,
+                    run: second[0].run,
+                    atPos: counts[1] ? counts[1] : false
+
+                },
+                workflow: diff.workflow,
+                difference: diff._id
+            }
+        }
+    }
     _anchorCorrelationFinal(second, found1, found2, newBody1, newBody2, diff, request, splitWith, value1, condition) {
         /*
          when everything is found then this function is used to 
@@ -1028,7 +1214,7 @@ class Backtrack {
             finalReg = finalReg.replace(/[^\*\?](\W\?)/g, '{{TEMP}}');
             finalReg = finalReg.replace(/\?/g, "\\?").replace(/{{TEMP}}/g, ".*?");
             finalReg = finalReg.replace("=undefined", "");
-            //console.log("final", finalReg);
+            console.log("final", finalReg);
             const counts = this.verifyAnchorTag(
                 finalReg,
                 [cheerio.html(forFinalReg[0]), cheerio.html(forFinalReg[1])],
@@ -1095,8 +1281,54 @@ class Backtrack {
         let allProps = Object.keys(forCreating);
         let tag = '<a'
         for (let i = 0; i < allProps.length; i++) {
+            if(!forCreating[allProps[i]]){
+                /*
+                    if only property is there just keep the property without its = and its blank value
+                    eg <a ...... method="post" data-prevent-resubmission=""> should be <a ...... method="post" data-prevent-resubmission>
+                */
+                tag += ` ${allProps[i]}`
+            }else{
+                tag += ` ${allProps[i]}="${forCreating[allProps[i]]}"`
+            }
+        }
+        tag += '>'
+        return tag;
+    }
+    matchFormTags(obj1, obj2) {
+        // console.log("checking tag objects", obj1, obj2);
+        let anchor1props = obj1.attribs;
+        let anchor2props = obj2.attribs;
+        //console.log("checking anchor props", anchor1props, anchor2props);
+        //console.log("reached till props", anchor1props)
+        let allKeys1 = Object.keys(anchor1props);
+        let forCreating = {}
+        for (let i = 0; i < allKeys1.length; i++) {
+            if (anchor1props[allKeys1[i]] === anchor2props[allKeys1[i]]) {
+                // console.log(forCreating[allKeys1[i]], "in side matched propres value", anchor1props[allKeys1[i]])
+                forCreating[allKeys1[i]] = anchor1props[allKeys1[i]]
+            } else if (allKeys1[i] === 'action') {
+                const comparedUrls = this._compareUrl(anchor1props[allKeys1[i]], anchor2props[allKeys1[i]]);
+                forCreating[allKeys1[i]] = comparedUrls;
+            } else {
+                forCreating[allKeys1[i]] = '(.*?)';
+            }
+        }
+          console.log("for creating", forCreating);
+        let allProps = Object.keys(forCreating);
+
+        let tag = '<form'
+        for (let i = 0; i < allProps.length; i++) {
             //   console.log("tag at step 1", i,"---", tag);
-            tag += ` ${allProps[i]}="${forCreating[allProps[i]]}"`
+            if(!forCreating[allProps[i]]){
+                /*
+                    if only property is there just keep the property without its = and its blank value
+                    eg <form ...... method="post" data-prevent-resubmission=""> should be <form ...... method="post" data-prevent-resubmission>
+                */
+                tag += ` ${allProps[i]}`
+            }else{
+                tag += ` ${allProps[i]}="${forCreating[allProps[i]]}"`
+            }
+            
         }
         tag += '>'
         return tag;
@@ -1116,8 +1348,43 @@ class Backtrack {
         let values2 = matched2.match(reg);
         //console.log("values", values2, values1)
         let totalMatches1 = body1.match(Reg)
-        if (!totalMatches1 || totalMatches1.length === 0) {
+        if (!totalMatches1 || totalMatches1.length == 0) {
             reg = reg.replace(/href="([^"]+)"/g, "href=$1")
+            Reg = new RegExp(reg.replace('&amp;', '&'), 'gi')
+            //console.log("test reg", Reg);
+            totalMatches1 = body1.match(Reg)
+        }
+        console.log("----------------------------total Matches1 anchor----------------------------")
+        console.log(totalMatches1)
+        let totalMatches2 = body2.match(Reg)
+        console.log("----------------------------total Matches2 Achor----------------------------")
+        console.log(totalMatches2)
+        //console.log("counting how many matched", totalMatches1.length, totalMatches2.length);
+        const first = this.compareRegValues(totalMatches1, values1, reg.replace('&amp;', '&'));
+        //console.log("first count", first);
+        const second = this.compareRegValues(totalMatches2, values2, reg.replace('&amp;', '&'));
+        //console.log("first count", second);
+
+        // added 1 to compansate array indexing
+        return [+first + 1, +second + 1, reg];
+    }
+    verifyFormTag(fReg, matchedStrings, body1, body2) {
+        let reg = fReg;
+        // console.log("body-----------------------------------1--------------------------------------------------")
+        // console.log(body1);
+        // console.log("body-----------------------------------2--------------------------------------------------")
+        // console.log(body2);
+        let Reg = new RegExp(reg.replace('&amp;', '&'), 'gi')
+        // console.log("hello world", Reg);
+        let matched1 = matchedStrings[0];
+        let matched2 = matchedStrings[1];
+        //console.log("matched", matched1, matched2);
+        let values1 = matched1.match(reg);
+        let values2 = matched2.match(reg);
+        //console.log("values", values2, values1)
+        let totalMatches1 = body1.match(Reg)
+        if (!totalMatches1 || totalMatches1.length === 0) {
+            reg = reg.replace(/action="([^"]+)"/g, "action=$1")
             Reg = new RegExp(reg.replace('&amp;', '&'), 'gi')
             //console.log("test reg", Reg);
             totalMatches1 = body1.match(Reg)
@@ -1139,23 +1406,25 @@ class Backtrack {
     compareRegValues(totalMatches, values, reg) {
         //console.log("values", values)
         //console.log(totalMatches.length)
-        for (let i = 0; i < totalMatches.length; i++) {
-            let arrTemp = totalMatches[i].match(reg);
-            let count = 0;
-            for (let j = 1; j < arrTemp.length; j++) {
-                // console.log("get values of both arr", arrTemp[j], "--------------", values[j])
-                if (arrTemp[j] === values[j]) {
-                    //console.log("get values of both arr", arrTemp[j], "--------------", values[j])
-                    //console.log("occorance", i)
-                    count++;
+        if (totalMatches) {
+            for (let i = 0; i < totalMatches.length; i++) {
+                let arrTemp = totalMatches[i].match(reg);
+                let count = 0;
+                for (let j = 1; j < arrTemp.length; j++) {
+                    // console.log("get values of both arr", arrTemp[j], "--------------", values[j])
+                    if (arrTemp[j] === values[j]) {
+                        //console.log("get values of both arr", arrTemp[j], "--------------", values[j])
+                        //console.log("occorance", i)
+                        count++;
+                    }
+                    //console.log("coujt in loop", count)
                 }
-                //console.log("coujt in loop", count)
-            }
-            // console.log("total count", count)
-            // console.log("values length", values.length);
-            if (count === values.length - 1) {
-                //console.log("reached inside true compare")
-                return i;
+                // console.log("total count", count)
+                // console.log("values length", values.length);
+                if (count === values.length - 1) {
+                    //console.log("reached inside true compare")
+                    return i;
+                }
             }
         }
         return false;

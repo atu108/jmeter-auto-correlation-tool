@@ -49,8 +49,8 @@ app
   }))
   .use(response)
   .use(router)
-    .use(cors()) 
-  .use(httpError);
+  .use(cors());
+  // .use(httpError);
 
 app.on('error', (err) => {
   logger.error(err);

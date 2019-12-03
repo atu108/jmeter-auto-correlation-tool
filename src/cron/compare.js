@@ -120,14 +120,14 @@ class Compare {
         temp.push(t)
       }
     }
-    console.log("checking lengths of requests ", r1," ", r2, " ",temp.length, "type ", type )
+    //console.log("checking lengths of requests ", r1," ", r2, " ",temp.length, "type ", type )
     return temp;
   }
   _diff(r1, r2){
     let temp = []
     // const headers = this._parse([r1.request.headers, r2.request.headers]);
     // const cookies = this._parse([r1.request.cookies, r2.request.cookies]);
-    console.log("before parsing" ,r1.request.post_data.length)
+    // console.log("before parsing" ,r1.request.post_data.length)
     const postParams = this._parse([r1.request.post_data, r2.request.post_data]);
     // console.log("after parsing", postParams)
     const queryParams = this._parse([r1.request.params, r2.request.params]);
@@ -157,7 +157,7 @@ class Compare {
     //   temp.push(...this._getDiff(cookies[0],cookies[1],"cookie",obj))
     // }
     if(postParams[0] && postParams[1]){
-      console.log("after compare post data",this._getDiff(postParams[0],postParams[1],"post_data",obj).length)
+      // console.log("after compare post data",this._getDiff(postParams[0],postParams[1],"post_data",obj).length)
       temp.push(...this._getDiff(postParams[0],postParams[1],"post_data",obj))
     }
     if(queryParams[0] && queryParams[1]){
