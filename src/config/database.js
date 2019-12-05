@@ -4,7 +4,7 @@ const database = {
   port: env('DB_PORT', 27017),
   user: env('DB_USER', ''),
   password: env('DB_PASSWORD', ''),
-  name: env('DB_NAME', 'impulsive'),
+  name: env('DB_NAME', 'perfeasy'),
   replica: env('DB_REPLICA', false),
 };
 

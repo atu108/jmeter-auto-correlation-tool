@@ -13,7 +13,7 @@ const UserSchema = new Schema({
     unique: true,
     required: true
   },
-  company_name:{
+  company_name: {
     type: String,
     required: true
   },
